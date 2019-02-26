@@ -2,20 +2,21 @@ import React, { Component } from 'react';
 import {
     Alignment,
     AnchorButton,
-    Classes,
+    //Classes,
     Navbar,
     NavbarGroup,
     NavbarHeading,
     NavbarDivider
   } from "@blueprintjs/core";
-  import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+  import { BrowserRouter as Router, Link } from "react-router-dom";
   //docs: https://blueprintjs.com/docs/#blueprint
 
 class Header extends Component {
   render() {
     return (
       <div className="App-header">
-        <Navbar className={Classes.DARK}>
+        <Navbar> 
+          {/* className={Classes.DARK} */}
             <NavbarGroup align={Alignment.LEFT}>
                 <NavbarHeading>Virtual Student</NavbarHeading>
                 <NavbarDivider />

@@ -38,3 +38,13 @@ body {
 p {
   color: white;
 }
+
+.Calendar {
+  width: 450px;
+  margin: auto;
+}
+
+.DayPicker-Month {
+  min-height: 420px;
+  min-width: 432px;
+}
