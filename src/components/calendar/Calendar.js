@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { DatePicker } from "@blueprintjs/datetime";
-import { Tag } from "@blueprintjs/core";
+import { Tag, Button, Card, Colors, Divider } from "@blueprintjs/core";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"; //css for the calendar
 //import { getDateOnlyWithTime } from '@blueprintjs/datetime/lib/esm/common/dateUtils';
 import Moment from 'react-moment';
@@ -20,7 +20,7 @@ class Calendar extends Component {
   }
   render() {
     return (
-      <div className="Calendar">
+      <Card className="Calendar">
         <DatePicker
           shortcuts={false}
           minDate={new Date()} //cannot reserve before today
@@ -29,18 +29,26 @@ class Calendar extends Component {
           onChange={(newDate) => this.handleChange(newDate)}
           value={this.state.selectedDate}
           showActionsBar
+          style={{ color: Colors.BLUE1 }}
         />
-        <Tag
-          key={this.state.selectedDate}
-          icon="calendar"
-        >
-          <Moment 
-            date={this.state.selectedDate} 
-            withTime={this.props.timePrecision !== undefined}
-            format="LLLL"
-          />
-        </Tag>
-      </div>
+        <Divider/>
+        
+        <Card style={{ background: Colors.BLUE2 }}>
+          <h5>Date Selected</h5>
+          <Tag
+            key={this.state.selectedDate}
+            icon="calendar"
+          >
+            <Moment 
+              date={this.state.selectedDate} 
+              withTime={this.props.timePrecision !== undefined}
+              format="LLLL"
+            />
+          </Tag>
+          <Divider/>
+          <Button rightIcon="arrow-right" intent="success" text="Reserve" />
+        </Card>
+      </Card>
     );
   }
 }

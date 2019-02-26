@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import {
     Alignment,
     AnchorButton,
-    //Classes,
     Navbar,
     NavbarGroup,
-    NavbarHeading,
     NavbarDivider
   } from "@blueprintjs/core";
   import { BrowserRouter as Router, Link } from "react-router-dom";
@@ -18,7 +16,11 @@ class Header extends Component {
         <Navbar> 
           {/* className={Classes.DARK} */}
             <NavbarGroup align={Alignment.LEFT}>
-                <NavbarHeading>Virtual Student</NavbarHeading>
+                <Link to="/">
+                  <AnchorButton
+                    text="Virtual Student"
+                  />
+                </Link>
                 <NavbarDivider />
                 <Link to="/login">
                   <AnchorButton //apparently this isn't allowed...
