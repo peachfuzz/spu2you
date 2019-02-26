@@ -13,6 +13,8 @@ import {
 
 const logoImage = require('../../images/virtual_student_logo_placeholder.png');
 
+const myNewVar = 2;
+
 class Header extends Component {
   render() {
     return (
