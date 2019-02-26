@@ -11,6 +11,8 @@ import {
   import { BrowserRouter as Router, Link } from "react-router-dom";
   //docs: https://blueprintjs.com/docs/#blueprint
 
+const logoImage = require('../../images/virtual_student_logo_placeholder.png');
+
 class Header extends Component {
   render() {
     return (
@@ -18,6 +20,9 @@ class Header extends Component {
         <Navbar> 
           {/* className={Classes.DARK} */}
             <NavbarGroup align={Alignment.LEFT}>
+                <div className="header_logo">
+                  <img src = {logoImage} width="50" height="50" />
+                </div>
                 <NavbarHeading>Virtual Student</NavbarHeading>
                 <NavbarDivider />
                 <Link to="/calendar">
