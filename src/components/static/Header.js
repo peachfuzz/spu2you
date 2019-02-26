@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import {
     Alignment,
     AnchorButton,
-    //Classes,
     Navbar,
     NavbarGroup,
-    NavbarHeading,
     NavbarDivider
   } from "@blueprintjs/core";
   import { BrowserRouter as Router, Link } from "react-router-dom";
