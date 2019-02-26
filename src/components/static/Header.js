@@ -7,7 +7,6 @@ import {
     NavbarDivider
   } from "@blueprintjs/core";
   import { BrowserRouter as Router, Link } from "react-router-dom";
-  
   //docs: https://blueprintjs.com/docs/#blueprint
 
 class Header extends Component {
