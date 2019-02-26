@@ -20,18 +20,20 @@ class Header extends Component {
             <NavbarGroup align={Alignment.LEFT}>
                 <NavbarHeading>Virtual Student</NavbarHeading>
                 <NavbarDivider />
-                <Link to="/login">
-                  <AnchorButton //apparently this isn't allowed...
-                      text="Login"
-                      minimal
-                      rightIcon="log-in"
-                  />
-                </Link>
                 <Link to="/calendar">
                   <AnchorButton
                       text="Calendar"
                       minimal
                       rightIcon="calendar"
+                  />
+                </Link>
+            </NavbarGroup>
+            <NavbarGroup align={Alignment.RIGHT}>
+                <Link to="/login">
+                  <AnchorButton //apparently this isn't allowed...
+                      text="Login"
+                      minimal
+                      rightIcon="log-in"
                   />
                 </Link>
             </NavbarGroup>
