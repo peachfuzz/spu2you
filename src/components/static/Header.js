@@ -4,14 +4,13 @@ import {
     AnchorButton,
     Navbar,
     NavbarGroup,
-    NavbarDivider
+    NavbarDivider,
+    NavbarHeading,
   } from "@blueprintjs/core";
   import { BrowserRouter as Router, Link } from "react-router-dom";
   //docs: https://blueprintjs.com/docs/#blueprint
 
 const logoImage = require('../../images/virtual_student_logo_placeholder.png');
-
-const myNewVar = 2;
 
 class Header extends Component {
   render() {
@@ -21,15 +20,37 @@ class Header extends Component {
           {/* className={Classes.DARK} */}
             <NavbarGroup align={Alignment.LEFT}>
                 <div className="header_logo">
-                  <img src = {logoImage} width="50" height="50" />
+                  <img src={logoImage} className="w50-h50" alt="logo" />
                 </div>
                 <NavbarHeading>Virtual Student</NavbarHeading>
                 <NavbarDivider />
+                <Link to="/">
+                  <AnchorButton
+                    text="Home"
+                    minimal
+                    icon="home"
+                  />
+                </Link>
                 <Link to="/calendar">
                   <AnchorButton
-                      text="Calendar"
+                      text="Create Reservation"
                       minimal
-                      rightIcon="calendar"
+                      icon="calendar"
+                      onKeyPress="c"
+                  />
+                </Link>
+                <Link to="/reservations">
+                  <AnchorButton
+                      text="My Reservations"
+                      minimal
+                      icon="calendar"
+                  />
+                </Link>
+                <Link to="/robot">
+                  <AnchorButton
+                      text="Robot"
+                      minimal
+                      icon="known-vehicle"
                   />
                 </Link>
             </NavbarGroup>
