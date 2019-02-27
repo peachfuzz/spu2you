@@ -50,7 +50,7 @@ class Header extends Component {
                   <AnchorButton
                       text="Robot"
                       minimal
-                      icon="known-vehicle"
+                      icon="rig"
                   />
                 </Link>
             </NavbarGroup>
