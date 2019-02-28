@@ -5,6 +5,8 @@ import Calendar from '../calendar/Calendar.js';
 import LogOut from '../logout/LogOut.js';
 import Reservations from '../reservations/Reservations.js'
 import Robot from '../robot/Robot';
+import Splash from '../splash/Splash.js';
+
 
 class Content extends Component {
   render() {
@@ -16,6 +18,7 @@ class Content extends Component {
               <Route path="/calendar" component={Calendar} />
               <Route path="/robot" component={Robot} />
               <Route path="/reservations" component={Reservations} />
+              <Route path="/splash" component={Splash} />
           </div>
       </div>
     );
