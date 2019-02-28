@@ -7,8 +7,8 @@ import {
     NavbarDivider,
     NavbarHeading,
   } from "@blueprintjs/core";
-  import { BrowserRouter as Router, Link } from "react-router-dom";
-  //docs: https://blueprintjs.com/docs/#blueprint
+import { BrowserRouter as Router, withRouter } from "react-router-dom";
+//docs: https://blueprintjs.com/docs/#blueprint
 
 const logoImage = require('../../images/virtual_student_logo_placeholder.png');
 
@@ -24,44 +24,38 @@ class Header extends Component {
                 </div>
                 <NavbarHeading>Virtual Student</NavbarHeading>
                 <NavbarDivider />
-                <Link to="/">
-                  <AnchorButton
-                    text="Home"
+                <AnchorButton
+                  text="Home"
+                  minimal
+                  icon="home"
+                  onClick={ () => this.props.history.push("/") }
+                />
+                <AnchorButton
+                    text="Create Reservation"
                     minimal
-                    icon="home"
-                  />
-                </Link>
-                <Link to="/calendar">
-                  <AnchorButton
-                      text="Create Reservation"
-                      minimal
-                      icon="calendar"
-                      onKeyPress="c"
-                  />
-                </Link>
-                <Link to="/reservations">
-                  <AnchorButton
-                      text="My Reservations"
-                      minimal
-                      icon="calendar"
-                  />
-                </Link>
-                <Link to="/robot">
-                  <AnchorButton
-                      text="Robot"
-                      minimal
-                      icon="rig"
-                  />
-                </Link>
+                    icon="calendar"
+                    onClick={ () => this.props.history.push("/calendar") }
+                />
+                <AnchorButton
+                    text="My Reservations"
+                    minimal
+                    icon="calendar"
+                    onClick={ () => this.props.history.push("/reservation") }
+                />
+                <AnchorButton
+                    text="Robot"
+                    minimal
+                    icon="rig"
+                    onClick={ () => this.props.history.push("/robot") }
+                />
             </NavbarGroup>
             <NavbarGroup align={Alignment.RIGHT}>
-                <Link to="/logout">
-                  <AnchorButton //apparently this isn't allowed...
-                      text="Log Out"
-                      minimal
-                      rightIcon="log-in"
-                  />
-                </Link>
+            <AnchorButton
+                text="Log Out"
+                minimal
+                rightIcon="log-in"
+                onClick={ () => this.props.history.push("/logout") }
+            />
             </NavbarGroup>
         </Navbar>
       </div>
@@ -69,4 +63,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default withRouter (Header);
