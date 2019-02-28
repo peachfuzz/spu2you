@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { DatePicker } from "@blueprintjs/datetime";
 import { Tag, Button, Card, Colors, Divider } from "@blueprintjs/core";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"; //css for the calendar
-//import { getDateOnlyWithTime } from '@blueprintjs/datetime/lib/esm/common/dateUtils';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
@@ -40,8 +39,7 @@ class Calendar extends Component {
             icon="calendar"
           >
             <Moment 
-              date={this.state.selectedDate} 
-              withTime={this.props.timePrecision !== undefined}
+              date={this.state.selectedDate}
               format="LLLL"
             />
           </Tag>

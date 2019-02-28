@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 //docs: https://blueprintjs.com/docs/#blueprint
 
 class SideMenu extends Component {
