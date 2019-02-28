@@ -55,9 +55,9 @@ class Header extends Component {
                 </Link>
             </NavbarGroup>
             <NavbarGroup align={Alignment.RIGHT}>
-                <Link to="/login">
+                <Link to="/logout">
                   <AnchorButton //apparently this isn't allowed...
-                      text="Login"
+                      text="Log Out"
                       minimal
                       rightIcon="log-in"
                   />
