@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Code, getKeyComboString, KeyCombo, Card } from "@blueprintjs/core";
 
 /* TODO:
@@ -8,50 +8,49 @@ import { Code, getKeyComboString, KeyCombo, Card } from "@blueprintjs/core";
   v mutes video
 */
 
-
 class Robot extends Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
-        combo: null
-    }
-}
+      combo: null
+    };
+  }
 
-render() {
-  return (
+  render() {
+    return (
       <Card
-          onKeyDown={this.handleKeyDown}
-          onBlur={this.handleBlur}
-          tabIndex={0}
+        onKeyDown={this.handleKeyDown}
+        onBlur={this.handleBlur}
+        tabIndex={0}
       >
         {this.renderKeyCombo()}
       </Card>
-  );
-}
-
-renderKeyCombo(){
-  const { combo } = this.state;
-  if (combo == null) {
-    return "Click here then press a key combo";
-  } else {
-    return (
-      <>
-        <KeyCombo combo={combo} />
-        <Code>{combo}</Code>
-      </>
     );
   }
-}
 
-handleKeyDown = (e) => {
-  e.preventDefault();
-  e.stopPropagation();
+  renderKeyCombo() {
+    const { combo } = this.state;
+    if (combo == null) {
+      return "Click here then press a key combo";
+    } else {
+      return (
+        <>
+          <KeyCombo combo={combo} />
+          <Code>{combo}</Code>
+        </>
+      );
+    }
+  }
 
-  const combo = getKeyComboString(e.nativeEvent);
-  this.setState({ combo });
-};
+  handleKeyDown = e => {
+    e.preventDefault();
+    e.stopPropagation();
 
-handleBlur = () => this.setState({ combo: null });
+    const combo = getKeyComboString(e.nativeEvent);
+    this.setState({ combo });
+  };
+
+  handleBlur = () => this.setState({ combo: null });
 }
 
 export default Robot;
