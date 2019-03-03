@@ -11,6 +11,7 @@ import { withAuthenticator } from "aws-amplify-react";
 Amplify.configure(awsMobile);
 const AppWithAuth = withAuthenticator(App);
 //aws stuff
+
 ReactDOM.render(<AppWithAuth />, document.getElementById("root")); //this replaces v
 //ReactDOM.render(<App />, document.getElementById('root')); //this is replaced by ^
 
