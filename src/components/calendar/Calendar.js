@@ -1,21 +1,19 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 import { DatePicker } from "@blueprintjs/datetime";
 import { Tag, Button, Card, Colors, Divider } from "@blueprintjs/core";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"; //css for the calendar
-import Moment from 'react-moment';
-import 'moment-timezone';
-
+import Moment from "react-moment";
+import "moment-timezone";
 
 class Calendar extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       selectedDate: new Date()
     };
-
   }
   handleChange(date) {
-        this.setState({ selectedDate: date });
+    this.setState({ selectedDate: date });
   }
   render() {
     return (
@@ -23,27 +21,23 @@ class Calendar extends Component {
         <DatePicker
           shortcuts={false}
           minDate={new Date()} //cannot reserve before today
-          maxDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))} //only allowed one year ahead of today
+          maxDate={
+            new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+          } //only allowed one year ahead of today
           timePrecision
-          onChange={(newDate) => this.handleChange(newDate)}
+          onChange={newDate => this.handleChange(newDate)}
           value={this.state.selectedDate}
           showActionsBar
           style={{ color: Colors.BLUE1 }}
         />
-        <Divider/>
-        
+        <Divider />
+
         <Card style={{ background: Colors.BLUE2 }}>
           <h5>Date Selected</h5>
-          <Tag
-            key={this.state.selectedDate}
-            icon="calendar"
-          >
-            <Moment 
-              date={this.state.selectedDate}
-              format="LLLL"
-            />
+          <Tag key={this.state.selectedDate} icon="calendar">
+            <Moment date={this.state.selectedDate} format="LLLL" />
           </Tag>
-          <Divider/>
+          <Divider />
           <Button rightIcon="arrow-right" intent="success" text="Reserve" />
         </Card>
       </Card>
