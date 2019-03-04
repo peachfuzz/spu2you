@@ -50,8 +50,8 @@ p {
   color: white;
 }
 
+/* removed:  "width: 600px;" */ 
 .content {
-  width: 600px;
   margin: auto;
 }
 
@@ -65,12 +65,27 @@ p {
   min-width: 432px;
 }
 
+.App-menu {
+  width: 250px;
+  margin: 0;
+}
+
+.Splash {
+  max-width: auto;
+  max-height: auto;
+}
+
+/* Image sizing */ 
 .w50-h50 {
   width: 50px;
   height: 50px;
 }
 
-.App-menu {
-  width: 250px;
-  margin: 0;
+.Splash-image {
+  width: 100%;
+  heigth: auto;
+}
+
+.Splash-overlay {
+  justify-content: center center;
 }
