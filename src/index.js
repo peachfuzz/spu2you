@@ -15,6 +15,8 @@ const AppWithAuth = withAuthenticator(App);
 ReactDOM.render(<AppWithAuth />, document.getElementById("root")); //this replaces v
 //ReactDOM.render(<App />, document.getElementById('root')); //this is replaced by ^
 
+//hosted at -> http://virtualstudent-hosting-mobilehub-1143763081.s3-website.us-east-1.amazonaws.com/
+
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
