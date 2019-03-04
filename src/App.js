@@ -13,17 +13,6 @@ import { BrowserRouter as Router} from "react-router-dom";
 
 class App extends Component {
   render() {
-    /*
-    return (
-      <Router>
-        <div className="App-bp3-dark">
-          <Content/>
-          <Footer/>
-        </div>
-      </Router>
-    );
-    */
-    // /* 
     return (
       <Router>
         <div className="App bp3-dark">
