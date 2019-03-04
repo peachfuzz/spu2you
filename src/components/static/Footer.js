@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { BrowserRouter as Router, withRouter } from "react-router-dom";
 import {
   Alignment,
   AnchorButton,
@@ -7,13 +7,12 @@ import {
   NavbarGroup,
   NavbarDivider
 } from "@blueprintjs/core";
-import { BrowserRouter as Router, withRouter } from "react-router-dom";
+
 
 class Footer extends Component {
   render() {
     return (
       /* will want to eventually align these elements to the center of the footer div */
-
       <div className="App-footer">
         <Navbar>
           <NavbarGroup align={Alignment.CENTER}>
@@ -24,9 +23,7 @@ class Footer extends Component {
               onClick={
                 () => {
                   this.props.history.push("/home");
-                  console.log("pressed button");
                 }
-                /* this.props.history.push("/home") */
               }
             />
             <NavbarDivider />
@@ -35,10 +32,9 @@ class Footer extends Component {
               minimal
               icon="git-branch"
               onClick={
-                () =>
-                  console.log(
-                    "pressed button"
-                  ) /* this.props.history.push("/") */
+                () => {
+                  this.props.history.push("/home");
+                }
               }
             />
             <NavbarDivider />
@@ -47,23 +43,12 @@ class Footer extends Component {
               minimal
               icon="envelope"
               onClick={
-                () =>
-                  console.log(
-                    "pressed button"
-                  ) /* this.props.history.push("/") */
+                () => {
+                  this.props.history.push("/home");
+                }
               }
             />
           </NavbarGroup>
-          <NavbarDivider />
-          <AnchorButton
-            text="Contact"
-            minimal
-            icon="envelope"
-            onClick={
-              () =>
-                console.log("pressed button") /* this.props.history.push("/") */
-            }
-          />
         </Navbar>
       </div>
     );

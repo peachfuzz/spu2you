@@ -9,16 +9,10 @@ const splashImage = require('../../images/spu-splash-highres.jpg');
 
 
 class Splash extends Component {
-  constructor() {
-    super();
-    this.state = {id: "splash"};
-  }
-
-  // ^ allows you to: "<p>This state id  == {this.state.id} </p>"
   render() {
-    // console.log(this.props); // many props!
     return (
       <div className="Splash">
+        <img src={splashImage} className="Splash-image" alt="logo" />
       </div>
     );
   }

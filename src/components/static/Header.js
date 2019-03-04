@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { BrowserRouter as Router, withRouter } from "react-router-dom";
 import {
   Alignment,
   AnchorButton,
@@ -7,14 +8,17 @@ import {
   NavbarDivider,
   NavbarHeading
 } from "@blueprintjs/core";
-import { BrowserRouter as Router, withRouter } from "react-router-dom";
 //docs: https://blueprintjs.com/docs/#blueprint
 
 const logoImage = require("../../images/virtual_student_logo_placeholder.png");
 
 class Header extends Component {
   render() {
-    if (this.props.location.pathname !== "/robot") {
+    /* make this if statement shorter */
+    if ((this.props.location.pathname == "/splash") || (this.props.location.pathname == "/robot") ) {
+      return <div />;
+    }
+    else {
       return (
         <div className="App-header">
           <Navbar>
@@ -55,14 +59,12 @@ class Header extends Component {
                 text="Log Out"
                 minimal
                 rightIcon="log-in"
-                onClick={() => this.props.history.push("/logout")}
+                onClick={() => this.props.history.push("/splash")}
               />
             </NavbarGroup>
           </Navbar>
         </div>
       );
-    } else {
-      return <div />;
     }
   }
 }
