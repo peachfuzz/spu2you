@@ -54,7 +54,6 @@ class Footer extends Component {
               }
             />
           </NavbarGroup>
-          "pressed button" ) /* this.props.history.push("/") */ } />
           <NavbarDivider />
           <AnchorButton
             text="Contact"
