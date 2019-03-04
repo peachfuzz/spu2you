@@ -9,10 +9,11 @@ import {
 } from "@blueprintjs/core";
 
 
+// https://github.com/peachfuzz/virtual-student
+
 class Footer extends Component {
   render() {
     return (
-      /* will want to eventually align these elements to the center of the footer div */
       <div className="App-footer">
         <Navbar>
           <NavbarGroup align={Alignment.CENTER}>
@@ -27,16 +28,11 @@ class Footer extends Component {
               }
             />
             <NavbarDivider />
-            <AnchorButton
-              text="GitHub"
-              minimal
-              icon="git-branch"
-              onClick={
-                () => {
-                  this.props.history.push("/home");
-                }
-              }
-            />
+              <AnchorButton
+                text="GitHub"
+                minimal
+                icon="git-branch"
+              />
             <NavbarDivider />
             <AnchorButton
               text="Contact"
