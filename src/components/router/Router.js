@@ -12,14 +12,14 @@ class Content extends Component {
   render() {
     return (
       <div className="content">
-          <div className="inner-content">
-              <Route exact path="/" component={Home} />
-              <Route path="/logout" component={LogOut} />
-              <Route path="/calendar" component={Calendar} />
-              <Route path="/robot" component={Robot} />
-              <Route path="/reservations" component={Reservations} />
-              <Route path="/splash" component={Splash} />
-          </div>
+        <div className="inner-content">
+          <Route exact path="/" component={Home} />
+          <Route path="/logout" component={LogOut} />
+          <Route path="/calendar" component={Calendar} />
+          <Route path="/robot" component={Robot} />
+          <Route path="/reservations" component={Reservations} />
+          <Route path="/splash" component={Splash} />
+        </div>
       </div>
     );
   }
