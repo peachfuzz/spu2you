@@ -22,6 +22,17 @@ body {
   color: white;
 }
 
+.App-footer {
+  height: 50px;
+  margin-top: 25px;
+  position: absolute;
+  flex-direction: row;
+  bottom: 0;
+  width: 100%;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
 .App-link {
   color: #61dafb;
 }
