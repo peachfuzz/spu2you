@@ -71,8 +71,8 @@ p {
 }
 
 .Splash {
-  max-width: auto;
-  max-height: auto;
+  width:100vw;
+  height:100vh;
 }
 
 /* Image sizing */ 
@@ -82,8 +82,9 @@ p {
 }
 
 .Splash-image {
-  width: 100%;
-  heigth: auto;
+  max-width:100%;
+  height:auto;
+  max-height:100%;
 }
 
 .Splash-overlay {
