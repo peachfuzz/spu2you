@@ -73,6 +73,7 @@ p {
 .Splash {
   width:100vw;
   height:100vh;
+  overflow: hidden;
 }
 
 /* Image sizing */ 
@@ -82,9 +83,10 @@ p {
 }
 
 .Splash-image {
-  max-width:100%;
+  max-width:130%;
   height:auto;
-  max-height:100%;
+  max-height:130%;
+  overflow: hidden;
 }
 
 .Splash-overlay {
