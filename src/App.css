@@ -74,6 +74,22 @@ p {
   width:100vw;
   height:100vh;
   overflow: hidden;
+  position: relative;
+}
+
+/* 
+How to center div over image: 
+https://www.sitepoint.com/css-center-position-absolute-div/
+*/
+.Splash-overlay {
+  position: absolute;
+  z-index: 1;
+  width: 300px;
+  height: 300px;
+  top: 10px;
+  left: 50%;
+  margin-left: -150px;
+  padding-top: 20%;
 }
 
 /* Image sizing */ 
@@ -87,8 +103,5 @@ p {
   height:auto;
   max-height:130%;
   overflow: hidden;
-}
-
-.Splash-overlay {
-  justify-content: center center;
+  z-index: 0;
 }
