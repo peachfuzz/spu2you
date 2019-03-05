@@ -48,7 +48,7 @@ class Robot extends Component {
           position="relative"
           allowFullScreen
         /> */}
-        <video autoPlay={true} id="videoElement" width="450px" />
+        <video autoPlay={true} id="videoElement" width="450px" muted="muted" />
         <br />
         {this.renderKeyCombo()}
       </Card>

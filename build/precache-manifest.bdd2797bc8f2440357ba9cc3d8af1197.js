@@ -1,10 +1,10 @@
 self.__precacheManifest = [
   {
-    "revision": "422aba8639312ac889d34200226a5c4e",
-    "url": "/static/media/icons-16.422aba86.woff"
+    "revision": "7f037192fcdef96884010177e90e8c5f",
+    "url": "/static/media/icons-16.7f037192.eot"
   },
   {
-    "revision": "24bb2ca81ccfeda70341",
+    "revision": "ddc8c8a34321b2e6fd6e",
     "url": "/static/css/main.ad63f68d.chunk.css"
   },
   {
@@ -24,31 +24,31 @@ self.__precacheManifest = [
     "url": "/static/media/virtual_student_logo_placeholder.1d16a0bb.png"
   },
   {
-    "revision": "24bb2ca81ccfeda70341",
-    "url": "/static/js/main.24bb2ca8.chunk.js"
-  },
-  {
-    "revision": "52f2f35bf3a635ca696e95cc33cf12fa",
-    "url": "/static/media/icons-20.52f2f35b.woff"
-  },
-  {
-    "revision": "f1bd87971a332ecb21b4ac1d19537fa3",
-    "url": "/static/media/icons-20.f1bd8797.eot"
-  },
-  {
-    "revision": "7f037192fcdef96884010177e90e8c5f",
-    "url": "/static/media/icons-16.7f037192.eot"
+    "revision": "ddc8c8a34321b2e6fd6e",
+    "url": "/static/js/main.ddc8c8a3.chunk.js"
   },
   {
     "revision": "a82b41082b04f774d82317dff6874d14",
     "url": "/static/media/icons-16.a82b4108.ttf"
   },
   {
+    "revision": "422aba8639312ac889d34200226a5c4e",
+    "url": "/static/media/icons-16.422aba86.woff"
+  },
+  {
+    "revision": "f1bd87971a332ecb21b4ac1d19537fa3",
+    "url": "/static/media/icons-20.f1bd8797.eot"
+  },
+  {
+    "revision": "52f2f35bf3a635ca696e95cc33cf12fa",
+    "url": "/static/media/icons-20.52f2f35b.woff"
+  },
+  {
     "revision": "208d1c61aa39e08896f6",
     "url": "/static/css/2.08cd7a10.chunk.css"
   },
   {
-    "revision": "ec61e2352477ee8667bb0905ef8a3049",
+    "revision": "b98f78170f735200e3711e5fb81143ec",
     "url": "/index.html"
   }
 ];
