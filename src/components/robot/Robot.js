@@ -26,6 +26,7 @@ class Robot extends Component {
         })
         .catch(function(error) {
           console.log("Something went wrong!");
+          console.log(error);
         });
     }
   }
@@ -47,7 +48,7 @@ class Robot extends Component {
           position="relative"
           allowFullScreen
         /> */}
-        <video autoplay="true" id="videoElement" width="450px" />
+        <video autoPlay={true} id="videoElement" width="450px" />
         <br />
         {this.renderKeyCombo()}
       </Card>
