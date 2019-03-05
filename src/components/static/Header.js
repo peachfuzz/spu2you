@@ -40,7 +40,7 @@ class Header extends Component {
             <AnchorButton
               text="My Reservations"
               minimal
-              icon="calendar"
+              icon="timeline-events"
               onClick={() => this.props.history.push("/reservation")}
             />
             <AnchorButton

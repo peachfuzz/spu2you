@@ -17,7 +17,7 @@ class App extends Component {
       <Router>
         <div className="App bp3-dark">
           <Header />
-          <SideMenu />
+          {/* <SideMenu /> */}
           <Content />
           <Footer />
         </div>
