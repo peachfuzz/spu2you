@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { Code, getKeyComboString, KeyCombo, Card } from "@blueprintjs/core";
+import {
+  Code,
+  getKeyComboString,
+  KeyCombo,
+  Card,
+  Button
+} from "@blueprintjs/core";
 import Iframe from "react-iframe";
 
 /* TODO:
@@ -13,21 +19,45 @@ class Robot extends Component {
   constructor() {
     super();
     this.state = {
-      combo: null
+      combo: null,
+      videoAccess: false,
+      streaming: null
     };
+    this.startVid = this.startVid.bind(this);
   }
-  componentDidMount() {
+
+  startVid() {
     var video = document.querySelector("#videoElement"); //for camera access
     if (navigator.mediaDevices.getUserMedia) {
+      // if (this.state.videoAccess === true) {
+      //   navigator.mediaDevices
+      //     .getUserMedia({ video: false, audio: false })
+      //     .then(function(stream) {
+      //       console.log("Vid off");
+      //       this.setState({ videoAccess: false });
+      //     });
+      // } else if (this.state.videoAccess === false) {
       navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({ video: true, audio: true })
         .then(function(stream) {
-          video.srcObject = stream;
+          if (video.srcObject === "" || video.srcObject === null)
+            video.srcObject = stream;
+          else {
+            // let tracks = video.srcObject.stream.getTracks();
+
+            // tracks.forEach(function(track) {
+            //   track.stop();
+            // });
+            video.srcObject = null;
+            console.log("off");
+          }
         })
         .catch(function(error) {
           console.log("Something went wrong!");
           console.log(error);
         });
+      this.setState({ videoAccess: true });
+      // }
     }
   }
 
@@ -41,7 +71,6 @@ class Robot extends Component {
         {/* <Iframe
           url="http://www.youtube.com/embed/xDMP3i36naA"
           width="450px"
-          height="450px"
           id="myId"
           className="myClassname"
           display="initial"
@@ -49,6 +78,7 @@ class Robot extends Component {
           allowFullScreen
         /> */}
         <video autoPlay={true} id="videoElement" width="450px" muted="muted" />
+        <Button text="Start Video" onClick={this.startVid} />
         <br />
         {this.renderKeyCombo()}
       </Card>
