@@ -111,3 +111,7 @@ https://www.sitepoint.com/css-center-position-absolute-div/
   overflow: hidden;
   z-index: 0;
 }
+
+.small {
+  height: 10px;
+}
