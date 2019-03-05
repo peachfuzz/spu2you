@@ -32,6 +32,8 @@ class Footer extends Component {
                 text="GitHub"
                 minimal
                 icon="git-branch"
+                href="https://github.com/peachfuzz/virtual-student"
+                target="_blank"
               />
             <NavbarDivider />
             <AnchorButton
