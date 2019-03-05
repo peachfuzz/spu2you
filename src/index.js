@@ -12,8 +12,8 @@ Amplify.configure(awsMobile);
 const AppWithAuth = withAuthenticator(App);
 //aws stuff
 
-ReactDOM.render(<AppWithAuth />, document.getElementById("root")); //this replaces v
-//ReactDOM.render(<App />, document.getElementById('root')); //this is replaced by ^
+// ReactDOM.render(<AppWithAuth />, document.getElementById("root")); //this replaces v
+ReactDOM.render(<App />, document.getElementById('root')); //this is replaced by ^
 
 //hosted at -> http://virtualstudent-hosting-mobilehub-1143763081.s3-website.us-east-1.amazonaws.com/
 //can get personal instance hosted here -> http://virtualstudent-hosting-mobilehub-1143763081.s3-website.us-east-1.amazonaws.com/
