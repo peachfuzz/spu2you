@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Code, getKeyComboString, KeyCombo, Card } from "@blueprintjs/core";
+import Iframe from "react-iframe";
 
 /* TODO:
   arrows move
@@ -15,6 +16,19 @@ class Robot extends Component {
       combo: null
     };
   }
+  componentDidMount() {
+    var video = document.querySelector("#videoElement"); //for camera access
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then(function(stream) {
+          video.srcObject = stream;
+        })
+        .catch(function(error) {
+          console.log("Something went wrong!");
+        });
+    }
+  }
 
   render() {
     return (
@@ -23,6 +37,18 @@ class Robot extends Component {
         onBlur={this.handleBlur}
         tabIndex={0}
       >
+        {/* <Iframe
+          url="http://www.youtube.com/embed/xDMP3i36naA"
+          width="450px"
+          height="450px"
+          id="myId"
+          className="myClassname"
+          display="initial"
+          position="relative"
+          allowFullScreen
+        /> */}
+        <video autoplay="true" id="videoElement" width="450px" />
+        <br />
         {this.renderKeyCombo()}
       </Card>
     );
