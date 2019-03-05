@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/static/media/icons-16.7f037192.eot"
   },
   {
-    "revision": "ddc8c8a34321b2e6fd6e",
+    "revision": "ffcb56a8d04065c62b19",
     "url": "/static/css/main.ad63f68d.chunk.css"
   },
   {
@@ -24,16 +24,16 @@ self.__precacheManifest = [
     "url": "/static/media/virtual_student_logo_placeholder.1d16a0bb.png"
   },
   {
-    "revision": "ddc8c8a34321b2e6fd6e",
-    "url": "/static/js/main.ddc8c8a3.chunk.js"
-  },
-  {
-    "revision": "a82b41082b04f774d82317dff6874d14",
-    "url": "/static/media/icons-16.a82b4108.ttf"
+    "revision": "ffcb56a8d04065c62b19",
+    "url": "/static/js/main.ffcb56a8.chunk.js"
   },
   {
     "revision": "422aba8639312ac889d34200226a5c4e",
     "url": "/static/media/icons-16.422aba86.woff"
+  },
+  {
+    "revision": "a82b41082b04f774d82317dff6874d14",
+    "url": "/static/media/icons-16.a82b4108.ttf"
   },
   {
     "revision": "f1bd87971a332ecb21b4ac1d19537fa3",
@@ -48,7 +48,7 @@ self.__precacheManifest = [
     "url": "/static/css/2.08cd7a10.chunk.css"
   },
   {
-    "revision": "b98f78170f735200e3711e5fb81143ec",
+    "revision": "163aaba517a15bf5e0c6a222c1ea1fb7",
     "url": "/index.html"
   }
 ];
