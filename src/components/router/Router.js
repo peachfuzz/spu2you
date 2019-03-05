@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
+
 import Home from "../home/Home.js";
 import Calendar from "../calendar/Calendar.js";
 import Login from "../login/Login.js";
 import Reservations from "../reservations/Reservations.js";
 import Robot from "../robot/Robot";
+// import Splash from '../splash/Splash.js';
+// <Route path="/splash" component={Splash} />
 
 class Content extends Component {
   render() {
