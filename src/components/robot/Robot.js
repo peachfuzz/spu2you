@@ -25,38 +25,41 @@ class Robot extends Component {
     };
     this.startVid = this.startVid.bind(this);
   }
-
   startVid() {
     var video = document.querySelector("#videoElement"); //for camera access
     if (navigator.mediaDevices.getUserMedia) {
-      // if (this.state.videoAccess === true) {
-      //   navigator.mediaDevices
-      //     .getUserMedia({ video: false, audio: false })
-      //     .then(function(stream) {
-      //       console.log("Vid off");
-      //       this.setState({ videoAccess: false });
-      //     });
-      // } else if (this.state.videoAccess === false) {
+      //make this use state bc currently, you're turning on stream twice
+      //get rid of here section
       navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
+        .getUserMedia({ video: true }) //doens't work with audio. Maybe make them separate??
         .then(function(stream) {
-          if (video.srcObject === "" || video.srcObject === null)
-            video.srcObject = stream;
-          else {
-            // let tracks = video.srcObject.stream.getTracks();
-
-            // tracks.forEach(function(track) {
-            //   track.stop();
-            // });
-            video.srcObject = null;
+          if (video.srcObject === "" || video.srcObject === null) {
+            video.srcObject = stream; //start recording
+            console.log(video.srcObject);
+          } else if (
+            video.srcObject !== "" ||
+            video.srcObject.active === true
+          ) {
+            //here
+            var tracks = stream.getTracks()[0]; //stop recording, currently stops display but keeps recording
+            tracks.stop();
             console.log("off");
+            tracks = null;
+            //here
+
+            video.srcObject.getTracks()[0].stop(); //this workssssss yassss
+            video.srcObject = null; //no longer displayed
+            video.pause();
+            video.src = null;
+            video.src = "";
           }
         })
         .catch(function(error) {
           console.log("Something went wrong!");
           console.log(error);
         });
-      this.setState({ videoAccess: true });
+      //else turn it off
+      // this.setState({ videoAccess: true });
       // }
     }
   }
@@ -78,6 +81,7 @@ class Robot extends Component {
           allowFullScreen
         /> */}
         <video autoPlay={true} id="videoElement" width="450px" muted="muted" />
+        <br />
         <Button text="Start Video" onClick={this.startVid} />
         <br />
         {this.renderKeyCombo()}
