@@ -5,6 +5,8 @@ import Calendar from "../calendar/Calendar.js";
 import Login from "../login/Login.js";
 import Reservations from "../reservations/Reservations.js";
 import Robot from "../robot/Robot";
+// import Splash from '../splash/Splash.js';
+// <Route path="/splash" component={Splash} />
 
 class Content extends Component {
   render() {
