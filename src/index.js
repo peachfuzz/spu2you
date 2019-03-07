@@ -5,11 +5,13 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 //aws stuff
-// import awsMobile from "./aws-exports";
-// import Amplify from "aws-amplify";
-// import { withAuthenticator } from "aws-amplify-react";
-// Amplify.configure(awsMobile);
-// const AppWithAuth = withAuthenticator(App);
+/* 
+import awsMobile from "./aws-exports";
+import Amplify from "aws-amplify";
+import { withAuthenticator } from "aws-amplify-react";
+Amplify.configure(awsMobile);
+const AppWithAuth = withAuthenticator(App);
+*/ 
 //aws stuff
 
 // ReactDOM.render(<AppWithAuth />, document.getElementById("root")); //this replaces v
