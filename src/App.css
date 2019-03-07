@@ -63,3 +63,11 @@ p {
   width: 250px;
   margin: 0;
 }
+
+#videoElement {
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg); /* Safari and Chrome */
+  -moz-transform: rotateY(180deg); /* Firefox */
+  height: 340px;
+  width: 340px;
+}

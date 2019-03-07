@@ -16,51 +16,56 @@ import Iframe from "react-iframe";
 */
 
 class Robot extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       combo: null,
-      videoAccess: false,
-      streaming: null
+      videoAccess: "Start Video",
+      mic: null
     };
     this.startVid = this.startVid.bind(this);
   }
-
   startVid() {
-    var video = document.querySelector("#videoElement"); //for camera access
+    var vid = document.querySelector("#videoElement"); //for camera access
+    var oof;
+    //var mediaRecorder; //= this.state.mic;
     if (navigator.mediaDevices.getUserMedia) {
-      // if (this.state.videoAccess === true) {
-      //   navigator.mediaDevices
-      //     .getUserMedia({ video: false, audio: false })
-      //     .then(function(stream) {
-      //       console.log("Vid off");
-      //       this.setState({ videoAccess: false });
-      //     });
-      // } else if (this.state.videoAccess === false) {
+      //make this use state bc currently, you're turning on stream twice
+      //get rid of here section
       navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
+        .getUserMedia({ video: true /*, audio: true*/ }) //doens't work with audio. Maybe make them separate??
         .then(function(stream) {
-          if (video.srcObject === "" || video.srcObject === null)
-            video.srcObject = stream;
-          else {
-            // let tracks = video.srcObject.stream.getTracks();
-
-            // tracks.forEach(function(track) {
-            //   track.stop();
-            // });
-            video.srcObject = null;
+          if (vid.srcObject === "" || vid.srcObject === null) {
+            vid.srcObject = stream; //start recording
+            console.log(vid.srcObject);
+            // mediaRecorder = new MediaRecorder(stream); //mic start
+            // mediaRecorder.start();
+            // console.log(mediaRecorder);
+          } else {
+            //here
+            var tracks = stream.getTracks()[0]; //stop recording, currently stops display but keeps recording
+            tracks.stop();
             console.log("off");
+            tracks = null;
+            //here
+            vid.srcObject.getTracks()[0].stop(); //this workssssss yassss
+            vid.srcObject = null; //no longer displayed
+            vid.pause();
+            vid.src = null;
+            vid.src = "";
+            // mediaRecorder.stop();
           }
         })
         .catch(function(error) {
           console.log("Something went wrong!");
           console.log(error);
+          oof = error;
         });
-      this.setState({ videoAccess: true });
-      // }
     }
+    if (this.state.videoAccess === "Start Video")
+      this.setState({ videoAccess: "End Video" });
+    else this.setState({ videoAccess: "Start Video" });
   }
-
   render() {
     return (
       <Card
@@ -77,8 +82,12 @@ class Robot extends Component {
           position="relative"
           allowFullScreen
         /> */}
-        <video autoPlay={true} id="videoElement" width="450px" muted="muted" />
-        <Button text="Start Video" onClick={this.startVid} />
+        <video autoPlay={true} id="videoElement" muted="muted" />
+        <br />
+        <Button
+          text={this.state.videoAccess.toString()}
+          onClick={this.startVid}
+        />
         <br />
         {this.renderKeyCombo()}
       </Card>
