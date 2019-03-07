@@ -27,40 +27,27 @@ class Robot extends Component {
   }
   startVid() {
     var vid = document.querySelector("#videoElement"); //for camera access
-    var oof;
-    //var mediaRecorder; //= this.state.mic;
     if (navigator.mediaDevices.getUserMedia) {
-      //make this use state bc currently, you're turning on stream twice
-      //get rid of here section
-      navigator.mediaDevices
-        .getUserMedia({ video: true /*, audio: true*/ }) //doens't work with audio. Maybe make them separate??
-        .then(function(stream) {
-          if (vid.srcObject === "" || vid.srcObject === null) {
+      //checking if there's already video/audio playing
+      if (vid.srcObject === "" || vid.srcObject === null) {
+        navigator.mediaDevices
+          .getUserMedia({ video: true, audio: true }) //doens't work with audio. Maybe make them separate??
+          .then(function(stream) {
             vid.srcObject = stream; //start recording
             console.log(vid.srcObject);
-            // mediaRecorder = new MediaRecorder(stream); //mic start
-            // mediaRecorder.start();
-            // console.log(mediaRecorder);
-          } else {
-            //here
-            var tracks = stream.getTracks()[0]; //stop recording, currently stops display but keeps recording
-            tracks.stop();
-            console.log("off");
-            tracks = null;
-            //here
-            vid.srcObject.getTracks()[0].stop(); //this workssssss yassss
-            vid.srcObject = null; //no longer displayed
-            vid.pause();
-            vid.src = null;
-            vid.src = "";
-            // mediaRecorder.stop();
-          }
-        })
-        .catch(function(error) {
-          console.log("Something went wrong!");
-          console.log(error);
-          oof = error;
-        });
+          })
+          .catch(function(error) {
+            console.log("Something went wrong!");
+            console.log(error);
+          });
+      } else {
+        console.log("off");
+        vid.srcObject.getTracks()[0].stop(); //turning off vid
+        vid.srcObject.getTracks()[1].stop(); //turning off mic
+        vid.srcObject = null; //no longer displayed
+        vid.src = null;
+        vid.src = "";
+      }
     }
     if (this.state.videoAccess === "Start Video")
       this.setState({ videoAccess: "End Video" });
@@ -73,15 +60,7 @@ class Robot extends Component {
         onBlur={this.handleBlur}
         tabIndex={0}
       >
-        {/* <Iframe
-          url="http://www.youtube.com/embed/xDMP3i36naA"
-          width="450px"
-          id="myId"
-          className="myClassname"
-          display="initial"
-          position="relative"
-          allowFullScreen
-        /> */}
+        {/* <Iframe url="ohmnilabs.com" display="initial" allowFullScreen /> */}
         <video autoPlay={true} id="videoElement" muted="muted" />
         <br />
         <Button
@@ -89,7 +68,8 @@ class Robot extends Component {
           onClick={this.startVid}
         />
         <br />
-        {this.renderKeyCombo()}
+        <br />
+        <div className="key-combo">{this.renderKeyCombo()}</div>
       </Card>
     );
   }
