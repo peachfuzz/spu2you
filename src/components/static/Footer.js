@@ -15,7 +15,7 @@ class Footer extends Component {
   render() {
     return (
       <div className="App-footer">
-        <Navbar>
+        <Navbar className="Nav-modified">
           <NavbarGroup align={Alignment.CENTER}>
             <AnchorButton
               text="About"

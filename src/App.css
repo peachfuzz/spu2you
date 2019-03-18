@@ -22,6 +22,7 @@ body {
   color: white;
 }
 
+/* change me to fix transparency */ 
 .App-footer {
   height: 50px;
   margin-top: 25px;
@@ -31,6 +32,11 @@ body {
   width: 100%;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.Nav-modified {
+  opacity: 1 !important;
+  background-color: rgba(0,0,0,0.6) !important;
 }
 
 .App-link {
@@ -83,13 +89,10 @@ p {
   position: relative;
 }
 
-/* 
-How to center div over image: 
-https://www.sitepoint.com/css-center-position-absolute-div/
-*/
 .Splash-overlay {
   position: absolute;
   z-index: 1;
+  max-width: 100%;
   width: 400px;
   height: 100px;
   top: 10px;
@@ -105,9 +108,9 @@ https://www.sitepoint.com/css-center-position-absolute-div/
 }
 
 .Splash-image {
-  max-width:130%;
+  width:110%;
   height:auto;
-  max-height:130%;
+  height:110%;
   overflow: hidden;
   z-index: 0;
 }
