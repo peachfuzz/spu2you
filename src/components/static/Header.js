@@ -25,16 +25,15 @@ class Header extends Component {
             {/* className={Classes.DARK} */}
             <NavbarGroup align={Alignment.LEFT}>
               <div className="header_logo">
-                <img src={logoImage} className="w50-h50" alt="logo" />
+                <img src={logoImage} className="w50-h50" alt="logo" onClick={() => this.props.history.push("/")}/>
               </div>
-              <NavbarHeading>Virtual Student</NavbarHeading>
-              <NavbarDivider />
               <AnchorButton
-                text="Home"
+                text="Virtual Student"
                 minimal
-                icon="home"
+                large
                 onClick={() => this.props.history.push("/")}
               />
+              <NavbarDivider />
               <AnchorButton
                 text="Create Reservation"
                 minimal
