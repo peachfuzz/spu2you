@@ -19,7 +19,7 @@ class App extends Component {
           <Header/>
           {/* <SideMenu/> */}
           <Content/>
-          <Footer/>
+          {/* <Footer/> */}
         </div>
       </Router>
     );
