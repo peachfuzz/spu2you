@@ -22,6 +22,23 @@ body {
   color: white;
 }
 
+/* change me to fix transparency */ 
+.App-footer {
+  height: 50px;
+  margin-top: 25px;
+  position: absolute;
+  flex-direction: row;
+  bottom: 0;
+  width: 100%;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.Nav-modified {
+  opacity: 1 !important;
+  background-color: rgba(0,0,0,0.6) !important;
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -39,8 +56,8 @@ p {
   color: white;
 }
 
+/* removed:  "width: 600px;" */ 
 .content {
-  width: 600px;
   margin: auto;
 }
 
@@ -54,15 +71,42 @@ p {
   min-width: 432px;
 }
 
+.App-menu {
+  width: 250px;
+  margin: 0;
+}
+
+.Footer-link-style {
+  text-decoration: none;
+  color: white;
+
+}
+
+.Splash {
+  width:100vw;
+  height:100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.Splash-overlay {
+  position: absolute;
+  z-index: 1;
+  max-width: 100%;
+  width: 400px;
+  height: 100px;
+  top: 10px;
+  left: 50%;
+  margin-left: -200px;
+  padding-top: 15%;
+}
+
+/* Image sizing */ 
 .w50-h50 {
   width: 50px;
   height: 50px;
 }
 
-.App-menu {
-  width: 250px;
-  margin: 0;
-}
 
 #videoElement {
   transform: rotateY(180deg);
@@ -71,3 +115,16 @@ p {
   height: 340px;
   width: 340px;
 }
+
+.Splash-image {
+  width:110%;
+  height:auto;
+  height:110%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.small {
+  height: 10px;
+}
+

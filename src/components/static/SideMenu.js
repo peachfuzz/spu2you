@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import { Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, withRouter } from "react-router-dom";
 //docs: https://blueprintjs.com/docs/#blueprint
 
 class SideMenu extends Component {
   render() {
-    return (
+    if (this.props.location.pathname == "/splash") {
+      return <div />;
+    }
+    else {
+      return (
       <div className="App-menu">
         <Menu>
           <MenuItem icon="home" onClick={this.handleClick} text="Home" />
@@ -27,7 +31,8 @@ class SideMenu extends Component {
         </Menu>
       </div>
     );
+    }
   }
 }
 
-export default SideMenu;
+export default withRouter(SideMenu);

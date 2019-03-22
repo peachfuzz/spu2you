@@ -20,6 +20,11 @@ class App extends Component {
           {/* <SideMenu /> */}
           <Content />
           <Footer />
+
+          {/* <Header/>
+          <SideMenu/>
+          <Content/>
+           <Footer/> */}
         </div>
       </Router>
     );

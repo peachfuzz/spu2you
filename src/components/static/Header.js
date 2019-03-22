@@ -9,12 +9,14 @@ import {
 } from "@blueprintjs/core";
 import { BrowserRouter as Router, withRouter } from "react-router-dom";
 import { Auth } from "aws-amplify";
+
 //docs: https://blueprintjs.com/docs/#blueprint
 
 const logoImage = require("../../images/virtual_student_logo_placeholder.png");
 
 class Header extends Component {
   render() {
+
     return (
       <div className="App-header">
         <Navbar>
@@ -65,6 +67,59 @@ class Header extends Component {
         </Navbar>
       </div>
     );
+
+    /* make this if statement shorter */
+    
+    /*if ((this.props.location.pathname == "/splash") || (this.props.location.pathname == "/robot") ) {
+      return <div />;
+    }
+    else {
+      return (
+        <div className="App-header">
+          <Navbar>
+            { className={Classes.DARK}}
+            <NavbarGroup align={Alignment.LEFT}>
+              <div className="header_logo">
+                <img src={logoImage} className="w50-h50" alt="logo" onClick={() => this.props.history.push("/")}/>
+              </div>
+              <AnchorButton
+                text="Virtual Student"
+                minimal
+                large
+                onClick={() => this.props.history.push("/")}
+              />
+              <NavbarDivider />
+              <AnchorButton
+                text="Create Reservation"
+                minimal
+                icon="calendar"
+                onClick={() => this.props.history.push("/calendar")}
+              />
+              <AnchorButton
+                text="My Reservations"
+                minimal
+                icon="calendar"
+                onClick={() => this.props.history.push("/reservation")}
+              />
+              <AnchorButton
+                text="Robot"
+                minimal
+                icon="rig"
+                onClick={() => this.props.history.push("/robot")}
+              />
+            </NavbarGroup>
+            <NavbarGroup align={Alignment.RIGHT}>
+              <AnchorButton
+                text="Log Out"
+                minimal
+                rightIcon="log-in"
+                onClick={() => this.props.history.push("/splash")}
+              />
+            </NavbarGroup>
+          </Navbar>
+        </div>
+      );
+    }*/
   }
 }
 
