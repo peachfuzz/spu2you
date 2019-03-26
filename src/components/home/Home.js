@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Card, H5, Button } from "@blueprintjs/core";
-import { BrowserRouter as Router, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 class Home extends Component {
   render() {

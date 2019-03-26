@@ -1,18 +1,11 @@
 import React, { Component } from "react";
-import {
-  Code,
-  getKeyComboString,
-  KeyCombo,
-  Card,
-  Button
-} from "@blueprintjs/core";
-import Iframe from "react-iframe";
+import { getKeyComboString, KeyCombo, Card, Button } from "@blueprintjs/core";
 
-/* TODO:
-  arrows move
-  s mutes sound
-  m mutes mic
-  v mutes video
+/* 
+  todo: arrows move
+  todo: s mutes sound
+  todo: m mutes mic
+  todo: v mutes video
 */
 
 class Robot extends Component {
@@ -53,6 +46,7 @@ class Robot extends Component {
       this.setState({ videoAccess: "End Video" });
     else this.setState({ videoAccess: "Start Video" });
   }
+
   render() {
     return (
       <Card
@@ -82,7 +76,6 @@ class Robot extends Component {
       return (
         <>
           <KeyCombo combo={combo} />
-          <Code>{combo}</Code>
         </>
       );
     }
@@ -96,7 +89,7 @@ class Robot extends Component {
     this.setState({ combo });
   };
 
-  handleBlur = () => this.setState({ combo: null });
+  handleBlur = () => this.setState({ combo: null }); // sets to null when keypress!=down
 }
 
 export default Robot;

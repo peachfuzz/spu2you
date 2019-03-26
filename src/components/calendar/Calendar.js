@@ -4,7 +4,7 @@ import { Tag, Button, Card, Colors, Divider } from "@blueprintjs/core";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"; //css for the calendar
 import Moment from "react-moment";
 import "moment-timezone";
-import { BrowserRouter as Router, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 class Calendar extends Component {
   constructor(props) {
