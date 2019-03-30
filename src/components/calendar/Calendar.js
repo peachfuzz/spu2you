@@ -18,21 +18,26 @@ class Calendar extends Component {
   }
   render() {
     return (
-      <Card className="Calendar">
-        <DatePicker
-          shortcuts={false}
-          minDate={new Date()} //cannot reserve before today
-          maxDate={
-            new Date(new Date().setFullYear(new Date().getFullYear() + 1))
-          } //only allowed one year ahead of today
-          timePrecision
-          onChange={newDate => this.handleChange(newDate)}
-          value={this.state.selectedDate}
-          showActionsBar
-          style={{ color: Colors.BLUE1 }}
-        />
+      <Card className="calendar">
+        <div className="flex">
+          <DatePicker
+            shortcuts={false}
+            minDate={new Date()} //cannot reserve before today
+            maxDate={
+              new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+            } //only allowed one year ahead of today
+            onChange={newDate => this.handleChange(newDate)}
+            style={{ color: Colors.BLUE1 }}
+          />
+          <Divider />
+          <Card>
+            <h5>Date Selected</h5>
+            <Tag key={this.state.selectedDate} icon="calendar">
+              <Moment date={this.state.selectedDate} format="LLLL" />
+            </Tag>
+          </Card>
+        </div>
         <Divider />
-
         <Card style={{ background: Colors.BLUE2 }}>
           <h5>Date Selected</h5>
           <p>To confirm this date, click confirm</p>
