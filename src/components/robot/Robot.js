@@ -17,7 +17,29 @@ class Robot extends Component {
       mic: null
     };
     this.startVid = this.startVid.bind(this);
+    this.setNeckPosition = this.setNeckPosition.bind(this);
+    this.move = this.move.bind(this);
+    this.clickToLook = this.clickToLook;
   }
+
+  setNeckPosition() {
+    window.Ohmni.setNeckTorqueEnabled(1);
+    // setNeckPosition(300 =< pos =< 600, 80 =< speed =< 220)
+    //                  down        up    fast           slow
+    window.Ohmni.setNeckPosition(300, 100);
+  }
+
+  move() {
+    // Ohmni.move(-500, 500, 2000); // Rotate in place for two seconds
+    // Ohmni.move(700, 700, 1500); // Go forwards for 1.5 seconds
+    // Ohmni.move(-200, -200, 5000); // Go backwards slowly for 5 seconds
+    window.Ohmni.move(700, 700, 100); // Go forwards for .1 seconds
+  }
+
+  clickToLook() {
+    window.Ohmni.clickToLook();
+  }
+
   startVid() {
     var vid = document.querySelector("#videoElement"); //for camera access
     if (navigator.mediaDevices.getUserMedia) {
@@ -54,7 +76,6 @@ class Robot extends Component {
         onBlur={this.handleBlur}
         tabIndex={0}
       >
-        {/* <Iframe url="ohmnilabs.com" display="initial" allowFullScreen /> */}
         <video autoPlay={true} id="videoElement" muted="muted" />
         <br />
         <Button
