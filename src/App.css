@@ -40,13 +40,14 @@ p {
 }
 
 .content {
-  width: 600px;
+  width: 1000px;
   margin: auto;
 }
 
 .calendar {
   width: 550px;
   margin: auto;
+  display: flex;
 }
 
 .DayPicker-Month {
@@ -99,3 +100,5 @@ p {
   -webkit-transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
   transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
 }
+
+
