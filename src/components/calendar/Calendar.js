@@ -18,8 +18,8 @@ class Calendar extends Component {
   }
   render() {
     return (
-      <Card className="calendar">
-        <div className="flex">
+      <Card className="">
+        <div className="calendar">
           <DatePicker
             shortcuts={false}
             minDate={new Date()} //cannot reserve before today
@@ -31,7 +31,22 @@ class Calendar extends Component {
           />
           <Divider />
           <Card>
-            <h5>Date Selected</h5>
+            <h5>Available Times</h5>
+            <Tag key={this.state.selectedDate} icon="calendar">
+              <Moment date={this.state.selectedDate} format="LLLL" />
+            </Tag>
+            <Tag key={this.state.selectedDate} icon="calendar">
+              <Moment date={this.state.selectedDate} format="LLLL" />
+            </Tag>
+            <Tag key={this.state.selectedDate} icon="calendar">
+              <Moment date={this.state.selectedDate} format="LLLL" />
+            </Tag>
+            <Tag key={this.state.selectedDate} icon="calendar">
+              <Moment date={this.state.selectedDate} format="LLLL" />
+            </Tag>
+            <Tag key={this.state.selectedDate} icon="calendar">
+              <Moment date={this.state.selectedDate} format="LLLL" />
+            </Tag>
             <Tag key={this.state.selectedDate} icon="calendar">
               <Moment date={this.state.selectedDate} format="LLLL" />
             </Tag>
