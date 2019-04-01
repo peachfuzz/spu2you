@@ -18,7 +18,7 @@ class Calendar extends Component {
   }
   render() {
     return (
-      <Card className="">
+      <Card>
         <div className="calendar">
           <DatePicker
             shortcuts={false}
@@ -30,20 +30,8 @@ class Calendar extends Component {
             style={{ color: Colors.BLUE1 }}
           />
           <Divider />
-          <Card>
+          <Card className="side-cal">
             <h5>Available Times</h5>
-            <Tag key={this.state.selectedDate} icon="calendar">
-              <Moment date={this.state.selectedDate} format="LLLL" />
-            </Tag>
-            <Tag key={this.state.selectedDate} icon="calendar">
-              <Moment date={this.state.selectedDate} format="LLLL" />
-            </Tag>
-            <Tag key={this.state.selectedDate} icon="calendar">
-              <Moment date={this.state.selectedDate} format="LLLL" />
-            </Tag>
-            <Tag key={this.state.selectedDate} icon="calendar">
-              <Moment date={this.state.selectedDate} format="LLLL" />
-            </Tag>
             <Tag key={this.state.selectedDate} icon="calendar">
               <Moment date={this.state.selectedDate} format="LLLL" />
             </Tag>
