@@ -7,7 +7,7 @@ import {
   NavbarDivider,
   NavbarHeading
 } from "@blueprintjs/core";
-import { BrowserRouter as Router, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Auth } from "aws-amplify";
 //docs: https://blueprintjs.com/docs/#blueprint
 

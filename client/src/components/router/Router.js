@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 
 import Home from "../home/Home.js";
 import Calendar from "../calendar/Calendar.js";
@@ -14,11 +14,13 @@ class Content extends Component {
     return (
       <div className="content">
         <div className="inner-content">
-          <Route exact path="/" component={Home} />
-          <Route path="/login" component={Login} />
-          <Route path="/calendar" component={Calendar} />
-          <Route path="/robot" component={Robot} />
-          <Route path="/reservations" component={Reservations} />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/login" component={Login} />
+            <Route path="/calendar" component={Calendar} />
+            <Route path="/robot" component={Robot} />
+            <Route path="/reservations" component={Reservations} />
+          </Switch>
         </div>
       </div>
     );

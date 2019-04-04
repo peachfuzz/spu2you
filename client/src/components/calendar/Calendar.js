@@ -4,7 +4,7 @@ import { Tag, Button, Card, Colors, Divider } from "@blueprintjs/core";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"; //css for the calendar
 import Moment from "react-moment";
 import "moment-timezone";
-import { BrowserRouter as Router, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 class Calendar extends Component {
   constructor(props) {
@@ -18,21 +18,29 @@ class Calendar extends Component {
   }
   render() {
     return (
-      <Card className="Calendar">
-        <DatePicker
-          shortcuts={false}
-          minDate={new Date()} //cannot reserve before today
-          maxDate={
-            new Date(new Date().setFullYear(new Date().getFullYear() + 1))
-          } //only allowed one year ahead of today
-          timePrecision
-          onChange={newDate => this.handleChange(newDate)}
-          value={this.state.selectedDate}
-          showActionsBar
-          style={{ color: Colors.BLUE1 }}
-        />
+      <Card>
+        <div className="calendar">
+          <DatePicker
+            shortcuts={false}
+            minDate={new Date()} //cannot reserve before today
+            maxDate={
+              new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+            } //only allowed one year ahead of today
+            onChange={newDate => this.handleChange(newDate)}
+            style={{ color: Colors.BLUE1 }}
+          />
+          <Divider />
+          <Card className="side-cal">
+            <h5>Available Times</h5>
+            <Tag key={this.state.selectedDate} icon="calendar">
+              <Moment date={this.state.selectedDate} format="LLLL" />
+            </Tag>
+            <Tag key={this.state.selectedDate} icon="calendar">
+              <Moment date={this.state.selectedDate} format="LLLL" />
+            </Tag>
+          </Card>
+        </div>
         <Divider />
-
         <Card style={{ background: Colors.BLUE2 }}>
           <h5>Date Selected</h5>
           <p>To confirm this date, click confirm</p>
