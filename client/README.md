@@ -66,3 +66,7 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+Version Control Plan: Currently we have two branches: aws-support branch and master branch. Our plan is to create 4 branches off of the aws-support branch for each team member, to ensure that we can each make commits without disrupting each other's work. Everyone will be working on separate project components so that we don't create rebasing issues. There is a rule in place that won't allow any members make a merge to a branch without another member reviewing the code first. Every member is responsible for fixing any rebasing issues they create. This helps to prevent merge conflicts.
+
+All members are required to use concise but descriptive commit messages. Each message should clearly describe the changes that were made, as fits within the character count.
