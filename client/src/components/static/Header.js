@@ -17,9 +17,8 @@ class Header extends Component {
   render() {
     return (
       <div className="App-header">
-        <Navbar>
-          {/* className={Classes.DARK} */}
-          <NavbarGroup align={Alignment.LEFT}>
+        <Navbar className="container">
+          <NavbarGroup className="container" align={Alignment.LEFT}>
             <div className="header_logo">
               <img src={logoImage} className="w50-h50" alt="logo" />
             </div>
@@ -50,7 +49,7 @@ class Header extends Component {
               onClick={() => this.props.history.push("/robot")}
             />
           </NavbarGroup>
-          <NavbarGroup align={Alignment.RIGHT}>
+          <NavbarGroup className="container" align={Alignment.RIGHT}>
             <AnchorButton
               text="Log out"
               minimal
