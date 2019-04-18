@@ -23,7 +23,7 @@ class Header extends Component {
             <div className="header_logo">
               <img src={logoImage} className="w50-h50" alt="logo" />
             </div>
-            <NavbarHeading>Virtual Student</NavbarHeading>
+            <NavbarHeading><ul>Virtual Student</ul></NavbarHeading>
             <NavbarDivider />
             <AnchorButton
               text="Home"
