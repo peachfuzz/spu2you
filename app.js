@@ -101,6 +101,14 @@ var findByOid = function(oid, fn) {
 //
 // To do prototype (6), passReqToCallback must be set to true in the config.
 //-----------------------------------------------------------------------------
+var env = process.argv[2] || "dev";
+var base_url = "https://spu2you.com";
+switch (env) {
+  case "dev":
+    base_url = "http://localhost:3000";
+    break;
+}
+
 passport.use(
   new OIDCStrategy(
     {
@@ -108,7 +116,7 @@ passport.use(
       clientID: config.creds.clientID,
       responseType: config.creds.responseType,
       responseMode: config.creds.responseMode,
-      redirectUrl: config.creds.redirectUrl,
+      redirectUrl: base_url + config.creds.redirectUrl,
       allowHttpForRedirectUrl: config.creds.allowHttpForRedirectUrl,
       clientSecret: config.creds.clientSecret,
       validateIssuer: config.creds.validateIssuer,
@@ -215,6 +223,9 @@ function ensureAuthenticated(req, res, next) {
 
 app.get("/", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
+  // var prot = req.protocol;
+  // var host = req.get("host");
+  // console.log(prot + "://" + host);
 });
 
 app.get("/calendar", ensureAuthenticated, function(req, res) {
@@ -290,7 +301,7 @@ app.post(
 app.get("/logout", function(req, res) {
   req.session.destroy(function(err) {
     req.logOut();
-    res.redirect(config.destroySessionUrl);
+    res.redirect(config.destroySessionUrl + base_url);
   });
 });
 
