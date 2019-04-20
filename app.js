@@ -33,22 +33,23 @@ var expressSession = require("express-session"); // idk...
 var bodyParser = require("body-parser"); // causes infinite redirect if removed
 var methodOverride = require("method-override");
 var passport = require("passport");
-// var util = require("util"); // idk...
-var bunyan = require("bunyan"); // idk...
 var config = require("./config");
+// const request = require("request");
+// var util = require("util"); // idk...
+// var bunyan = require("bunyan"); // idk...
 
 // set up database for express session
-var MongoStore = require("connect-mongo")(expressSession); // idk...
-var mongoose = require("mongoose"); // idk...
+// var MongoStore = require("connect-mongo")(expressSession); // idk...
+// var mongoose = require("mongoose"); // idk...
 
 // Start QuickStart here
 
 var OIDCStrategy = require("passport-azure-ad").OIDCStrategy;
 
 // idk...
-var log = bunyan.createLogger({
-  name: "Microsoft OIDC Example Web Application"
-});
+// var log = bunyan.createLogger({
+//   name: "Microsoft OIDC Example Web Application"
+// });
 
 /******************************************************************************
  * Set up passport in the app
@@ -76,7 +77,7 @@ var users = [];
 var findByOid = function(oid, fn) {
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
-    log.info("we are using user: ", user);
+    // log.info("we are using user: ", user);
     if (user.oid === oid) {
       return fn(null, user);
     }
@@ -158,36 +159,33 @@ passport.use(
 //-----------------------------------------------------------------------------
 var app = express();
 
-// app.set("views", __dirname + "/views");
-// app.set("view engine", "ejs");
 app.set("views", __dirname + "/client/build");
-// app.set("view engine", "js");
 app.use(express.logger()); // idk...
 app.use(methodOverride());
 app.use(cookieParser());
 
 // set up session middleware
-if (config.useMongoDBSessionStore) {
-  mongoose.connect(config.databaseUri);
-  app.use(
-    express.session({
-      secret: "secret",
-      cookie: { maxAge: config.mongoDBSessionMaxAge * 1000 },
-      store: new MongoStore({
-        mongooseConnection: mongoose.connection,
-        clear_interval: config.mongoDBSessionMaxAge
-      })
-    })
-  );
-} else {
-  app.use(
-    expressSession({
-      secret: "keyboard cat",
-      resave: true,
-      saveUninitialized: false
-    })
-  );
-}
+// if (config.useMongoDBSessionStore) {
+//   mongoose.connect(config.databaseUri);
+//   app.use(
+//     express.session({
+//       secret: "secret",
+//       cookie: { maxAge: config.mongoDBSessionMaxAge * 1000 }
+// store: new MongoStore({
+//   mongooseConnection: mongoose.connection,
+//   clear_interval: config.mongoDBSessionMaxAge
+// })
+//     })
+//   );
+// } else {
+app.use(
+  expressSession({
+    secret: "keyboard cat", // is this safe???
+    resave: true,
+    saveUninitialized: false
+  })
+);
+// }
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -197,8 +195,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
 app.use(express.static(__dirname + "/client/build")); // ???
-// app.use(express.static(__dirname + '/public'));
-app.set("views", __dirname + "/client/build");
 app.engine("html", require("ejs").renderFile);
 app.set("view engine", "html");
 
@@ -213,21 +209,29 @@ app.set("view engine", "html");
 // `ensureAuthenticated`. It checks if there is an user stored in session, if not
 // it will call `passport.authenticate` to ask for user to log in.
 //-----------------------------------------------------------------------------
+
+var user_email = "";
+var user_info;
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  console.log("trying to redirect");
   res.redirect("/login");
 }
 
 app.get("/", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
+  user_info = req.user._json;
+  user_email = req.user._json.email;
   // var prot = req.protocol;
   // var host = req.get("host");
   // console.log(prot + "://" + host);
 });
 
+app.get("/api/user", ensureAuthenticated, function(req, res) {
+  console.log("USER_EMAIL DUMBASS");
+  res.json(user_email);
+});
 app.get("/calendar", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
 });
@@ -237,16 +241,10 @@ app.get("/reservation", ensureAuthenticated, function(req, res) {
 app.get("/robot", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
 });
-// app.get("*", ensureAuthenticated, (req, res) => { // this doesn't work :(
-//   res.sendFile(path.join(__dirname + "/client/build/index.html"));
-// });
-
-// '/account' is only available to logged in user
 
 app.get(
   "/login",
   function(req, res, next) {
-    console.log("failed auth");
     passport.authenticate("azuread-openidconnect", {
       response: res, // required
       resourceURL: config.resourceURL, // optional. Provide a value if you want to specify the resource.
@@ -255,8 +253,7 @@ app.get(
     })(req, res, next);
   },
   function(req, res) {
-    console.log("trying to auth");
-    log.info("Login was called in the Sample");
+    // log.info("Login was called in the Sample");
     res.redirect("/");
   }
 );
@@ -274,7 +271,7 @@ app.get(
     })(req, res, next);
   },
   function(req, res) {
-    log.info("We received a return from AzureAD.");
+    // log.info("We received a return from AzureAD.");
     res.redirect("/");
   }
 );
@@ -292,7 +289,7 @@ app.post(
     })(req, res, next);
   },
   function(req, res) {
-    log.info("We received a return from AzureAD.");
+    // log.info("We received a return from AzureAD.");
     res.redirect("/");
   }
 );
@@ -305,49 +302,36 @@ app.get("/logout", function(req, res) {
   });
 });
 
+// needs to be at the bottom
+// still doesn't work...
+// app.get("*", function(req, res) {
+//   res.render("index", { user: req.user });
+// });
+
 app.listen(3000);
 
-// ! old app.js
+// ! example sql connection
 /*
-const express = require("express");
-const path = require("path");
-const request = require("request");
-const router = express.Router();
-const app = express();
+var mysql = require("mysql");
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, "client/build")));
-app.use("/", router);
-
-// var mysql = require("mysql");
-
-// var connection = mysql.createConnection({
-//   host: process.env.RDS_HOSTNAME,
-//   user: process.env.RDS_USERNAME,
-//   password: process.env.RDS_PASSWORD,
-//   port: process.env.RDS_PORT
-// });
-
-// connection.connect(function(err) {
-//   if (err) {
-//     console.error("Database connection failed: " + err.stack);
-//     return;
-//   }
-
-//   console.log("Connected to database.");
-// });
-
-// connection.end();
-
-// The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client/build/index.html"));
+var connection = mysql.createConnection({
+  host: process.env.RDS_HOSTNAME,
+  user: process.env.RDS_USERNAME,
+  password: process.env.RDS_PASSWORD,
+  port: process.env.RDS_PORT
 });
 
-const port = process.env.PORT || 5000;
-app.listen(port);
+connection.connect(function(err) {
+  if (err) {
+    console.error("Database connection failed: " + err.stack);
+    return;
+  }
 
-console.log(`Backend listening on ${port}`);
+  console.log("Connected to database.");
+});
 
+connection.end();
+
+The "catchall" handler: for any request that doesn't
+match one above, send back React's index.html file.
 */
