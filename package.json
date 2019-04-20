@@ -19,5 +19,8 @@
     "negotiator": "^0.6.1",
     "passport": "*",
     "passport-azure-ad": "^3.0.12"
+  },
+  "scripts": {
+    "start": "node app.js"
   }
 }
