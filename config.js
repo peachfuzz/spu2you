@@ -18,7 +18,7 @@ exports.creds = {
   responseMode: "form_post",
 
   // Required, the reply URL registered in AAD for your app
-  redirectUrl: "http://localhost:3000/auth/openid/return",
+  redirectUrl: "/auth/openid/return",
 
   // Required if we use http for redirectUrl
   allowHttpForRedirectUrl: true,
@@ -77,12 +77,12 @@ exports.resourceURL = "https://graph.windows.net";
 
 // The url you need to go to destroy the session with AAD
 exports.destroySessionUrl =
-  "https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=http://localhost:3000";
+  "https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri="; // redirect_url value will be added in app.js based on dev/prod
 
 // If you want to use the mongoDB session store for session middleware, set to true; otherwise we will use the default
 // session store provided by express-session.
 // Note that the default session store is designed for development purpose only.
-exports.useMongoDBSessionStore = false;
+// exports.useMongoDBSessionStore = false;
 
 // If you want to use mongoDB, provide the uri here for the database.
 // exports.databaseUri = "mongodb://localhost/OIDCStrategy";
