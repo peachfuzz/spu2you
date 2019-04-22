@@ -232,12 +232,23 @@ app.get("/api/user", ensureAuthenticated, function(req, res) {
   console.log("USER_EMAIL DUMBASS");
   res.json(user_email);
 });
+
+app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
+  // here goes an azure function
+});
+
+app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
+  // here goes an azure function
+});
+
 app.get("/calendar", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
 });
+
 app.get("/reservation", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
 });
+
 app.get("/robot", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
 });
