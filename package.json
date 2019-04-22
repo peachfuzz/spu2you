@@ -22,6 +22,7 @@
   },
   "scripts": {
     "start": "nodemon app.js",
-    "client": "npm run build --prefix ./client"
+    "c-build": "npm run build --prefix ./client",
+    "c-install": "npm install --prefix ./client"
   }
 }
