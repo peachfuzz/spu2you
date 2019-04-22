@@ -1,5 +1,5 @@
 {
-  "name": "passport-azure-ad-login-oidc",
+  "name": "spu2you",
   "version": "0.0.1",
   "dependencies": {
     "assert-plus": "*",
@@ -21,6 +21,7 @@
     "passport-azure-ad": "^3.0.12"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js",
+    "client": "npm run build --prefix ./client"
   }
 }
