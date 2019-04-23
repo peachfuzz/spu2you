@@ -29,7 +29,7 @@ class Home extends Component {
     return (
       <div className="Home">
         <Card>
-          <H5>Welcome to spu2you{this.state.email}</H5>
+          <H5>Welcome to spu2you, {this.state.email}</H5>
           <p>
             You can start reserving telecommuting robots by clicking reserve.
           </p>
