@@ -245,7 +245,7 @@ app.get("/calendar", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
 });
 
-app.get("/reservation", ensureAuthenticated, function(req, res) {
+app.get("/reservations", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
 });
 

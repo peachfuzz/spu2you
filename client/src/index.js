@@ -6,9 +6,6 @@ import * as serviceWorker from "./serviceWorker";
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
-//hosted at -> http://virtualstudent-hosting-mobilehub-1143763081.s3-website.us-east-1.amazonaws.com/
-//can get personal instance hosted here -> http://virtualstudent-hosting-mobilehub-1143763081.s3-website.us-east-1.amazonaws.com/
-
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
