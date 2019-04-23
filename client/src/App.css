@@ -1,6 +1,7 @@
 body {
   background-color: #282c34;
   color: white;
+  min-width: 475px;
 }
 
 .App {
@@ -126,4 +127,14 @@ p {
   padding: 20px;
   -webkit-transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
   transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.bp3-navbar,
+.bp3-navbar-group {
+  height: auto !important;
 }
