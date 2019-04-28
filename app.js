@@ -320,29 +320,3 @@ app.get("/logout", function(req, res) {
 // });
 
 app.listen(3000);
-
-// ! example sql connection
-/*
-var mysql = require("mysql");
-
-var connection = mysql.createConnection({
-  host: process.env.RDS_HOSTNAME,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-  port: process.env.RDS_PORT
-});
-
-connection.connect(function(err) {
-  if (err) {
-    console.error("Database connection failed: " + err.stack);
-    return;
-  }
-
-  console.log("Connected to database.");
-});
-
-connection.end();
-
-The "catchall" handler: for any request that doesn't
-match one above, send back React's index.html file.
-*/
