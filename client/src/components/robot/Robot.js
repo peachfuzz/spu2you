@@ -85,7 +85,7 @@ class Robot extends Component {
         <br />
         <br />
         <div className="key-combo">{this.renderKeyCombo()}</div>
-        <embed src="https://app.ohmnilabs.com" className />
+        {/* <embed src="https://app.ohmnilabs.com" className /> */}
       </Card>
     );
   }
