@@ -6,7 +6,7 @@
 
 <script>
 function checkDate(){
-var str;
+var str; //= SELECT CONVERT(date, getdate());
 var res;
 }
 // i need to check the format again but here are if statements for now that validate the string for correct months and days
@@ -77,6 +77,16 @@ if(month == "1"){
     else if(month == "12"){
       newMonth == "Dec";
     }
+    
+    
+function checkDate(){
+}
+ 
+function checkLeapYear(){
+}
+
+function checkTime(){
+}
 </script>
 
 </body>
