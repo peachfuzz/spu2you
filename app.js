@@ -34,7 +34,7 @@ var bodyParser = require("body-parser"); // causes infinite redirect if removed
 var methodOverride = require("method-override");
 var passport = require("passport");
 var config = require("./config");
-// const request = require("request");
+const request = require("request");
 // var util = require("util"); // idk...
 // var bunyan = require("bunyan"); // idk...
 
@@ -104,6 +104,7 @@ var findByOid = function(oid, fn) {
 //-----------------------------------------------------------------------------
 var env = process.argv[2] || "dev";
 var base_url = "https://spu2you.com";
+
 switch (env) {
   case "dev":
     base_url = "http://localhost:3000";
@@ -233,14 +234,6 @@ app.get("/api/user", ensureAuthenticated, function(req, res) {
   res.json(user_email);
 });
 
-app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
-  // here goes an azure function
-});
-
-app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
-  // here goes an azure function
-});
-
 app.get("/calendar", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
 });
@@ -313,6 +306,40 @@ app.get("/logout", function(req, res) {
   });
 });
 
+app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
+  // /azure/delete_reservations?date=12-12-19
+
+  var options = {
+    url: "*insert url* ?func=delete_reservation" + req.query.date
+  };
+
+  request.get(options, (error, response, body) => {
+    res.json(body);
+  });
+});
+
+app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
+  // /azure/get_reservations?date=12-12-19
+  var options = {
+    url: "*insert url* ?func=getAllTimeSlots" + req.query.date
+  };
+
+  request.get(options, (error, response, body) => {
+    res.json(body);
+  });
+});
+
+app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
+  // /azure/post_reservations?date=12-12-19
+  var options = {
+    url: "*insert url* ?func=post_reservation" + req.query.date
+  };
+
+  request.get(options, (error, response, body) => {
+    res.json(body);
+  });
+});
+
 // needs to be at the bottom
 // still doesn't work...
 // app.get("*", function(req, res) {
@@ -320,29 +347,3 @@ app.get("/logout", function(req, res) {
 // });
 
 app.listen(3000);
-
-// ! example sql connection
-/*
-var mysql = require("mysql");
-
-var connection = mysql.createConnection({
-  host: process.env.RDS_HOSTNAME,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-  port: process.env.RDS_PORT
-});
-
-connection.connect(function(err) {
-  if (err) {
-    console.error("Database connection failed: " + err.stack);
-    return;
-  }
-
-  console.log("Connected to database.");
-});
-
-connection.end();
-
-The "catchall" handler: for any request that doesn't
-match one above, send back React's index.html file.
-*/
