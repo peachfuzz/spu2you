@@ -3,6 +3,7 @@ import { DatePicker } from "@blueprintjs/datetime";
 import { Tag, Button, Card, Colors, Divider } from "@blueprintjs/core";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"; //css for the calendar
 import Moment from "react-moment";
+import moment from "moment";
 import "moment-timezone";
 import { withRouter } from "react-router-dom";
 
@@ -10,12 +11,22 @@ class Calendar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDate: new Date()
+      selectedDate: new Date(),
+      selectedTime: ""
     };
   }
+
   handleChange(date) {
-    this.setState({ selectedDate: date });
+    this.setState({ selectedDate: date }, () => {
+      var momentDate = moment(this.state.selectedDate);
+      var url =
+        "/azure/get_reservations?date=" + momentDate.format("YYYY-MM-DD");
+      console.log(momentDate.format("YYYY-MM-DD"));
+      console.log(url);
+      fetch(url);
+    });
   }
+
   render() {
     return (
       <Card>
@@ -32,9 +43,7 @@ class Calendar extends Component {
           <Divider />
           <Card className="side-cal">
             <h5>Available Times</h5>
-            <Tag key={this.state.selectedDate} icon="calendar">
-              <Moment date={this.state.selectedDate} format="LLLL" />
-            </Tag>
+            {/* map stuff here */}
             <Tag key={this.state.selectedDate} icon="calendar">
               <Moment date={this.state.selectedDate} format="LLLL" />
             </Tag>

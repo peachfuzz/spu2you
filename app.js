@@ -34,7 +34,7 @@ var bodyParser = require("body-parser"); // causes infinite redirect if removed
 var methodOverride = require("method-override");
 var passport = require("passport");
 var config = require("./config");
-// const request = require("request");
+const request = require("request");
 // var util = require("util"); // idk...
 // var bunyan = require("bunyan"); // idk...
 
@@ -104,6 +104,7 @@ var findByOid = function(oid, fn) {
 //-----------------------------------------------------------------------------
 var env = process.argv[2] || "dev";
 var base_url = "https://spu2you.com";
+
 switch (env) {
   case "dev":
     base_url = "http://localhost:3000";
@@ -233,14 +234,6 @@ app.get("/api/user", ensureAuthenticated, function(req, res) {
   res.json(user_email);
 });
 
-app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
-  // here goes an azure function
-});
-
-app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
-  // here goes an azure function
-});
-
 app.get("/calendar", ensureAuthenticated, function(req, res) {
   res.render("index", { user: req.user });
 });
@@ -310,6 +303,40 @@ app.get("/logout", function(req, res) {
   req.session.destroy(function(err) {
     req.logOut();
     res.redirect(config.destroySessionUrl + base_url);
+  });
+});
+
+app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
+  // /azure/delete_reservations?date=12-12-19
+
+  var options = {
+    url: "*insert url* ?func=delete_reservation" + req.query.date
+  };
+
+  request.get(options, (error, response, body) => {
+    res.json(body);
+  });
+});
+
+app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
+  // /azure/get_reservations?date=12-12-19
+  var options = {
+    url: "*insert url* ?func=getAllTimeSlots" + req.query.date
+  };
+
+  request.get(options, (error, response, body) => {
+    res.json(body);
+  });
+});
+
+app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
+  // /azure/post_reservations?date=12-12-19
+  var options = {
+    url: "*insert url* ?func=post_reservation" + req.query.date
+  };
+
+  request.get(options, (error, response, body) => {
+    res.json(body);
   });
 });
 
