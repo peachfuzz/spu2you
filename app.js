@@ -308,7 +308,8 @@ app.get("/logout", function(req, res) {
 
 app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
   // /azure/delete_reservations?date=12-12-19
-
+  var scrub = req.query.date;
+  scrub.replace("delete", "");
   var options = {
     url: "*insert url* ?func=delete_reservation" + req.query.date
   };
