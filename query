@@ -1,1 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
 
+<button onclick="checkDate()">Confirm Date</button>
+
+<script>
+function checkDate(){
+var str;
+var res;
+</script>
+</body>
+</html>
