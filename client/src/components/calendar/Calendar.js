@@ -19,9 +19,8 @@ class Calendar extends Component {
   handleChange(date) {
     this.setState({ selectedDate: date }, () => {
       var momentDate = moment(this.state.selectedDate);
-      var url =
-        "/azure/get_reservations?date=" + momentDate.format("YYYY-MM-DD");
-      console.log(momentDate.format("YYYY-MM-DD"));
+      var url = "/azure/get_reservations?date=" + momentDate.format("YYYYMMDD");
+      console.log(momentDate.format("YYYYMMDD"));
       console.log(url);
       fetch(url);
     });
