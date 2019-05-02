@@ -310,7 +310,26 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
   // /azure/delete_reservations?date=12-12-19
 
   var options = {
-    url: "*insert url* ?func=delete_reservation" + req.query.date
+    url:
+      "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=iFU28oaioBprTdHF3Al9C0eFqSgwt54hagCJAr1EV5tywTqHcDfHWA==&func=deleteReservation&date=" +
+      req.query.date +
+      "&user=" +
+      user_email
+  };
+
+  request.get(options, (error, response, body) => {
+    res.json(body);
+  });
+});
+
+app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
+  // /azure/get_reservations?date=12-12-19
+  var options = {
+    url:
+      "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+      config.creds.azureFunctionsCode +
+      "==&func=getAllTimeSlots&date=" +
+      req.query.date
   };
 
   request.get(options, (error, response, body) => {
@@ -321,7 +340,11 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
 app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
   // /azure/get_reservations?date=12-12-19
   var options = {
-    url: "*insert url* ?func=getAllTimeSlots" + req.query.date
+    url:
+      "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+      config.creds.azureFunctionsCode +
+      "==&func=getAllTimeSlots&date=" +
+      req.query.date
   };
 
   request.get(options, (error, response, body) => {
@@ -332,7 +355,13 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
 app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
   // /azure/post_reservations?date=12-12-19
   var options = {
-    url: "*insert url* ?func=post_reservation" + req.query.date
+    url:
+      "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+      config.creds.azureFunctionsCode +
+      "==&func=createReservation&date=" +
+      req.query.date +
+      "&user=" +
+      user_email
   };
 
   request.get(options, (error, response, body) => {
