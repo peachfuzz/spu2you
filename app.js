@@ -210,6 +210,19 @@ app.set("view engine", "html");
 // `ensureAuthenticated`. It checks if there is an user stored in session, if not
 // it will call `passport.authenticate` to ask for user to log in.
 //-----------------------------------------------------------------------------
+var badWords = ['delete', 'insert', 'update', 'alter', 'select', 'drop', 'add'];
+//creates an array of words that we dont want to have in our URL selection
+
+var i;
+
+//function to loop through bad words array in the url to inject
+//will replace the words if in it
+function badwordInjection(req){
+  for(i = 0; badWords.length; i++){
+    var scrub = req.query.date;
+    scrub.replace(badWords[i], ""); 
+  }
+} 
 
 var user_email = "";
 var user_info;
@@ -308,8 +321,8 @@ app.get("/logout", function(req, res) {
 
 app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
   // /azure/delete_reservations?date=12-12-19
-  var scrub = req.query.date;
-  scrub.replace("delete", "");
+  badwordInjection(req); //function for creating the bad word injection
+
   var options = {
     url: "*insert url* ?func=delete_reservation" + req.query.date
   };
@@ -321,6 +334,7 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
 
 app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
   // /azure/get_reservations?date=12-12-19
+  badwordInjection(req); // created 
   var options = {
     url: "*insert url* ?func=getAllTimeSlots" + req.query.date
   };
