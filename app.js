@@ -224,6 +224,20 @@ function badwordInjection(req){
   }
 } 
 
+var badWords = ['func', 'func=', 'FUNC', 'FUNC=', 'DELETE', 'INSERT', 'UPDATE', 'ALTER', 'SELECT', 'DROP', 'ADD','delete', 'insert', 'update', 'alter', 'select', 'drop', 'add'];
+//creates an array of words that we dont want to have in our URL selection
+
+var i;
+
+//function to loop through bad words array in the url to inject
+//will replace the words if in it
+function badwordInjection(req){
+  for(i = 0; badWords.length; i++){
+    var scrub = req.query.date;
+    scrub.replace(badWords[i], ""); 
+  }
+}
+
 var user_email = "";
 var user_info;
 function ensureAuthenticated(req, res, next) {
@@ -321,8 +335,12 @@ app.get("/logout", function(req, res) {
 
 app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
   // /azure/delete_reservations?date=12-12-19
+<<<<<<< HEAD
   badwordInjection(req); //function for creating the bad word injection
 
+=======
+  badwordInjection(req);
+>>>>>>> aeba33e4a573758af00da87d9c6faae0d7e2d9e0
   var options = {
     url: "*insert url* ?func=delete_reservation" + req.query.date
   };
@@ -334,8 +352,13 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
 
 app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
   // /azure/get_reservations?date=12-12-19
+<<<<<<< HEAD
   badwordInjection(req); // created 
+=======
+  badwordInjection(req);
+>>>>>>> aeba33e4a573758af00da87d9c6faae0d7e2d9e0
   var options = {
+    
     url: "*insert url* ?func=getAllTimeSlots" + req.query.date
   };
 
@@ -346,6 +369,7 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
 
 app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
   // /azure/post_reservations?date=12-12-19
+  badwordInjection(req);
   var options = {
     url: "*insert url* ?func=post_reservation" + req.query.date
   };
