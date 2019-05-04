@@ -347,27 +347,27 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
 // };
 const times_in_day = {
   dates: [
-    "7:30-10:30",
-    "8:00-11:00",
-    "8:30-11:30",
-    "9:00-12:00",
-    "9:30-12:30",
-    "10:00-1:00",
-    "10:30-1:30",
-    "11:00-2:00",
-    "11:30-2:30",
-    "12:00-3:00",
-    "12:30-3:30",
-    "1:00-4:00",
-    "1:30-4:30",
-    "2:00-5:00",
-    "2:30-5:30",
-    "3:00-6:00",
-    "3:30-6:30",
-    "4:00-7:00",
-    "4:30-7:30",
-    "5:00-8:00",
-    "5:30-8:30"
+    "7:30am-10:30am",
+    "8:00am-11:00am",
+    "8:30am-11:30am",
+    "9:00am-12:00pm",
+    "9:30am-12:30pm",
+    "10:00am-1:00pm",
+    "10:30am-1:30pm",
+    "11:00am-2:00pm",
+    "11:30am-2:30pm",
+    "12:00pm-3:00pm",
+    "12:30pm-3:30pm",
+    "1:00pm-4:00pm",
+    "1:30pm-4:30pm",
+    "2:00pm-5:00pm",
+    "2:30pm-5:30pm",
+    "3:00pm-6:00pm",
+    "3:30pm-6:30pm",
+    "4:00pm-7:00pm",
+    "4:30pm-7:30pm",
+    "5:00pm-8:00pm",
+    "5:30pm-8:30pm"
   ]
 };
 var number_of_times = times_in_day.length;
@@ -387,7 +387,7 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
     var j = 0;
     if (body.length !== 0) {
       for (var i = 0; i < times_in_day.length; i++) {
-        if (body[j] === i) {
+        if (body[j] === i + 1) {
           j++;
         } else {
           my_times.dates.push(times_in_day);
