@@ -322,6 +322,56 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
   });
 });
 
+// const times_in_day = {
+//   "1": "7:30-10:30",
+//   "2": "8:00-11:00",
+//   "3": "8:30-11:30",
+//   "4": "9:00-12:00",
+//   "5": "9:30-12:30",
+//   "6": "10:00-1:00",
+//   "7": "10:30-1:30",
+//   "8": "11:00-2:00",
+//   "9": "11:30-2:30",
+//   "10": "12:00-3:00",
+//   "11": "12:30-3:30",
+//   "12": "1:00-4:00",
+//   "13": "1:30-4:30",
+//   "14": "2:00-5:00",
+//   "15": "2:30-5:30",
+//   "16": "3:00-6:00",
+//   "17": "3:30-6:30",
+//   "18": "4:00-7:00",
+//   "19": "4:30-7:30",
+//   "20": "5:00-8:00",
+//   "21": "5:30-8:30"
+// };
+const times_in_day = {
+  dates: [
+    "7:30-10:30",
+    "8:00-11:00",
+    "8:30-11:30",
+    "9:00-12:00",
+    "9:30-12:30",
+    "10:00-1:00",
+    "10:30-1:30",
+    "11:00-2:00",
+    "11:30-2:30",
+    "12:00-3:00",
+    "12:30-3:30",
+    "1:00-4:00",
+    "1:30-4:30",
+    "2:00-5:00",
+    "2:30-5:30",
+    "3:00-6:00",
+    "3:30-6:30",
+    "4:00-7:00",
+    "4:30-7:30",
+    "5:00-8:00",
+    "5:30-8:30"
+  ]
+};
+var number_of_times = times_in_day.length;
+
 app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
   // /azure/get_reservations?date=12-12-19
   var options = {
@@ -333,7 +383,20 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
   };
 
   request.get(options, (error, response, body) => {
-    res.json(body);
+    var my_times = { dates: [] };
+    var j = 0;
+    if (body.length !== 0) {
+      for (var i = 0; i < times_in_day.length; i++) {
+        if (body[j] === i) {
+          j++;
+        } else {
+          my_times.dates.push(times_in_day);
+        }
+      }
+      res.json(my_times);
+    } else {
+      res.json(times_in_day);
+    }
   });
 });
 
@@ -346,9 +409,23 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
       "==&func=getAllTimeSlots&date=" +
       req.query.date
   };
-
   request.get(options, (error, response, body) => {
-    res.json(body);
+    var my_times = {};
+    var j = 0;
+    if (body.length !== 0) {
+      for (var i = 0; i < times_in_day.length; i++) {
+        if (body[j] === i) {
+          j++;
+        } else {
+          my_times.push(times_in_day);
+        }
+      }
+      res.json(my_times);
+    } else {
+      console.log("~~~~times~~~~");
+      console.log(times_in_day);
+      res.json(times_in_day);
+    }
   });
 });
 
