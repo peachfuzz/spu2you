@@ -6,27 +6,38 @@ import Moment from "react-moment";
 import moment from "moment";
 import "moment-timezone";
 import { withRouter } from "react-router-dom";
+import Dates from "./Dates";
 
 class Calendar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDate: new Date(),
+      selectedDate: "",
+      formatedDate: "",
+      availableDates: [],
       selectedTime: ""
     };
   }
 
   handleChange(date) {
     this.setState({ selectedDate: date }, () => {
-      var momentDate = moment(this.state.selectedDate);
-      var url = "/azure/get_reservations?date=" + momentDate.format("YYYYMMDD");
-      console.log(momentDate.format("YYYYMMDD"));
+      var momentDate = moment(this.state.selectedDate).format("YYYYMMDD");
+      this.setState({ formatedDate: momentDate });
+      var url = "/azure/get_reservations?date=" + momentDate;
+      console.log(momentDate);
       console.log(url);
-      fetch(url);
+      fetch(url)
+        .then(res => res.json())
+        .then(results => {
+          this.setState({ availableDates: results.dates });
+          console.log(results.dates);
+        });
     });
   }
 
   render() {
+    console.log(this.state.availableDates.length);
+    console.log(this.state.availableDates);
     return (
       <Card>
         <div className="calendar">
@@ -44,8 +55,26 @@ class Calendar extends Component {
             <h5>Available Times</h5>
             {/* map stuff here */}
             <Tag key={this.state.selectedDate} icon="calendar">
-              <Moment date={this.state.selectedDate} format="LLLL" />
+              {moment(this.state.selectedDate).format("LLL")}
             </Tag>
+            <Tag key={this.state.selectedDate} icon="calendar">
+              {moment(this.state.selectedDate).format("LLL")
+              // .add(3, "hours")
+              }
+            </Tag>
+
+            {/* <p>{this.state.formatedDate + this.state.availableDates[0]}</p> */}
+
+            <Moment
+              duration="2018-11-1T10:59-0500"
+              date="2018-11-1T12:59-0500"
+            />
+            {/* {this.state.availableDates.length !== 0 ? (
+              <Dates
+                availableDates={this.state.availableDates}
+                selectedDate={this.state.selectedDate}
+              />
+            ) : null} */}
           </Card>
         </div>
         <Divider />
