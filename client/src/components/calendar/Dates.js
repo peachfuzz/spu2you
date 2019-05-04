@@ -1,22 +1,23 @@
 import React, { Component } from "react";
 
-import { Tag, Button, Card, Colors, Divider } from "@blueprintjs/core";
-
+import { Tag, Button } from "@blueprintjs/core";
 import Moment from "react-moment";
 import moment from "moment";
-import "moment-timezone";
 
 class Dates extends Component {
   render() {
-    // return this.props.availableDates.map(time => {
-    //   return (
-    //     <p>
-    //       <Moment date={this.props.selectedDate + time} format="LLLL" />;
-    //       {this.props.selectedDate} {time}
-    //     </p>
-    //   );
-    // });
-    return <></>;
+    var i = 0;
+    return this.props.availableDates.map(time => {
+      i++;
+      return (
+        <>
+          <Button icon="calendar" key={i}>
+            {time}
+          </Button>
+          <br />
+        </>
+      );
+    });
   }
 }
 
