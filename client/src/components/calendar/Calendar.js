@@ -12,32 +12,42 @@ class Calendar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDate: "",
-      formatedDate: "",
+      selectedDate: moment(),
+      formatedDate: moment().add(3, "h"),
       availableDates: [],
       selectedTime: ""
     };
   }
 
   handleChange(date) {
-    this.setState({ selectedDate: date }, () => {
-      var momentDate = moment(this.state.selectedDate).format("YYYYMMDD");
-      this.setState({ formatedDate: momentDate });
-      var url = "/azure/get_reservations?date=" + momentDate;
-      console.log(momentDate);
-      console.log(url);
-      fetch(url)
-        .then(res => res.json())
-        .then(results => {
-          this.setState({ availableDates: results.dates });
-          console.log(results.dates);
+    if (date) {
+      this.setState({ selectedDate: date }, () => {
+        var momentDate = moment(this.state.selectedDate).format("YYYYMMDD");
+
+        this.setState({
+          formatedDate: moment(momentDate).add(3, "hours")
         });
-    });
+
+        var url = "/azure/get_reservations?date=" + momentDate;
+        console.log(momentDate);
+        console.log(url);
+        fetch(url)
+          .then(res => res.json())
+          .then(results => {
+            this.setState({ availableDates: results.dates });
+            console.log(results.dates);
+          })
+          .catch(error => console.log(error));
+      });
+    } else {
+      this.setState({
+        selectedDate: moment(),
+        formatedDate: moment().add(3, "h")
+      });
+    }
   }
 
   render() {
-    console.log(this.state.availableDates.length);
-    console.log(this.state.availableDates);
     return (
       <Card>
         <div className="calendar">
@@ -53,22 +63,13 @@ class Calendar extends Component {
           <Divider />
           <Card className="side-cal">
             <h5>Available Times</h5>
-            {/* map stuff here */}
             <Tag key={this.state.selectedDate} icon="calendar">
               {moment(this.state.selectedDate).format("LLL")}
             </Tag>
-            <Tag key={this.state.selectedDate} icon="calendar">
-              {moment(this.state.selectedDate).format("LLL")
-              // .add(3, "hours")
-              }
+            <Tag key={this.state.formatedDate + 1} icon="calendar">
+              {moment(this.state.formatedDate).format("LLL")}
             </Tag>
 
-            {/* <p>{this.state.formatedDate + this.state.availableDates[0]}</p> */}
-
-            <Moment
-              duration="2018-11-1T10:59-0500"
-              date="2018-11-1T12:59-0500"
-            />
             {/* {this.state.availableDates.length !== 0 ? (
               <Dates
                 availableDates={this.state.availableDates}
