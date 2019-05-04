@@ -33,17 +33,14 @@ class Calendar extends Component {
 
         var url = "/azure/get_reservations?date=" + momentDate;
         this.setState({ loading: true });
-        console.log(momentDate);
-        console.log(url);
         fetch(url)
           .then(res => res.json())
           .then(results => {
             this.setState({ availableDates: results.dates });
-            console.log(results.dates);
             this.setState({ loading: false });
           })
           .catch(error => {
-            console.log(error);
+            // need to send error to backend and save...
             this.setState({ loading: false });
           });
       });
