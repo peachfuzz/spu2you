@@ -90,26 +90,6 @@ class Calendar extends Component {
             )}
           </Card>
         </div>
-        <Divider />
-        <Card style={{ background: Colors.BLUE2 }}>
-          <h5>Date Selected</h5>
-          <p>To confirm this date, click confirm</p>
-          <Tag key={this.state.selectedDate} icon="calendar">
-            <Moment date={this.state.selectedDate} format="LLLL" />
-          </Tag>
-          <Divider />
-          <Button
-            rightIcon="arrow-right"
-            intent="success"
-            text="Confirm"
-            onClick={() => {
-              this.props.history.push({
-                pathname: "/reservations",
-                state: { selectedDate: this.state.selectedDate }
-              });
-            }}
-          />
-        </Card>
       </Card>
     );
   }
