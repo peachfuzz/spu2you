@@ -1,8 +1,15 @@
 import React, { Component } from "react";
 import { DatePicker } from "@blueprintjs/datetime";
-import { Tag, Button, Card, Colors, Divider } from "@blueprintjs/core";
+import {
+  Tag,
+  NonIdealState,
+  Card,
+  Colors,
+  Divider,
+  Spinner
+} from "@blueprintjs/core";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"; //css for the calendar
-import Moment from "react-moment";
+// import Moment from "react-moment";
 import moment from "moment";
 import "moment-timezone";
 import { withRouter } from "react-router-dom";
@@ -12,10 +19,10 @@ class Calendar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDate: moment(),
-      formatedDate: moment().add(3, "h"),
+      selectedDate: "none",
       availableDates: [],
-      selectedTime: ""
+      selectedTime: "",
+      loading: false
     };
   }
 
@@ -24,11 +31,8 @@ class Calendar extends Component {
       this.setState({ selectedDate: date }, () => {
         var momentDate = moment(this.state.selectedDate).format("YYYYMMDD");
 
-        this.setState({
-          formatedDate: moment(momentDate).add(3, "hours")
-        });
-
         var url = "/azure/get_reservations?date=" + momentDate;
+        this.setState({ loading: true });
         console.log(momentDate);
         console.log(url);
         fetch(url)
@@ -36,14 +40,18 @@ class Calendar extends Component {
           .then(results => {
             this.setState({ availableDates: results.dates });
             console.log(results.dates);
+            this.setState({ loading: false });
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            console.log(error);
+            this.setState({ loading: false });
+          });
       });
     } else {
       this.setState({
-        selectedDate: moment(),
-        formatedDate: moment().add(3, "h"),
-        availableDates: []
+        selectedDate: "none",
+        availableDates: [],
+        loading: false
       });
     }
   }
@@ -75,7 +83,11 @@ class Calendar extends Component {
                   selectedDate={this.state.selectedDate}
                 />
               </>
-            ) : null}
+            ) : this.state.loading ? (
+              <Spinner size="50" />
+            ) : (
+              <NonIdealState icon="calendar" title="No date selected" />
+            )}
           </Card>
         </div>
         <Divider />
