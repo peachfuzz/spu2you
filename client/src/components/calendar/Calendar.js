@@ -42,7 +42,8 @@ class Calendar extends Component {
     } else {
       this.setState({
         selectedDate: moment(),
-        formatedDate: moment().add(3, "h")
+        formatedDate: moment().add(3, "h"),
+        availableDates: []
       });
     }
   }
@@ -62,20 +63,19 @@ class Calendar extends Component {
           />
           <Divider />
           <Card className="side-cal">
-            <h5>Available Times</h5>
-            <Tag key={this.state.selectedDate} icon="calendar">
-              {moment(this.state.selectedDate).format("LLL")}
-            </Tag>
-            <Tag key={this.state.formatedDate + 1} icon="calendar">
-              {moment(this.state.formatedDate).format("LLL")}
-            </Tag>
-
-            {/* {this.state.availableDates.length !== 0 ? (
-              <Dates
-                availableDates={this.state.availableDates}
-                selectedDate={this.state.selectedDate}
-              />
-            ) : null} */}
+            {this.state.availableDates.length !== 0 ? (
+              <>
+                <Tag key={this.state.selectedDate} icon="calendar">
+                  Available Times for{" "}
+                  {moment(this.state.selectedDate).format("LL")}
+                </Tag>
+                <br />
+                <Dates
+                  availableDates={this.state.availableDates}
+                  selectedDate={this.state.selectedDate}
+                />
+              </>
+            ) : null}
           </Card>
         </div>
         <Divider />
