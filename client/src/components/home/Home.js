@@ -17,8 +17,8 @@ class Home extends Component {
       .then(res => res.json())
       .then(data => this.setState({ email: data }))
       .catch(error => {
-        console.log("ERROR");
-        console.log(error);
+        // error
+        // should send error to backend and log
       });
   }
   componentDidMount() {

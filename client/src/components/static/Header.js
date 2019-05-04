@@ -58,7 +58,6 @@ class Header extends Component {
               rightIcon="log-out"
               onClick={() => {
                 window.location = "http://localhost:3000/logout";
-                console.log("trying to logout");
               }}
             />
           </NavbarGroup>

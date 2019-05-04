@@ -422,8 +422,6 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
       }
       res.json(my_times);
     } else {
-      console.log("~~~~times~~~~");
-      console.log(times_in_day);
       res.json(times_in_day);
     }
   });
