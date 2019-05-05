@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
-import { Tag, Button } from "@blueprintjs/core";
-import Moment from "react-moment";
-import moment from "moment";
+import { Button } from "@blueprintjs/core";
+// import Moment from "react-moment";
+// import moment from "moment";
 
 class Dates extends Component {
   render() {
