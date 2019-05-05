@@ -33,8 +33,11 @@ var expressSession = require("express-session"); // idk...
 var bodyParser = require("body-parser"); // causes infinite redirect if removed
 var methodOverride = require("method-override");
 var passport = require("passport");
-var config = require("./config");
+var moment = require("moment");
+
 const request = require("request");
+
+var config = require("./config");
 // var util = require("util"); // idk...
 // var bunyan = require("bunyan"); // idk...
 
@@ -322,29 +325,6 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
   });
 });
 
-// const times_in_day = {
-//   "1": "7:30-10:30",
-//   "2": "8:00-11:00",
-//   "3": "8:30-11:30",
-//   "4": "9:00-12:00",
-//   "5": "9:30-12:30",
-//   "6": "10:00-1:00",
-//   "7": "10:30-1:30",
-//   "8": "11:00-2:00",
-//   "9": "11:30-2:30",
-//   "10": "12:00-3:00",
-//   "11": "12:30-3:30",
-//   "12": "1:00-4:00",
-//   "13": "1:30-4:30",
-//   "14": "2:00-5:00",
-//   "15": "2:30-5:30",
-//   "16": "3:00-6:00",
-//   "17": "3:30-6:30",
-//   "18": "4:00-7:00",
-//   "19": "4:30-7:30",
-//   "20": "5:00-8:00",
-//   "21": "5:30-8:30"
-// };
 const times_in_day = {
   dates: [
     "7:30am-10:30am",
@@ -370,14 +350,13 @@ const times_in_day = {
     "5:30pm-8:30pm"
   ]
 };
-var number_of_times = times_in_day.length;
 
 app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
   // /azure/get_reservations?date=12-12-19
   var options = {
     url:
       "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
-      config.creds.azureFunctionsCode +
+      config.azureFunctionCode +
       "==&func=getAllTimeSlots&date=" +
       req.query.date
   };
@@ -386,6 +365,8 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
     var my_times = { dates: [] };
     var j = 0;
     if (body.length !== 0) {
+      // need find out response types for all items reserved, no items reserved, n items reserved
+      // currently returns empty string if no items reserved AND if date invalid
       for (var i = 0; i < times_in_day.length; i++) {
         if (body[j] === i + 1) {
           j++;
@@ -402,25 +383,36 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
 
 app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
   // /azure/get_reservations?date=12-12-19
+
   var options = {
     url:
       "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
-      config.creds.azureFunctionsCode +
-      "==&func=getAllTimeSlots&date=" +
+      config.azureFunctionCode +
+      "==&func=getUsedTimeSlots&date=" +
       req.query.date
   };
   request.get(options, (error, response, body) => {
-    var my_times = {};
+    var current_hour = moment().format("h"); // trying to figure out how to ignore
+    var dates = [];
     var j = 0;
-    if (body.length !== 0) {
-      for (var i = 0; i < times_in_day.length; i++) {
-        if (body[j] === i) {
+    var body_to_json = JSON.parse(body);
+    console.log(body_to_json);
+    console.log(body_to_json.TimeID.value);
+    // console.log(Object.keys(body).length);
+
+    if (Object.keys(body).length !== 0) {
+      for (var i = 0; i < times_in_day.dates.length; i++) {
+        if (body_to_json.TimeID.value - 1 === i) {
           j++;
+          console.log("skippyyyy " + i);
         } else {
-          my_times.push(times_in_day);
+          dates.push(times_in_day.dates[i]);
         }
       }
-      res.json(my_times);
+      var r = {};
+      r.dates = dates;
+      // console.log(r);
+      res.json(r);
     } else {
       res.json(times_in_day);
     }
@@ -432,7 +424,7 @@ app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
   var options = {
     url:
       "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
-      config.creds.azureFunctionsCode +
+      config.azureFunctionCode +
       "==&func=createReservation&date=" +
       req.query.date +
       "&user=" +
