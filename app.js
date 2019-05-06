@@ -396,32 +396,40 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
       req.query.date
   };
   request.get(options, (error, response, body) => {
-    console.log(body);
     if (Object.keys(body).length !== 0) {
       // supposed to get number of keys but just returns character count 🤷‍
       var current_hour = moment().format("h"); // trying to figure out how to ignore
       var dates = [];
       var j = 0;
-      //var body_to_json = "{" + body + "}";
-      var body_to_json = JSON.parse(body);
+      var body_to_json = [];
 
-      // console.log(body_to_json[j + 1].toString());
-
-      // for (var i = 0; i < times_in_day.dates.length; i++) {
-      //   if (body_to_json[i.toString()].TimeID.value - 1 === i) {
-      //     j++;
-      //   } else {
-      //     dates.push(times_in_day.dates[i]);
-      //   }
-      // }
       console.log("forloop poop");
-      for (var key in body_to_json) {
-        if (body_to_json.hasOwnProperty(key)) {
-          console.log(key + " ------> " + body_to_json[key]);
+
+      for (var key in JSON.parse(body)) {
+        if (JSON.parse(body).hasOwnProperty(key)) {
+          body_to_json.push(parseInt(key));
         }
       }
+
+      for (var i = 0; i < times_in_day.dates.length; i++) {
+        if (body_to_json[i] - 1 === i) {
+          j++;
+        } else {
+          dates.push(times_in_day.dates[i]);
+        }
+      }
+
       var r = {};
-      r.dates = dates;
+
+      if (dates === undefined || dates.length === 0) {
+        r.dates = ["no dates"];
+        console.log("no datesssss");
+      } else {
+        r.dates = dates;
+        console.log("datezzzzz");
+        console.log(r);
+      }
+
       res.json(r);
     } else {
       res.json(times_in_day);
