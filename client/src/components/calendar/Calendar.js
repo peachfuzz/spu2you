@@ -9,7 +9,6 @@ import {
   Spinner
 } from "@blueprintjs/core";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"; //css for the calendar
-// import Moment from "react-moment";
 import moment from "moment";
 import "moment-timezone";
 import { withRouter } from "react-router-dom";
@@ -68,7 +67,15 @@ class Calendar extends Component {
           />
           <Divider />
           <Card className="side-cal">
-            {this.state.availableDates.length !== 0 ? (
+            {this.state.loading ? (
+              <Spinner size="50" />
+            ) : this.state.availableDates.length === 1 &&
+              this.state.availableDates[0] === "no dates" ? (
+              <Tag>
+                No available dates for{" "}
+                {moment(this.state.selectedDate).format("LL")}
+              </Tag>
+            ) : this.state.availableDates.length > 0 ? (
               <>
                 <Tag key={this.state.selectedDate} icon="calendar">
                   Available Times for{" "}
@@ -80,8 +87,6 @@ class Calendar extends Component {
                   selectedDate={this.state.selectedDate}
                 />
               </>
-            ) : this.state.loading ? (
-              <Spinner size="50" />
             ) : (
               <NonIdealState icon="calendar" title="No date selected" />
             )}
