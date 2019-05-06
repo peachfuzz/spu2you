@@ -314,7 +314,9 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
 
   var options = {
     url:
-      "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=iFU28oaioBprTdHF3Al9C0eFqSgwt54hagCJAr1EV5tywTqHcDfHWA==&func=deleteReservation&date=" +
+      "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+      config.azureFunctionCode +
+      "==&func=deleteReservation&date=" +
       req.query.date +
       "&user=" +
       user_email
@@ -358,7 +360,9 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
       "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
       config.azureFunctionCode +
       "==&func=getAllTimeSlots&date=" +
-      req.query.date
+      req.query.date +
+      "&user=" +
+      user_email
   };
 
   request.get(options, (error, response, body) => {
@@ -392,26 +396,32 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
       req.query.date
   };
   request.get(options, (error, response, body) => {
-    var current_hour = moment().format("h"); // trying to figure out how to ignore
-    var dates = [];
-    var j = 0;
-    var body_to_json = JSON.parse(body);
-    console.log(body_to_json);
-    console.log(body_to_json.TimeID.value);
-    // console.log(Object.keys(body).length);
-
+    console.log(body);
     if (Object.keys(body).length !== 0) {
-      for (var i = 0; i < times_in_day.dates.length; i++) {
-        if (body_to_json.TimeID.value - 1 === i) {
-          j++;
-          console.log("skippyyyy " + i);
-        } else {
-          dates.push(times_in_day.dates[i]);
+      // supposed to get number of keys but just returns character count 🤷‍
+      var current_hour = moment().format("h"); // trying to figure out how to ignore
+      var dates = [];
+      var j = 0;
+      //var body_to_json = "{" + body + "}";
+      var body_to_json = JSON.parse(body);
+
+      // console.log(body_to_json[j + 1].toString());
+
+      // for (var i = 0; i < times_in_day.dates.length; i++) {
+      //   if (body_to_json[i.toString()].TimeID.value - 1 === i) {
+      //     j++;
+      //   } else {
+      //     dates.push(times_in_day.dates[i]);
+      //   }
+      // }
+      console.log("forloop poop");
+      for (var key in body_to_json) {
+        if (body_to_json.hasOwnProperty(key)) {
+          console.log(key + " ------> " + body_to_json[key]);
         }
       }
       var r = {};
       r.dates = dates;
-      // console.log(r);
       res.json(r);
     } else {
       res.json(times_in_day);
