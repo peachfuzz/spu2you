@@ -138,3 +138,12 @@ p {
 .bp3-navbar-group {
   height: auto !important;
 }
+
+.bp3-popover-content {
+  text-align: center;
+  justify-content: center;
+}
+
+.reserve-button {
+  margin: 7px 0 3px 0;
+}

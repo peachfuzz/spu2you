@@ -33,8 +33,11 @@ var expressSession = require("express-session"); // idk...
 var bodyParser = require("body-parser"); // causes infinite redirect if removed
 var methodOverride = require("method-override");
 var passport = require("passport");
-var config = require("./config");
+var moment = require("moment");
+
 const request = require("request");
+
+var config = require("./config");
 // var util = require("util"); // idk...
 // var bunyan = require("bunyan"); // idk...
 
@@ -230,7 +233,6 @@ app.get("/", ensureAuthenticated, function(req, res) {
 });
 
 app.get("/api/user", ensureAuthenticated, function(req, res) {
-  console.log("USER_EMAIL DUMBASS");
   res.json(user_email);
 });
 
@@ -310,7 +312,13 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
   // /azure/delete_reservations?date=12-12-19
 
   var options = {
-    url: "*insert url* ?func=delete_reservation" + req.query.date
+    url:
+      "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+      config.azureFunctionCode +
+      "==&func=deleteReservation&date=" +
+      req.query.date +
+      "&user=" +
+      user_email
   };
 
   request.get(options, (error, response, body) => {
@@ -318,21 +326,126 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
   });
 });
 
-app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
+const times_in_day = {
+  dates: [
+    "7:30am-10:30am",
+    "8:00am-11:00am",
+    "8:30am-11:30am",
+    "9:00am-12:00pm",
+    "9:30am-12:30pm",
+    "10:00am-1:00pm",
+    "10:30am-1:30pm",
+    "11:00am-2:00pm",
+    "11:30am-2:30pm",
+    "12:00pm-3:00pm",
+    "12:30pm-3:30pm",
+    "1:00pm-4:00pm",
+    "1:30pm-4:30pm",
+    "2:00pm-5:00pm",
+    "2:30pm-5:30pm",
+    "3:00pm-6:00pm",
+    "3:30pm-6:30pm",
+    "4:00pm-7:00pm",
+    "4:30pm-7:30pm",
+    "5:00pm-8:00pm",
+    "5:30pm-8:30pm"
+  ]
+};
+
+app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
   // /azure/get_reservations?date=12-12-19
   var options = {
-    url: "*insert url* ?func=getAllTimeSlots" + req.query.date
+    url:
+      "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+      config.azureFunctionCode +
+      "==&func=getAllTimeSlots&date=" +
+      req.query.date +
+      "&user=" +
+      user_email
   };
 
   request.get(options, (error, response, body) => {
-    res.json(body);
+    var my_times = { dates: [] };
+    var j = 0;
+    if (body.length !== 0) {
+      // need find out response types for all items reserved, no items reserved, n items reserved
+      // currently returns empty string if no items reserved AND if date invalid
+      for (var i = 0; i < times_in_day.length; i++) {
+        if (body[j] === i + 1) {
+          j++;
+        } else {
+          my_times.dates.push(times_in_day);
+        }
+      }
+      res.json(my_times);
+    } else {
+      res.json(times_in_day);
+    }
+  });
+});
+
+app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
+  // /azure/get_reservations?date=12-12-19
+
+  var options = {
+    url:
+      "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+      config.azureFunctionCode +
+      "==&func=getUsedTimeSlots&date=" +
+      req.query.date
+  };
+  request.get(options, (error, response, body) => {
+    if (Object.keys(body).length !== 0) {
+      // supposed to get number of keys but just returns character count 🤷‍
+      var current_hour = moment().format("h"); // trying to figure out how to ignore
+      var dates = [];
+      var j = 0;
+      var body_to_json = [];
+
+      for (var key in JSON.parse(body)) {
+        if (JSON.parse(body).hasOwnProperty(key)) {
+          body_to_json.push(JSON.parse(body)[key.toString()].TimeID.value);
+        }
+      }
+
+      // sorts numbers - otherwise will sort as strings ie: 1 10 12 13 2 3
+      body_to_json.sort(function(a, b) {
+        return a - b;
+      });
+
+      for (var i = 0; i < times_in_day.dates.length; i++) {
+        if (body_to_json.length > j && body_to_json[j] - 1 === i) {
+          j++;
+        } else {
+          dates.push(times_in_day.dates[i]);
+        }
+      }
+
+      var r = {};
+
+      if (dates === undefined || dates.length === 0) {
+        r.dates = ["no dates"];
+      } else {
+        r.dates = dates;
+      }
+
+      res.json(r);
+    } else {
+      res.json(times_in_day);
+    }
   });
 });
 
 app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
   // /azure/post_reservations?date=12-12-19
   var options = {
-    url: "*insert url* ?func=post_reservation" + req.query.date
+    url:
+      "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+      config.azureFunctionCode +
+      "==&func=createReservation&date=" +
+      req.query.date +
+      "&user=" +
+      user_email
   };
 
   request.get(options, (error, response, body) => {

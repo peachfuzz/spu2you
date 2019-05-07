@@ -49,14 +49,13 @@ class Robot extends Component {
           .getUserMedia({ video: true, audio: true }) //doens't work with audio. Maybe make them separate??
           .then(function(stream) {
             vid.srcObject = stream; //start recording
-            console.log(vid.srcObject);
           })
           .catch(function(error) {
-            console.log("Something went wrong!");
-            console.log(error);
+            // something went wrong!
+            // need to send error to backend and log
           });
       } else {
-        console.log("off");
+        // off
         vid.srcObject.getTracks()[0].stop(); //turning off vid
         vid.srcObject.getTracks()[1].stop(); //turning off mic
         vid.srcObject = null; //no longer displayed

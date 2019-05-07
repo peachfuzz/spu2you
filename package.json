@@ -14,6 +14,7 @@
     "fresh": "^0.5.2",
     "method-override": "^2.3.6",
     "mime": "^2.4.2",
+    "moment": "^2.24.0",
     "mongoose": "^4.6.2",
     "morgan": "^1.9.1",
     "negotiator": "^0.6.1",
@@ -23,7 +24,7 @@
   },
   "scripts": {
     "start": "nodemon app.js",
-    "c-build": "npm run build --prefix ./client",
+    "build": "npm run build --prefix ./client",
     "c-install": "npm install --prefix ./client"
   }
 }
