@@ -12,18 +12,18 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import { BrowserRouter as Router } from "react-router-dom";
 
 class App extends Component {
-  render() {
-    return (
-      <Router>
-        <div className="App bp3-dark">
-          <Header />
-          {/* <SideMenu /> */}
-          <Content />
-          <Footer />
-        </div>
-      </Router>
-    );
-  }
+    render() {
+        return (
+            <Router>
+                <div className="App bp3-dark">
+                    <Header />
+                    {/* <SideMenu /> */}
+                    <Content />
+                    <Footer />
+                </div>
+            </Router>
+        );
+    }
 }
 
 export default App;
