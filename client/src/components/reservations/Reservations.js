@@ -1,11 +1,23 @@
 import React, { Component } from "react";
 //import Drawer from 'react-drag-drawer';
-//import { Code, getKeyComboString, KeyCombo, Card } from "@blueprintjs/core";
+import { Code, getKeyComboString, KeyCombo, Card } from "@blueprintjs/core";
+import { Cell, Column, Table } from "@bluepringjs/table";
 import { Tag, Card, H5, Button } from "@blueprintjs/core";
 import Moment from "react-moment";
 import moment from "moment";
 import "moment-timezone";
 
+const cellRenderer = () => {
+
+  return <Cell>{`$${(rowIndex * 10).toFixed(2)}`}</Cell>
+
+};
+
+var newTable = (
+<Table numRows={10}>
+  <Column name="Reservations" cellRenderer={cellRenderer}/>
+</Table>
+);
 
 // create a drawer to show information when clicking a button
 class Reservations extends Component {
@@ -52,21 +64,26 @@ class Reservations extends Component {
   }  // this.onRemoveItem(item.id)}
   */
 
+
   render() {
     return (
-      <div>
+      newTable,
+      document.getElementById('newTable')
+      /*<div>
         <ul>
+          
           {this.state.list.map(item => (
             <li key={item.id}>
             
               The reservation for {item.name} is {item.date} - {item.month} - {item.day} .
               <button onClick={() => this.alertBox(item.id)}> 
-                Cancel Reservation
+              delete
               </button>
             </li>
           ))}
         </ul>
       </div>
+      */
     );
   }
 }
