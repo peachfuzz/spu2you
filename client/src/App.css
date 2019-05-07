@@ -1,8 +1,12 @@
 body {
   background-color: #282c34;
   color: white;
-  display: flex;
-  flex-direction: column;
+
+  min-width: 475px;
+
+// Marissa
+//  display: flex;
+//  flex-direction: column;
 }
 
 .App {
@@ -168,6 +172,27 @@ p {
   transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
 }
 
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.bp3-navbar,
+.bp3-navbar-group {
+  height: auto !important;
+}
+
+.bp3-popover-content {
+  text-align: center;
+  justify-content: center;
+}
+
+.reserve-button {
+  margin: 7px 0 3px 0;
+}
+
+/*
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -181,3 +206,4 @@ p {
 .page-main{
   flex-grow: 1;
 }
+Marissa */

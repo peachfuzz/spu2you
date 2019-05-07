@@ -8,7 +8,7 @@ import {
   NavbarHeading
 } from "@blueprintjs/core";
 import { withRouter } from "react-router-dom";
-import { Auth } from "aws-amplify";
+
 //docs: https://blueprintjs.com/docs/#blueprint
 
 const logoImage = require("../../images/virtual_student_logo_placeholder.png");
@@ -17,14 +17,15 @@ class Header extends Component {
   render() {
     return (
       <div className="App-header">
-        <Navbar>
-          {/* className={Classes.DARK} */}
+        <Navbar className="container">
           <NavbarGroup align={Alignment.LEFT}>
             <div className="header_logo">
               <img src={logoImage} className="w50-h50" alt="logo" />
             </div>
-            <NavbarHeading><ul>Virtual Student</ul></NavbarHeading>
+            <NavbarHeading>spu2you</NavbarHeading>
             <NavbarDivider />
+          </NavbarGroup>
+          <NavbarGroup className="container" align={Alignment.LEFT}>
             <AnchorButton
               text="Home"
               minimal
@@ -56,9 +57,7 @@ class Header extends Component {
               minimal
               rightIcon="log-out"
               onClick={() => {
-                Auth.signOut()
-                  .then(data => console.log(data))
-                  .catch(err => console.log(err));
+                window.location = "http://localhost:3000/logout";
               }}
             />
           </NavbarGroup>
