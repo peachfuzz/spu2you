@@ -1,7 +1,12 @@
 body {
   background-color: #282c34;
   color: white;
+
   min-width: 475px;
+
+// Marissa
+//  display: flex;
+//  flex-direction: column;
 }
 
 .App {
@@ -53,13 +58,37 @@ p {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-
-  -webkit-flex-flow: row wrap;
   justify-content: space-around;
 }
 .side-cal {
   width: 300px;
 }
+
+.page-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items:center;
+}
+
+.page-header ul{
+  display: flex;
+  order: 1;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.page-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 350 px;
+}
+
+.page-main div {
+  max-width: 500px;
+}
+
 
 @media screen and (max-width: 820px) {
   .calendar {
@@ -76,6 +105,19 @@ p {
   .side-cal {
     margin: auto;
   }
+
+  .page-header ul{
+    width: auto;
+    margin-top: 0;
+  }
+
+  .page-header .cta-contact{
+    order: 1;
+  }
+
+  .paige-main{
+    padding-left: 90px;
+  }
 }
 
 .DayPicker-Month {
@@ -90,6 +132,7 @@ p {
 
 .App-menu {
   width: 250px;
+  height: 100vh;
   margin: 0;
 }
 
@@ -129,6 +172,7 @@ p {
   transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
 }
 
+
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -147,3 +191,19 @@ p {
 .reserve-button {
   margin: 7px 0 3px 0;
 }
+
+/*
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.wrapper > *{
+  padding: 20px;
+}
+
+.page-main{
+  flex-grow: 1;
+}
+Marissa */
