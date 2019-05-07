@@ -30,9 +30,6 @@ class Dates extends Component {
           wholeDate.split("-", 1),
         "YYYY-MM-DDTHH:mma"
       );
-      console.log(wholeDate);
-      console.log(wholeDate.format("LLL"));
-      console.log(moment(wholeDate).format("LLL"));
       i++;
       return (
         <>
@@ -54,7 +51,7 @@ class Dates extends Component {
                 <Button
                   intent="success"
                   text="Reserve"
-                  onClick={this.selectDate(wholeDate)}
+                  onClick={() => this.selectDate(wholeDate)}
                 />
               </div>
             </div>
