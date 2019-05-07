@@ -88,4 +88,51 @@ class Reservations extends Component {
   }
 }
 
-  export default Reservations;
+  export default withRouter(Reservations);
+
+  render() {
+    return (
+      <Card>
+        <div className="calendar">
+          <DatePicker
+            shortcuts={false}
+            minDate={new Date()} //cannot reserve before today
+            maxDate={
+              new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+            } //only allowed one year ahead of today
+            onChange={newDate => this.handleChange(newDate)}
+            style={{ color: Colors.BLUE1 }}
+          />
+          <Divider />
+          <Card className="side-cal">
+            <h5>Available Times</h5>
+            {/* map stuff here */}
+            <Tag key={this.state.selectedDate} icon="calendar">
+              <Moment date={this.state.selectedDate} format="LLLL" />
+            </Tag>
+          </Card>
+        </div>
+        <Divider />
+        <Card style={{ background: Colors.BLUE2 }}>
+          <h5>Date Selected</h5>
+          <p>To confirm this date, click confirm</p>
+          <Tag key={this.state.selectedDate} icon="calendar">
+            <Moment date={this.state.selectedDate} format="LLLL" />
+          </Tag>
+          <Divider />
+          <Button
+            rightIcon="arrow-right"
+            intent="success"
+            text="Confirm"
+            onClick={() => {
+              this.props.history.push({
+                pathname: "/reservations",
+                state: { selectedDate: this.state.selectedDate }
+              });
+            }}
+          />
+        </Card>
+      </Card>
+    );
+  }
+}
