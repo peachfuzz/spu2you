@@ -40,7 +40,7 @@ return;
   // 12 Dec
   var newMonth;
 if(month == "1"){
-  newMonth == "Jan";
+  newMonth == "January";
 }
   else if(month == "2"){
     newMonth == "Feb";
