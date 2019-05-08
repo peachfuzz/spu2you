@@ -8,7 +8,6 @@ import {
     Divider,
     Spinner
 } from "@blueprintjs/core";
-import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"; //css for the calendar
 import moment from "moment";
 import "moment-timezone";
 import { withRouter } from "react-router-dom";
