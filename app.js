@@ -352,6 +352,32 @@ const times_in_day = {
     ]
 };
 
+const timeID = {
+    "7:30am-10:30am": 1,
+    "8:00am-11:00am": 2,
+    "8:30am-11:30am": 3,
+    "9:00am-12:00pm": 4,
+    "9:30am-12:30pm": 5,
+    "10:00am-1:00pm": 6,
+    "10:30am-1:30pm": 7,
+    "11:00am-2:00pm": 8,
+    "11:30am-2:30pm": 9,
+    "12:00pm-3:00pm": 10,
+    "12:30pm-3:30pm": 11,
+    "1:00pm-4:00pm": 12,
+    "1:30pm-4:30pm": 13,
+    "2:00pm-5:00pm": 14,
+    "2:30pm-5:30pm": 15,
+    "3:00pm-6:00pm": 16,
+    "3:30pm-6:30pm": 17,
+    "4:00pm-7:00pm": 18,
+    "4:30pm-7:30pm": 19,
+    "5:00pm-8:00pm": 20,
+    "5:30pm-8:30pm": 21
+};
+// 2137
+var date = moment().format("YYYYMMDD");
+
 app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
     // /azure/get_reservations?date=12-12-19
     var options = {
@@ -363,6 +389,7 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
             "&user=" +
             user_email
     };
+    date = moment(req.query.date); // might use this variable bc it might be faster
 
     request.get(options, (error, response, body) => {
         var my_times = { dates: [] };
@@ -440,22 +467,35 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
 
 app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
     // /azure/post_reservations?date=12-12-19
+    console.log("incoming poop");
+    console.log(
+        moment(req.query.date).format("YYYYMMDD"),
+        timeID[req.query.time],
+        user_email
+    );
     var options = {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
             config.azureFunctionCode +
-            "==&func=createReservation&date=" +
-            req.query.date +
-            "&user=" +
+            "==&func=addReservations&date=" +
+            moment(req.query.date).format("YYYYMMDD") +
+            "&timeID=" +
+            timeID[req.query.time] +
+            "&uEmail=" +
             user_email
     };
+
+    console.log(options.url);
     // add reservation format: spu2you-af...orchestrator...func=addReservation&date=20190507&timeID=2&uEmail=hector@spu.edu
     // request res's for specific user ...&func=getReservations&uEmail=hector@spu.edu
-
     request.post(options, (error, response, body) => {
-        res.json(body);
+        // res.json(body);
+        if (error) {
+            res.json({ bad: error });
+        } else {
+            res.json({ res: response, bod: body });
+        }
     });
-    res.json({ nice: 1 });
 });
 
 // needs to be at the bottom
