@@ -59,7 +59,12 @@ class Calendar extends Component {
                 <div className="calendar">
                     <DatePicker
                         shortcuts={false}
-                        minDate={new Date()} //cannot reserve before today
+                        // minDate={new Date()}
+                        minDate={
+                            new Date(
+                                new Date().setDate(new Date().getDate() + 1)
+                            )
+                        } //cannot reserve before today
                         maxDate={
                             new Date(
                                 new Date().setFullYear(
@@ -67,6 +72,7 @@ class Calendar extends Component {
                                 )
                             )
                         } //only allowed one year ahead of today
+                        initialMonth={new Date()}
                         onChange={newDate => this.handleChange(newDate)}
                         style={{ color: Colors.BLUE1 }}
                     />
