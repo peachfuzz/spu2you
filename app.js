@@ -466,18 +466,12 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
 });
 
 app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
-    // /azure/post_reservations?date=12-12-19
-    console.log("incoming poop");
-    console.log(
-        moment(req.query.date).format("YYYYMMDD"),
-        timeID[req.query.time],
-        user_email
-    );
+    // /azure/post_reservations?date=191221
     var options = {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
             config.azureFunctionCode +
-            "==&func=addReservations&date=" +
+            "==&func=addReservation&date=" +
             moment(req.query.date).format("YYYYMMDD") +
             "&timeID=" +
             timeID[req.query.time] +
