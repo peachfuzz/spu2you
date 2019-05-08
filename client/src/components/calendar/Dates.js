@@ -1,12 +1,5 @@
 import React, { Component } from "react";
-import {
-    AnchorButton,
-    Button,
-    Dialog,
-    H5,
-    Popover,
-    Tooltip
-} from "@blueprintjs/core";
+import { Alert, Button, H5, Popover, ProgressBar } from "@blueprintjs/core";
 import moment from "moment";
 
 class Dates extends Component {
@@ -14,7 +7,9 @@ class Dates extends Component {
         super(props);
 
         this.state = {
-            isOpen: false
+            error: "",
+            isOpen: false,
+            loading: false
         };
 
         this.selectDate = this.selectDate.bind(this);
@@ -24,6 +19,7 @@ class Dates extends Component {
 
     handleClose() {
         this.setState({ isOpen: false });
+        window.location.reload();
     }
 
     handleOpen() {
@@ -32,22 +28,28 @@ class Dates extends Component {
 
     selectDate(time) {
         if (time) {
-            var url =
-                "/azure/post_reservation?date=" +
-                this.props.selectedDate +
-                "&time=" +
-                time;
-            fetch(url, { method: "POST" })
-                .then(res => res.json())
-                .then(results => {
-                    console.log("succcc");
-                    console.log(results);
-                })
-                .catch(error => {
-                    // need to send error to backend and save...
-                    console.log("booooo");
-                    console.log(error);
-                });
+            this.setState({ loading: true, error: "" }, () => {
+                var url =
+                    "/azure/post_reservation?date=" +
+                    this.props.selectedDate +
+                    "&time=" +
+                    time;
+                fetch(url, { method: "POST" })
+                    .then(res => res.json())
+                    .then(results => {
+                        console.log("succcc");
+                        console.log(results);
+                        this.setState({ loading: false });
+                        this.handleOpen(); // nice, on click ok refresh page
+                    })
+                    .catch(error => {
+                        // need to send error to backend and save...
+                        console.log("booooo");
+                        console.log(error);
+                        this.setState({ loading: false, error: error });
+                        this.handleOpen(); // error
+                    });
+            });
         }
     }
 
@@ -86,6 +88,34 @@ class Dates extends Component {
                                 text="Reserve"
                                 onClick={() => this.selectDate(time)}
                             />
+                            {this.state.loading ? (
+                                <ProgressBar
+                                    className="margin-top-10"
+                                    size="50"
+                                />
+                            ) : null}
+                            <Alert
+                                className="bp3-dark"
+                                confirmButtonText="Okay"
+                                isOpen={this.state.isOpen}
+                                onClose={this.handleClose}
+                                icon={
+                                    this.state.error.length === 0
+                                        ? "endorsed"
+                                        : "error"
+                                }
+                                intent={
+                                    this.state.error.length === 0
+                                        ? "success"
+                                        : "danger"
+                                }
+                            >
+                                <p>
+                                    {this.state.error.length === 0
+                                        ? "Your reservation was successful!"
+                                        : "Something went wrong!"}
+                                </p>
+                            </Alert>
                         </div>
                     </div>
                 </Popover>
