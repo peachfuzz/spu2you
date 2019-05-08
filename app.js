@@ -33,8 +33,11 @@ var expressSession = require("express-session"); // idk...
 var bodyParser = require("body-parser"); // causes infinite redirect if removed
 var methodOverride = require("method-override");
 var passport = require("passport");
+var moment = require("moment");
+
+const request = require("request");
+
 var config = require("./config");
-// const request = require("request");
 // var util = require("util"); // idk...
 // var bunyan = require("bunyan"); // idk...
 
@@ -62,27 +65,27 @@ var OIDCStrategy = require("passport-azure-ad").OIDCStrategy;
 // the user by ID when deserializing.
 //-----------------------------------------------------------------------------
 passport.serializeUser(function(user, done) {
-  done(null, user.oid);
+    done(null, user.oid);
 });
 
 passport.deserializeUser(function(oid, done) {
-  findByOid(oid, function(err, user) {
-    done(err, user);
-  });
+    findByOid(oid, function(err, user) {
+        done(err, user);
+    });
 });
 
 // array to hold logged in users
 var users = [];
 
 var findByOid = function(oid, fn) {
-  for (var i = 0, len = users.length; i < len; i++) {
-    var user = users[i];
-    // log.info("we are using user: ", user);
-    if (user.oid === oid) {
-      return fn(null, user);
+    for (var i = 0, len = users.length; i < len; i++) {
+        var user = users[i];
+        // log.info("we are using user: ", user);
+        if (user.oid === oid) {
+            return fn(null, user);
+        }
     }
-  }
-  return fn(null, null);
+    return fn(null, null);
 };
 
 //-----------------------------------------------------------------------------
@@ -104,54 +107,55 @@ var findByOid = function(oid, fn) {
 //-----------------------------------------------------------------------------
 var env = process.argv[2] || "dev";
 var base_url = "https://spu2you.com";
+
 switch (env) {
-  case "dev":
-    base_url = "http://localhost:3000";
-    break;
+    case "dev":
+        base_url = "http://localhost:3000";
+        break;
 }
 
 passport.use(
-  new OIDCStrategy(
-    {
-      identityMetadata: config.creds.identityMetadata,
-      clientID: config.creds.clientID,
-      responseType: config.creds.responseType,
-      responseMode: config.creds.responseMode,
-      redirectUrl: base_url + config.creds.redirectUrl,
-      allowHttpForRedirectUrl: config.creds.allowHttpForRedirectUrl,
-      clientSecret: config.creds.clientSecret,
-      validateIssuer: config.creds.validateIssuer,
-      isB2C: config.creds.isB2C,
-      issuer: config.creds.issuer,
-      passReqToCallback: config.creds.passReqToCallback,
-      scope: config.creds.scope,
-      loggingLevel: config.creds.loggingLevel,
-      nonceLifetime: config.creds.nonceLifetime,
-      nonceMaxAmount: config.creds.nonceMaxAmount,
-      useCookieInsteadOfSession: config.creds.useCookieInsteadOfSession,
-      cookieEncryptionKeys: config.creds.cookieEncryptionKeys,
-      clockSkew: config.creds.clockSkew
-    },
-    function(iss, sub, profile, accessToken, refreshToken, done) {
-      if (!profile.oid) {
-        return done(new Error("No oid found"), null);
-      }
-      // asynchronous verification, for effect...
-      process.nextTick(function() {
-        findByOid(profile.oid, function(err, user) {
-          if (err) {
-            return done(err);
-          }
-          if (!user) {
-            // "Auto-registration"
-            users.push(profile);
-            return done(null, profile);
-          }
-          return done(null, user);
-        });
-      });
-    }
-  )
+    new OIDCStrategy(
+        {
+            identityMetadata: config.creds.identityMetadata,
+            clientID: config.creds.clientID,
+            responseType: config.creds.responseType,
+            responseMode: config.creds.responseMode,
+            redirectUrl: base_url + config.creds.redirectUrl,
+            allowHttpForRedirectUrl: config.creds.allowHttpForRedirectUrl,
+            clientSecret: config.creds.clientSecret,
+            validateIssuer: config.creds.validateIssuer,
+            isB2C: config.creds.isB2C,
+            issuer: config.creds.issuer,
+            passReqToCallback: config.creds.passReqToCallback,
+            scope: config.creds.scope,
+            loggingLevel: config.creds.loggingLevel,
+            nonceLifetime: config.creds.nonceLifetime,
+            nonceMaxAmount: config.creds.nonceMaxAmount,
+            useCookieInsteadOfSession: config.creds.useCookieInsteadOfSession,
+            cookieEncryptionKeys: config.creds.cookieEncryptionKeys,
+            clockSkew: config.creds.clockSkew
+        },
+        function(iss, sub, profile, accessToken, refreshToken, done) {
+            if (!profile.oid) {
+                return done(new Error("No oid found"), null);
+            }
+            // asynchronous verification, for effect...
+            process.nextTick(function() {
+                findByOid(profile.oid, function(err, user) {
+                    if (err) {
+                        return done(err);
+                    }
+                    if (!user) {
+                        // "Auto-registration"
+                        users.push(profile);
+                        return done(null, profile);
+                    }
+                    return done(null, user);
+                });
+            });
+        }
+    )
 );
 
 //-----------------------------------------------------------------------------
@@ -179,11 +183,11 @@ app.use(cookieParser());
 //   );
 // } else {
 app.use(
-  expressSession({
-    secret: "keyboard cat", // is this safe???
-    resave: true,
-    saveUninitialized: false
-  })
+    expressSession({
+        secret: "keyboard cat", // is this safe???
+        resave: true,
+        saveUninitialized: false
+    })
 );
 // }
 
@@ -213,60 +217,51 @@ app.set("view engine", "html");
 var user_email = "";
 var user_info;
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login");
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
 }
 
 app.get("/", ensureAuthenticated, function(req, res) {
-  res.render("index", { user: req.user });
-  user_info = req.user._json;
-  user_email = req.user._json.email;
-  // var prot = req.protocol;
-  // var host = req.get("host");
-  // console.log(prot + "://" + host);
+    res.render("index", { user: req.user });
+    user_info = req.user._json;
+    user_email = req.user._json.email;
+    // var prot = req.protocol;
+    // var host = req.get("host");
+    // console.log(prot + "://" + host);
 });
 
 app.get("/api/user", ensureAuthenticated, function(req, res) {
-  console.log("USER_EMAIL DUMBASS");
-  res.json(user_email);
-});
-
-app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
-  // here goes an azure function
-});
-
-app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
-  // here goes an azure function
+    res.json(user_email);
 });
 
 app.get("/calendar", ensureAuthenticated, function(req, res) {
-  res.render("index", { user: req.user });
+    res.render("index", { user: req.user });
 });
 
 app.get("/reservations", ensureAuthenticated, function(req, res) {
-  res.render("index", { user: req.user });
+    res.render("index", { user: req.user });
 });
 
 app.get("/robot", ensureAuthenticated, function(req, res) {
-  res.render("index", { user: req.user });
+    res.render("index", { user: req.user });
 });
 
 app.get(
-  "/login",
-  function(req, res, next) {
-    passport.authenticate("azuread-openidconnect", {
-      response: res, // required
-      resourceURL: config.resourceURL, // optional. Provide a value if you want to specify the resource.
-      customState: "my_state", // optional. Provide a value if you want to provide custom state value.
-      failureRedirect: "/"
-    })(req, res, next);
-  },
-  function(req, res) {
-    // log.info("Login was called in the Sample");
-    res.redirect("/");
-  }
+    "/login",
+    function(req, res, next) {
+        passport.authenticate("azuread-openidconnect", {
+            response: res, // required
+            resourceURL: config.resourceURL, // optional. Provide a value if you want to specify the resource.
+            customState: "my_state", // optional. Provide a value if you want to provide custom state value.
+            failureRedirect: "/"
+        })(req, res, next);
+    },
+    function(req, res) {
+        // log.info("Login was called in the Sample");
+        res.redirect("/");
+    }
 );
 
 // 'GET returnURL'
@@ -274,17 +269,17 @@ app.get(
 // query (such as authorization code). If authentication fails, user will be
 // redirected to '/' (home page); otherwise, it passes to the next middleware.
 app.get(
-  "/auth/openid/return",
-  function(req, res, next) {
-    passport.authenticate("azuread-openidconnect", {
-      response: res, // required
-      failureRedirect: "/"
-    })(req, res, next);
-  },
-  function(req, res) {
-    // log.info("We received a return from AzureAD.");
-    res.redirect("/");
-  }
+    "/auth/openid/return",
+    function(req, res, next) {
+        passport.authenticate("azuread-openidconnect", {
+            response: res, // required
+            failureRedirect: "/"
+        })(req, res, next);
+    },
+    function(req, res) {
+        // log.info("We received a return from AzureAD.");
+        res.redirect("/");
+    }
 );
 
 // 'POST returnURL'
@@ -292,25 +287,209 @@ app.get(
 // body (such as authorization code). If authentication fails, user will be
 // redirected to '/' (home page); otherwise, it passes to the next middleware.
 app.post(
-  "/auth/openid/return",
-  function(req, res, next) {
-    passport.authenticate("azuread-openidconnect", {
-      response: res, // required
-      failureRedirect: "/"
-    })(req, res, next);
-  },
-  function(req, res) {
-    // log.info("We received a return from AzureAD.");
-    res.redirect("/");
-  }
+    "/auth/openid/return",
+    function(req, res, next) {
+        passport.authenticate("azuread-openidconnect", {
+            response: res, // required
+            failureRedirect: "/"
+        })(req, res, next);
+    },
+    function(req, res) {
+        // log.info("We received a return from AzureAD.");
+        res.redirect("/");
+    }
 );
 
 // 'logout' route, logout from passport, and destroy the session with AAD.
 app.get("/logout", function(req, res) {
-  req.session.destroy(function(err) {
-    req.logOut();
-    res.redirect(config.destroySessionUrl + base_url);
-  });
+    req.session.destroy(function(err) {
+        req.logOut();
+        res.redirect(config.destroySessionUrl + base_url);
+    });
+});
+
+app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
+    // /azure/delete_reservations?date=12-12-19
+
+    var options = {
+        url:
+            "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+            config.azureFunctionCode +
+            "==&func=deleteReservation&date=" +
+            req.query.date +
+            "&user=" +
+            user_email
+    };
+
+    request.get(options, (error, response, body) => {
+        res.json(body);
+    });
+});
+
+const times_in_day = {
+    dates: [
+        "7:30am-10:30am",
+        "8:00am-11:00am",
+        "8:30am-11:30am",
+        "9:00am-12:00pm",
+        "9:30am-12:30pm",
+        "10:00am-1:00pm",
+        "10:30am-1:30pm",
+        "11:00am-2:00pm",
+        "11:30am-2:30pm",
+        "12:00pm-3:00pm",
+        "12:30pm-3:30pm",
+        "1:00pm-4:00pm",
+        "1:30pm-4:30pm",
+        "2:00pm-5:00pm",
+        "2:30pm-5:30pm",
+        "3:00pm-6:00pm",
+        "3:30pm-6:30pm",
+        "4:00pm-7:00pm",
+        "4:30pm-7:30pm",
+        "5:00pm-8:00pm",
+        "5:30pm-8:30pm"
+    ]
+};
+
+const timeID = {
+    "7:30am-10:30am": 1,
+    "8:00am-11:00am": 2,
+    "8:30am-11:30am": 3,
+    "9:00am-12:00pm": 4,
+    "9:30am-12:30pm": 5,
+    "10:00am-1:00pm": 6,
+    "10:30am-1:30pm": 7,
+    "11:00am-2:00pm": 8,
+    "11:30am-2:30pm": 9,
+    "12:00pm-3:00pm": 10,
+    "12:30pm-3:30pm": 11,
+    "1:00pm-4:00pm": 12,
+    "1:30pm-4:30pm": 13,
+    "2:00pm-5:00pm": 14,
+    "2:30pm-5:30pm": 15,
+    "3:00pm-6:00pm": 16,
+    "3:30pm-6:30pm": 17,
+    "4:00pm-7:00pm": 18,
+    "4:30pm-7:30pm": 19,
+    "5:00pm-8:00pm": 20,
+    "5:30pm-8:30pm": 21
+};
+// 2137
+var date = moment().format("YYYYMMDD");
+
+app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
+    // /azure/get_reservations?date=12-12-19
+    var options = {
+        url:
+            "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+            config.azureFunctionCode +
+            "==&func=getAllTimeSlots&date=" +
+            req.query.date +
+            "&user=" +
+            user_email
+    };
+    date = moment(req.query.date); // might use this variable bc it might be faster
+
+    request.get(options, (error, response, body) => {
+        var my_times = { dates: [] };
+        var j = 0;
+        if (body.length !== 0) {
+            // need find out response types for all items reserved, no items reserved, n items reserved
+            // currently returns empty string if no items reserved AND if date invalid
+            for (var i = 0; i < times_in_day.length; i++) {
+                if (body[j] === i + 1) {
+                    j++;
+                } else {
+                    my_times.dates.push(times_in_day);
+                }
+            }
+            res.json(my_times);
+        } else {
+            res.json(times_in_day);
+        }
+    });
+});
+
+app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
+    // /azure/get_reservations?date=12-12-19
+
+    var options = {
+        url:
+            "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+            config.azureFunctionCode +
+            "==&func=getUsedTimeSlots&date=" +
+            req.query.date
+    };
+    request.get(options, (error, response, body) => {
+        if (Object.keys(body).length !== 0) {
+            // supposed to get number of keys but just returns character count 🤷‍
+            var current_hour = moment().format("h"); // trying to figure out how to ignore
+            var dates = [];
+            var j = 0;
+            var body_to_json = [];
+
+            for (var key in JSON.parse(body)) {
+                if (JSON.parse(body).hasOwnProperty(key)) {
+                    body_to_json.push(
+                        JSON.parse(body)[key.toString()].TimeID.value
+                    );
+                }
+            }
+
+            // sorts numbers - otherwise will sort as strings ie: 1 10 12 13 2 3
+            body_to_json.sort(function(a, b) {
+                return a - b;
+            });
+
+            for (var i = 0; i < times_in_day.dates.length; i++) {
+                if (body_to_json.length > j && body_to_json[j] - 1 === i) {
+                    j++;
+                } else {
+                    dates.push(times_in_day.dates[i]);
+                }
+            }
+
+            var r = {};
+
+            if (dates === undefined || dates.length === 0) {
+                r.dates = ["no dates"];
+            } else {
+                r.dates = dates;
+            }
+
+            res.json(r);
+        } else {
+            res.json(times_in_day);
+        }
+    });
+});
+
+app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
+    // /azure/post_reservations?date=191221
+    var options = {
+        url:
+            "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+            config.azureFunctionCode +
+            "==&func=addReservation&date=" +
+            moment(req.query.date).format("YYYYMMDD") +
+            "&timeID=" +
+            timeID[req.query.time] +
+            "&uEmail=" +
+            user_email
+    };
+
+    console.log(options.url);
+    // add reservation format: spu2you-af...orchestrator...func=addReservation&date=20190507&timeID=2&uEmail=hector@spu.edu
+    // request res's for specific user ...&func=getReservations&uEmail=hector@spu.edu
+    request.post(options, (error, response, body) => {
+        // res.json(body);
+        if (error) {
+            res.json({ bad: error });
+        } else {
+            res.json({ res: response, bod: body });
+        }
+    });
 });
 
 // needs to be at the bottom
@@ -320,29 +499,3 @@ app.get("/logout", function(req, res) {
 // });
 
 app.listen(3000);
-
-// ! example sql connection
-/*
-var mysql = require("mysql");
-
-var connection = mysql.createConnection({
-  host: process.env.RDS_HOSTNAME,
-  user: process.env.RDS_USERNAME,
-  password: process.env.RDS_PASSWORD,
-  port: process.env.RDS_PORT
-});
-
-connection.connect(function(err) {
-  if (err) {
-    console.error("Database connection failed: " + err.stack);
-    return;
-  }
-
-  console.log("Connected to database.");
-});
-
-connection.end();
-
-The "catchall" handler: for any request that doesn't
-match one above, send back React's index.html file.
-*/
