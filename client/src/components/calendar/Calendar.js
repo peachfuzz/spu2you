@@ -26,7 +26,7 @@ class Calendar extends Component {
 
     handleChange(date) {
         if (date) {
-            this.setState({ selectedDate: date }, () => {
+            this.setState({ selectedDate: date.toISOString() }, () => {
                 var momentDate = moment(this.state.selectedDate).format(
                     "YYYYMMDD"
                 );
