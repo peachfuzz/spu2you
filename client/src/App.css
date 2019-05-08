@@ -156,3 +156,7 @@ p {
 .margin-top-10 {
     margin-top: 10px;
 }
+
+.bp3-align-right {
+    margin-left: auto;
+}
