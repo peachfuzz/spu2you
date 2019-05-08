@@ -47,7 +47,7 @@ class Header extends Component {
                             minimal
                             icon="timeline-events"
                             onClick={() =>
-                                this.props.history.push("/reservation")
+                                this.props.history.push("/reservations")
                             }
                         />
                         <AnchorButton
