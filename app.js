@@ -377,7 +377,7 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
             config.azureFunctionCode +
-            "==&func=getUserReservations&uEmail=" +
+            "==&func=getActiveUserReservations&uEmail=" +
             user_email
     };
     console.log(options.url);
@@ -395,7 +395,8 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
             timeID = times_in_day.dates[key - 1]; // time_in_day.dates is an array
             ret.push({
                 date: JSON.parse(body)[key].ResDate.value,
-                time: timeID
+                time: timeID,
+                reservationID: JSON.parse(body)[key].ResID.value
             });
         }
         res.json({ body: ret });
@@ -534,8 +535,8 @@ app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
             config.azureFunctionCode +
-            "==&func=deleteReservation&date=" +
-            req.query.date +
+            "==&func=deleteReservation&ResID=" +
+            req.query.reservationID +
             "&user=" +
             user_email
     };
