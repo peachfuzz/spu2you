@@ -25,8 +25,13 @@ class Calendar extends Component {
     }
 
     handleChange(date) {
-        if (date) {
-            this.setState({ selectedDate: date.toISOString() }, () => {
+        console.log(date.substring(0, 10));
+        console.log(new Date().toISOString().substring(0, 10));
+        if (
+            date &&
+            date.substring(0, 10) !== new Date().toISOString().substring(0, 10)
+        ) {
+            this.setState({ selectedDate: date }, () => {
                 var momentDate = moment(this.state.selectedDate).format(
                     "YYYYMMDD"
                 );
@@ -73,7 +78,11 @@ class Calendar extends Component {
                             )
                         } //only allowed one year ahead of today
                         initialMonth={new Date()}
-                        onChange={newDate => this.handleChange(newDate)}
+                        showActionsBar="true"
+                        onChange={newDate =>
+                            this.handleChange(newDate.toISOString())
+                        }
+                        todayButtonText="Tomorrow"
                         style={{ color: Colors.BLUE1 }}
                     />
                     <Divider />
