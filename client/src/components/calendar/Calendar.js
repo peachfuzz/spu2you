@@ -19,8 +19,10 @@ class Calendar extends Component {
         this.state = {
             selectedDate: undefined,
             availableDates: [],
-            selectedTime: "",
-            loading: false
+            loading: false,
+            tomorrow: moment()
+                .add(1, "d")
+                .format("LLL")
         };
     }
 
@@ -29,9 +31,7 @@ class Calendar extends Component {
             var momentDate =
                 moment().format("YYYYMMDD") !== moment(date).format("YYYYMMDD")
                     ? moment(date).format("YYYYMMDD")
-                    : moment()
-                          .add(1, "d")
-                          .format("YYYYMMDD");
+                    : moment(this.state.tomorrow, "LLL").format("YYYYMMDD");
             this.setState(
                 {
                     selectedDate: momentDate
@@ -46,8 +46,7 @@ class Calendar extends Component {
                             this.setState({ loading: false });
                         })
                         .catch(error => {
-                            // need to send error to backend and save...
-                            this.setState({ loading: false });
+                            this.setState({ loading: false }); // need to send error to backend and save...
                         });
                 }
             );
@@ -66,12 +65,7 @@ class Calendar extends Component {
                 <div className="calendar">
                     <DatePicker
                         shortcuts={false}
-                        // minDate={new Date()}
-                        minDate={
-                            new Date(
-                                new Date().setDate(new Date().getDate() + 1)
-                            )
-                        } //cannot reserve before today
+                        minDate={new Date(this.state.tomorrow)} //cannot reserve before today
                         maxDate={
                             new Date(
                                 new Date().setFullYear(
@@ -82,12 +76,7 @@ class Calendar extends Component {
                         initialMonth={new Date()}
                         showActionsBar="true"
                         onChange={newDate => this.handleChange(newDate)}
-                        todayButtonText={
-                            "Tomorrow, " +
-                            moment()
-                                .add(1, "d")
-                                .format("MM/DD/YYYY")
-                        }
+                        todayButtonText={"Tomorrow, " + this.state.tomorrow}
                         style={{ color: Colors.BLUE1 }}
                         value={
                             this.state.selectedDate !== undefined
