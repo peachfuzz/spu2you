@@ -308,24 +308,6 @@ app.get("/logout", function(req, res) {
     });
 });
 
-app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
-    // /azure/delete_reservations?date=12-12-19
-
-    var options = {
-        url:
-            "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
-            config.azureFunctionCode +
-            "==&func=deleteReservation&date=" +
-            req.query.date +
-            "&user=" +
-            user_email
-    };
-
-    request.get(options, (error, response, body) => {
-        res.json(body);
-    });
-});
-
 const times_in_day = {
     dates: [
         "7:30am-10:30am",
@@ -489,6 +471,66 @@ app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
         } else {
             res.json({ res: response, bod: body });
         }
+    });
+});
+
+app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
+    // allow them to checkin 30 min before start time?
+    var reservation_start_time = moment(
+        req.query.date + "T" + res.query.time,
+        "YYYYMMDDTHH:mma"
+    );
+    // allow them to checkin 30 min before end time?
+    var reservation_end_time = moment(
+        req.query.date + "T" + res.query.time,
+        "YYYYMMDDTHH:mma"
+    );
+    // isSameOrBefore()/isSameOrAfter() defaults to now
+    if (
+        moment(reservation_start_time).isSameOrAfter() &&
+        moment(reservation_end_time).isSameOrBefore()
+    ) {
+        var succ = document.createElement("h1");
+        response.textContent = "you succcc";
+
+        // endgoal response: <embed src="https://app.ohmnilabs.com" className />;
+        var OhmniLabsEmbed = document.createElement("EMBED");
+        OhmniLabsEmbed.src = "https://app.ohmnilabs.com";
+
+        // stretch goals:
+        // only display certain items
+        // OR
+        // get them to the point where they can control the robot and add event listener for src link change / when they hang up
+        // maybe window.hashchange ??
+        // window.addEventListener('hashchange', function(e){console.log('hash changed')});
+
+        res.json({
+            success: "Checking you in!",
+            response: succ,
+            OhmniLabs: OhmniLabsEmbed
+        });
+    } else {
+        res.json({
+            error: "It's not time yet to checkin for this appointment!"
+        });
+    }
+});
+
+app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
+    // /azure/delete_reservations?date=12-12-19
+
+    var options = {
+        url:
+            "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+            config.azureFunctionCode +
+            "==&func=deleteReservation&date=" +
+            req.query.date +
+            "&user=" +
+            user_email
+    };
+
+    request.get(options, (error, response, body) => {
+        res.json(body);
     });
 });
 
