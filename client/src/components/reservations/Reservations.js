@@ -1,39 +1,38 @@
 import React, { Component } from "react";
 //import { Code, getKeyComboString, KeyCombo, Card } from "@blueprintjs/core";
-import { Tag, Card, H5, Button } from "@blueprintjs/core";
-import Moment from "react-moment";
-import "moment-timezone";
+import { Tag, Card, H5, Button, Spinner } from "@blueprintjs/core";
+import PostList from './posts/PostList';
 
 export default class Reservation extends Component {
     constructor() {
         super();
-        this.state = { selectedDate: new Date() };
+        this.state = { availableDates: [], loading: false };
     }
+
+    getDates() {
+        var url = "/azure/get_my_reservations";
+        this.setState({ loading: true });
+        fetch(url)
+            .then(res => res.json())
+            .then(results => {
+                this.setState({ availableDates: [new Date(), new Date()] });
+                this.setState({ loading: false });
+            })
+            .catch(error => {
+                this.setState({ loading: false }); // need to send error to backend and save...
+            });
+    }
+
+    componentDidMount() {
+        this.setState({ loading: true })
+        this.getDates()
+    }
+
     render() {
         return (
             <Card>
-                <H5>This is the date you chose:</H5>
-                <Tag key={this.state.selectedDate} icon="calendar">
-                    <Moment date={this.state.selectedDate} format="LLLL" />
-                </Tag>
-                <p>To checkin to your reservation, click check-in</p>
-                <Button
-                    rightIcon="arrow-right"
-                    intent="success"
-                    text="Check-in"
-                    onClick={() => {
-                        this.props.history.push({
-                            pathname: "/robot",
-                            state: { selectedDate: this.state.selectedDate }
-                        });
-                    }}
-                />
-                <Button
-                    rightIcon="arrow-right"
-                    intent="success"
-                    text="Delete"
-                    onClick={() => {}}
-                />
+                {this.state.loading ? <Spinner /> :
+                    <PostList PostData={this.state.availableDates} />}
             </Card>
         );
     }
