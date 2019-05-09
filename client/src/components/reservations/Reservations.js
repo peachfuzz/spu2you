@@ -28,6 +28,12 @@ export default class Reservation extends Component {
                         });
                     }}
                 />
+                <Button
+                    rightIcon="arrow-right"
+                    intent="success"
+                    text="Delete"
+                    onClick={() => {}}
+                />
             </Card>
         );
     }

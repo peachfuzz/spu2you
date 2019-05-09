@@ -8,8 +8,9 @@ class Dates extends Component {
 
         this.state = {
             error: "",
-            isOpen: false,
-            loading: false
+            isOpen: null,
+            loading: false,
+            index: -1
         };
 
         this.selectDate = this.selectDate.bind(this);
@@ -18,17 +19,17 @@ class Dates extends Component {
     }
 
     handleClose() {
-        this.setState({ isOpen: false });
+        this.setState({ isOpen: null, index: -1 });
         window.location.reload();
     }
 
-    handleOpen() {
+    handleOpen(i) {
         this.setState({ isOpen: true });
     }
 
-    selectDate(time) {
+    selectDate(time, i) {
         if (time) {
-            this.setState({ loading: true, error: "" }, () => {
+            this.setState({ index: i, loading: true, error: "" }, () => {
                 var url =
                     "/azure/post_reservation?date=" +
                     this.props.selectedDate +
@@ -60,11 +61,24 @@ class Dates extends Component {
                 "YYYYMMDDTHH:mma"
             );
             return (
-                <Popover key={i} popoverClassName="bp3-popover-content-sizing">
+                <Popover
+                    key={i}
+                    popoverClassName="bp3-popover-content-sizing"
+                    isOpen={
+                        this.state.loading && this.state.index === i
+                            ? this.state.loading
+                            : null
+                    }
+                >
                     <Button
                         icon="calendar"
                         text={"Reserve " + time}
                         className="reserve-button"
+                        disabled={
+                            this.state.loading && this.state.index !== i
+                                ? this.state.index
+                                : null
+                        } // disable button when loading
                     />
                     <div>
                         <H5>Confirm reservation?</H5>
@@ -77,11 +91,13 @@ class Dates extends Component {
                                 intent="danger"
                                 text="Cancel"
                                 className="bp3-popover-dismiss"
+                                disabled={this.state.loading} // disable button when loading
                             />
                             <Button
                                 intent="success"
                                 text="Reserve"
-                                onClick={() => this.selectDate(time)}
+                                onClick={() => this.selectDate(time, i)}
+                                disabled={this.state.loading} // disable button when loading
                             />
                             {this.state.loading ? (
                                 <ProgressBar
@@ -104,6 +120,9 @@ class Dates extends Component {
                                         ? "success"
                                         : "danger"
                                 }
+                                canOutsideClickCancel={true}
+                                canEscapeKeyCancel={true}
+                                onCancel={() => this.handleClose}
                             >
                                 <p>
                                     {this.state.error.length === 0
