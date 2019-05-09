@@ -76,7 +76,10 @@ class Calendar extends Component {
                         initialMonth={new Date()}
                         showActionsBar="true"
                         onChange={newDate => this.handleChange(newDate)}
-                        todayButtonText={"Tomorrow, " + this.state.tomorrow}
+                        todayButtonText={
+                            "Tomorrow, " +
+                            moment(this.state.tomorrow).format("MMMM D, Y")
+                        }
                         style={{ color: Colors.BLUE1 }}
                         value={
                             this.state.selectedDate !== undefined
