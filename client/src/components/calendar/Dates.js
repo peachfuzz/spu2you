@@ -54,16 +54,11 @@ class Dates extends Component {
     }
 
     render() {
-        var i = 0;
-        return this.props.availableDates.map(time => {
-            var wholeDate = time;
-            wholeDate = moment(
-                moment(this.props.selectedDate).format("YYYY-MM-DD") +
-                    "T" +
-                    wholeDate.split("-", 1),
-                "YYYY-MM-DDTHH:mma"
+        return this.props.availableDates.map((time, i) => {
+            var wholeDate = moment(
+                moment(this.props.selectedDate) + "T" + time.split("-", 1),
+                "YYYYMMDDTHH:mma"
             );
-            i++;
             return (
                 <Popover key={i} popoverClassName="bp3-popover-content-sizing">
                     <Button
