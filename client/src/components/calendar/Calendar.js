@@ -78,7 +78,9 @@ class Calendar extends Component {
                         onChange={newDate => this.handleChange(newDate)}
                         todayButtonText={
                             "Tomorrow, " +
-                            moment(this.state.tomorrow).format("MMMM D, Y")
+                            moment(this.state.tomorrow, "LLL").format(
+                                "MMMM D, Y"
+                            )
                         }
                         style={{ color: Colors.BLUE1 }}
                         value={
