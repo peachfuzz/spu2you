@@ -17,7 +17,7 @@ class Calendar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedDate: "none",
+            selectedDate: undefined,
             availableDates: [],
             selectedTime: "",
             loading: false
@@ -25,33 +25,35 @@ class Calendar extends Component {
     }
 
     handleChange(date) {
-        console.log(date.substring(0, 10));
-        console.log(new Date().toISOString().substring(0, 10));
-        if (
-            date &&
-            date.substring(0, 10) !== new Date().toISOString().substring(0, 10)
-        ) {
-            this.setState({ selectedDate: date }, () => {
-                var momentDate = moment(this.state.selectedDate).format(
-                    "YYYYMMDD"
-                );
-
-                var url = "/azure/get_reservations?date=" + momentDate;
-                this.setState({ loading: true });
-                fetch(url)
-                    .then(res => res.json())
-                    .then(results => {
-                        this.setState({ availableDates: results.dates });
-                        this.setState({ loading: false });
-                    })
-                    .catch(error => {
-                        // need to send error to backend and save...
-                        this.setState({ loading: false });
-                    });
-            });
+        if (date) {
+            var momentDate =
+                moment().format("YYYYMMDD") !== moment(date).format("YYYYMMDD")
+                    ? moment(date).format("YYYYMMDD")
+                    : moment()
+                          .add(1, "d")
+                          .format("YYYYMMDD");
+            this.setState(
+                {
+                    selectedDate: momentDate
+                },
+                () => {
+                    var url = "/azure/get_reservations?date=" + momentDate;
+                    this.setState({ loading: true });
+                    fetch(url)
+                        .then(res => res.json())
+                        .then(results => {
+                            this.setState({ availableDates: results.dates });
+                            this.setState({ loading: false });
+                        })
+                        .catch(error => {
+                            // need to send error to backend and save...
+                            this.setState({ loading: false });
+                        });
+                }
+            );
         } else {
             this.setState({
-                selectedDate: "none",
+                selectedDate: undefined,
                 availableDates: [],
                 loading: false
             });
@@ -79,11 +81,23 @@ class Calendar extends Component {
                         } //only allowed one year ahead of today
                         initialMonth={new Date()}
                         showActionsBar="true"
-                        onChange={newDate =>
-                            this.handleChange(newDate.toISOString())
+                        onChange={newDate => this.handleChange(newDate)}
+                        todayButtonText={
+                            "Tomorrow, " +
+                            moment()
+                                .add(1, "d")
+                                .format("MM/DD/YYYY")
                         }
-                        todayButtonText="Tomorrow"
                         style={{ color: Colors.BLUE1 }}
+                        value={
+                            this.state.selectedDate !== undefined
+                                ? new Date(
+                                      moment(this.state.selectedDate).format(
+                                          "LLL"
+                                      )
+                                  )
+                                : undefined
+                        }
                     />
                     <Divider />
                     <Card className="side-cal">
