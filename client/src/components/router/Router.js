@@ -10,21 +10,21 @@ import Robot from "../robot/Robot";
 // <Route path="/splash" component={Splash} />
 
 class Content extends Component {
-  render() {
-    return (
-      <div className="content">
-        <div className="inner-content">
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/login" component={Login} />
-            <Route path="/calendar" component={Calendar} />
-            <Route path="/robot" component={Robot} />
-            <Route path="/reservations" component={Reservations} />
-          </Switch>
-        </div>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="content">
+                <div className="inner-content">
+                    <Switch>
+                        <Route exact path="/" component={Home} />
+                        <Route path="/login" component={Login} />
+                        <Route path="/calendar" component={Calendar} />
+                        <Route path="/robot" component={Robot} />
+                        <Route path="/reservations" component={Reservations} />
+                    </Switch>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default Content;

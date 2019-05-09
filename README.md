@@ -43,8 +43,8 @@ This Node.js server will give you a quick and easy way to set up a REST API Serv
 
 This REST API server is built using Restify and MongoDB with the following features:
 
-- A node.js server running an REST API interface with JSON using MongoDB as persistent storage
-- REST APIs leveraging OAuth2 API protection for endpoints using Azure Active Directory
+-   A node.js server running an REST API interface with JSON using MongoDB as persistent storage
+-   REST APIs leveraging OAuth2 API protection for endpoints using Azure Active Directory
 
 We've released all of the source code for this example in GitHub under an Apache 2.0 license, so feel free to clone (or even better, fork!) and provide feedback on the forums.
 
@@ -82,9 +82,9 @@ Next, clone the sample repo and install the NPM.
 
 From your shell or command line:
 
-- `$ git clone https://github.com/Azure-Samples/active-directory-node-webapi.git`
-- `$ cd node-server`
-- `$ npm install`
+-   `$ git clone https://github.com/Azure-Samples/active-directory-node-webapi.git`
+-   `$ cd node-server`
+-   `$ npm install`
 
 ### Step 6: Configure your server using config.js
 
@@ -94,13 +94,13 @@ You will need to update the sample to use your values for the metadata endpoint.
 
 ### Step 7: Run the application
 
-- `$ cd node-server`
-- `$ node app.js`
+-   `$ cd node-server`
+-   `$ node app.js`
 
 **Is the server output hard to understand?:** We use `bunyan` for logging in this sample. The console won't make much sense to you unless you also install bunyan and run the server like above but pipe it through the bunyan binary:
 
-- `$ npm install -g bunyan`
-- `$ node app.js | bunyan`
+-   `$ npm install -g bunyan`
+-   `$ node app.js | bunyan`
 
 ### You're done!
 
@@ -118,9 +118,9 @@ This sample demonstrates how to set up OpenId Connect authentication in a web ap
 
 To run this sample you will need the following:
 
-- Install Node.js from http://nodejs.org/
+-   Install Node.js from http://nodejs.org/
 
-- An Azure AD tenant. If you're not sure what a tenant is or how you would get one, read [How to get an Azure AD tenant](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-howto-tenant).
+-   An Azure AD tenant. If you're not sure what a tenant is or how you would get one, read [How to get an Azure AD tenant](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-howto-tenant).
 
 ## Register the sample in your Azure AD tenant
 
@@ -145,10 +145,10 @@ To run this sample you will need the following:
 1. Under **Settings**, click on **Reply URLs** and set it to `http://localhost:3000/auth/openid/return` which this sample uses by default.
 
 1. From the **Settings** menu, choose **Keys** and add a new entry in the Password section:
-   - Type a key description (for instance 'app secret'),
-   - Select a key duration of either **In 1 year**, **In 2 years**, or **Never Expires**.
-   - When you save this page, the key value will be displayed. Copy, and save the value in a safe location.
-   - You'll need this key later to configure the client secret in the app. This key value will not be displayed again, nor retrievable by any other means, so record it as soon as it is visible from the Azure portal.
+    - Type a key description (for instance 'app secret'),
+    - Select a key duration of either **In 1 year**, **In 2 years**, or **Never Expires**.
+    - When you save this page, the key value will be displayed. Copy, and save the value in a safe location.
+    - You'll need this key later to configure the client secret in the app. This key value will not be displayed again, nor retrievable by any other means, so record it as soon as it is visible from the Azure portal.
 
 ## Download the sample application and modules
 
@@ -156,45 +156,45 @@ Next, clone the sample repo and install the NPM modules.
 
 From your shell or command line run:
 
-- `$ git clone git@github.com:AzureADQuickStarts/WebApp-OpenIDConnect-NodeJS.git`
+-   `$ git clone git@github.com:AzureADQuickStarts/WebApp-OpenIDConnect-NodeJS.git`
 
 or
 
-- `$ git clone https://github.com/AzureADQuickStarts/WebApp-OpenIDConnect-NodeJS.git`
+-   `$ git clone https://github.com/AzureADQuickStarts/WebApp-OpenIDConnect-NodeJS.git`
 
 From the project root directory, run the command:
 
-- `$ npm install`
+-   `$ npm install`
 
 ## Configure the application
 
 Provide the parameters in `exports.creds` in config.js as instructed.
 
-- Update `<tenant_name>` in `exports.identityMetadata` with the Azure AD tenant name of the format \*.onmicrosoft.com.
-- Update `exports.clientID` with the Application Id noted from app registration.
-- Update `exports.clientSecret` with the Application key noted from app registration.
-- Update `exports.redirectUrl` with the Reply URL noted from app registration.
+-   Update `<tenant_name>` in `exports.identityMetadata` with the Azure AD tenant name of the format \*.onmicrosoft.com.
+-   Update `exports.clientID` with the Application Id noted from app registration.
+-   Update `exports.clientSecret` with the Application key noted from app registration.
+-   Update `exports.redirectUrl` with the Reply URL noted from app registration.
 
 **Optional configuration for production apps:**
 
-- Update `exports.destroySessionUrl` in config.js, if you want to use a different `post_logout_redirect_uri`.
+-   Update `exports.destroySessionUrl` in config.js, if you want to use a different `post_logout_redirect_uri`.
 
-- Set `exports.useMongoDBSessionStore` in config.js to true, if you want to use use mongoDB or other [compatible session stores](https://github.com/expressjs/session#compatible-session-stores).
-  The default session store in this sample is `express-session`. Note that the default session store is not suitable for production.
+-   Set `exports.useMongoDBSessionStore` in config.js to true, if you want to use use mongoDB or other [compatible session stores](https://github.com/expressjs/session#compatible-session-stores).
+    The default session store in this sample is `express-session`. Note that the default session store is not suitable for production.
 
-- Update `exports.databaseUri`, if you want to use mongoDB session store and a different database URI.
+-   Update `exports.databaseUri`, if you want to use mongoDB session store and a different database URI.
 
-- Update `exports.mongoDBSessionMaxAge`. Here you can specify how long you want to keep a session in mongoDB. The unit is second(s).
+-   Update `exports.mongoDBSessionMaxAge`. Here you can specify how long you want to keep a session in mongoDB. The unit is second(s).
 
 ## Build and run the application
 
-- Start mongoDB service. If you are using mongoDB session store in this app, you have to [install mongoDB](http://www.mongodb.org/) and start the service first. If you are using the default session store, you can skip this step.
+-   Start mongoDB service. If you are using mongoDB session store in this app, you have to [install mongoDB](http://www.mongodb.org/) and start the service first. If you are using the default session store, you can skip this step.
 
-- Run the app using the following command from your command line.
+-   Run the app using the following command from your command line.
 
-  ```
-  $ node app.js
-  ```
+    ```
+    $ node app.js
+    ```
 
 **Is the server output hard to understand?:** We use `bunyan` for logging in this sample. The console won't make much sense to you unless you also install bunyan and run the server like above but pipe it through the bunyan binary:
 

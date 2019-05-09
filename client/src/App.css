@@ -1,140 +1,158 @@
+@import "~normalize.css";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+@import "~@blueprintjs/datetime/lib/css/blueprint-datetime.css"; /*css for the calendar*/
+
 body {
-  background-color: #282c34;
-  color: white;
-  min-width: 475px;
+    background-color: #282c34;
+    color: white;
+    min-width: 475px;
 }
 
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+    animation: App-logo-spin infinite 20s linear;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 .App-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 p {
-  color: white;
+    color: white;
 }
 
 .content {
-  max-width: 1000px;
-  margin: auto;
+    max-width: 1000px;
+    margin: auto;
 }
 
 .calendar {
-  margin: auto;
+    margin: auto;
 
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
 
-  -webkit-flex-flow: row wrap;
-  justify-content: space-around;
+    -webkit-flex-flow: row wrap;
+    justify-content: space-around;
 }
 .side-cal {
-  width: 300px;
+    width: 300px;
 }
 
 @media screen and (max-width: 820px) {
-  .calendar {
+    .calendar {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-box-align: stretch;
+        -ms-flex-align: stretch;
+        align-items: stretch;
+        vertical-align: top;
+        justify-content: center;
+    }
+    .side-cal {
+        margin: auto;
+    }
+}
+
+.DayPicker-Month {
+    min-height: 420px;
+    min-width: 432px;
+}
+
+.w50-h50 {
+    width: 50px;
+    height: 50px;
+}
+
+.App-menu {
+    width: 250px;
+    margin: 0;
+}
+
+#videoElement {
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg); /* Safari and Chrome */
+    -moz-transform: rotateY(180deg); /* Firefox */
+    height: 400px;
+    width: 400px;
+}
+
+.key-combo {
+    width: 300px;
+    margin: auto;
+    padding: auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    -webkit-box-align: stretch;
-    -ms-flex-align: stretch;
-    align-items: stretch;
-    vertical-align: top;
-    justify-content: center;
-  }
-  .side-cal {
-    margin: auto;
-  }
-}
-
-.DayPicker-Month {
-  min-height: 420px;
-  min-width: 432px;
-}
-
-.w50-h50 {
-  width: 50px;
-  height: 50px;
-}
-
-.App-menu {
-  width: 250px;
-  margin: 0;
-}
-
-#videoElement {
-  transform: rotateY(180deg);
-  -webkit-transform: rotateY(180deg); /* Safari and Chrome */
-  -moz-transform: rotateY(180deg); /* Firefox */
-  height: 400px;
-  width: 400px;
-}
-
-.key-combo {
-  width: 300px;
-  margin: auto;
-  padding: auto;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-flex: 1;
-  -ms-flex: 1 1;
-  flex: 1 1;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -ms-flex-pack: distribute;
-  justify-content: space-around;
-  border: 2px solid rgba(138, 155, 168, 0.8);
-  border-radius: 6px;
-  max-width: 70%;
-  min-height: 120px;
-  padding: 20px;
-  -webkit-transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
-  transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1;
+    flex: 1 1;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    border: 2px solid rgba(138, 155, 168, 0.8);
+    border-radius: 6px;
+    max-width: 70%;
+    min-height: 120px;
+    padding: 20px;
+    -webkit-transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
+    transition: all 0.1s cubic-bezier(0.4, 1, 0.75, 0.9);
 }
 
 .container {
-  display: flex;
-  flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .bp3-navbar,
 .bp3-navbar-group {
-  height: auto !important;
+    height: auto !important;
+}
+
+.bp3-popover-content {
+    text-align: center;
+    justify-content: center;
+}
+
+.reserve-button {
+    margin: 7px 0 3px 0;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
 }
