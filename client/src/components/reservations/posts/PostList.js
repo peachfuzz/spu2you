@@ -2,10 +2,6 @@ import React, { Component } from "react";
 
 import PostDetail from "./PostDetail";
 class PostList extends Component {
-    handleDateCallback(txtMsg) {
-        alert(txtMsg);
-        console.log(this);
-    }
     render() {
         return (
             <div>
