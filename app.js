@@ -380,7 +380,7 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
             "==&func=getActiveUserReservations&uEmail=" +
             user_email
     };
-    console.log(options.url);
+
     date = moment(req.query.date); // might use this variable bc it might be faster
     var my_reservations = { dates: [] };
 
@@ -388,24 +388,21 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
         var ret = [];
         var timeID = "";
         for (var key in JSON.parse(body)) {
-            console.log("reservation", JSON.parse(body)[key].ResDate.value);
-
             my_reservations.dates.push(JSON.parse(body)[key].ResDate.value);
+            timeID = times_in_day.dates[JSON.parse(body)[key].TimeID.value - 1]; // time_in_day.dates is an array
 
-            timeID = times_in_day.dates[key - 1]; // time_in_day.dates is an array
             ret.push({
                 date: JSON.parse(body)[key].ResDate.value,
                 time: timeID,
                 reservationID: JSON.parse(body)[key].ResID.value
             });
         }
-        res.json({ body: ret });
+        res.json({ dates: ret });
     });
 });
 
 app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
     // /azure/get_reservations?date=12-12-19
-
     var options = {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
@@ -471,7 +468,6 @@ app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
             user_email
     };
 
-    console.log(options.url);
     // add reservation format: spu2you-af...orchestrator...func=addReservation&date=20190507&timeID=2&uEmail=hector@spu.edu
     // request res's for specific user ...&func=getReservations&uEmail=hector@spu.edu
     // reminder: if unreservable conflict appointments are reserved by user x, they will show in user x's appointments === bad
@@ -528,20 +524,19 @@ app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
     }
 });
 
-app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
+app.post("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
     // /azure/delete_reservations?date=12-12-19
-
     var options = {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
             config.azureFunctionCode +
             "==&func=deleteReservation&ResID=" +
-            req.query.reservationID +
+            req.query.ResID +
             "&user=" +
             user_email
     };
 
-    request.get(options, (error, response, body) => {
+    request.post(options, (error, response, body) => {
         res.json(body);
     });
 });
