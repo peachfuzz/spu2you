@@ -45,13 +45,11 @@ class Dates extends Component {
                 fetch(url, { method: "POST" })
                     .then(res => res.json())
                     .then(results => {
-                        console.log(results);
                         this.setState({ loading: false });
                         this.handleOpen(); // nice, on click ok refresh page
                     })
                     .catch(error => {
                         // need to send error to backend and save...
-                        console.log(error);
                         this.setState({ loading: false, error: error });
                         this.handleOpen(); // error
                     });
