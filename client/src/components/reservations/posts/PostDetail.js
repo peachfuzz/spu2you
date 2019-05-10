@@ -67,7 +67,9 @@ class PostDetail extends Component {
         // const { isOpen, isOpenError, ...alertProps } = this.state;
         return (
             <Callout className="margin-bottom-20">
-                <H3>{moment(post.date, "YYYY-MM-DD").format("MMMM D, Y")}</H3>
+                <H3>
+                    {moment(post.date, "YYYY-MM-DD").format("dddd, MMMM D, Y")}
+                </H3>
                 <p>{post.time}</p>
                 <ButtonGroup>
                     <Popover
