@@ -51,13 +51,11 @@ class PostDetail extends Component {
             fetch(url, { method: "POST" })
                 .then(res => res.json())
                 .then(results => {
-                    console.log(results);
                     this.setState({ loading: false });
                     this.handleOpen(); // nice, on click ok refresh page
                 })
                 .catch(error => {
                     // need to send error to backend and save...
-                    console.log(error);
                     this.setState({ loading: false, error: "error" });
                     this.handleOpen(); // error
                 });
@@ -69,7 +67,7 @@ class PostDetail extends Component {
         // const { isOpen, isOpenError, ...alertProps } = this.state;
         return (
             <Callout className="margin-bottom-20">
-                <H3>{moment(post.date).format("MMMM D, Y")}</H3>
+                <H3>{moment(post.date, "YYYY-MM-DD").format("MMMM D, Y")}</H3>
                 <p>{post.time}</p>
                 <ButtonGroup>
                     <Popover
