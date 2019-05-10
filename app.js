@@ -382,17 +382,15 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
     };
 
     date = moment(req.query.date); // might use this variable bc it might be faster
-    var my_reservations = { dates: [] };
 
     request.get(options, (error, response, body) => {
         var ret = [];
         var timeID = "";
         for (var key in JSON.parse(body)) {
-            my_reservations.dates.push(JSON.parse(body)[key].ResDate.value);
             timeID = times_in_day.dates[JSON.parse(body)[key].TimeID.value - 1]; // time_in_day.dates is an array
 
             ret.push({
-                date: JSON.parse(body)[key].ResDate.value,
+                date: JSON.parse(body)[key].ResDate.value.substr(0, 10),
                 time: timeID,
                 reservationID: JSON.parse(body)[key].ResID.value
             });
