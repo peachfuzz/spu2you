@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Alert, Button, H5, Popover, ProgressBar } from "@blueprintjs/core";
+import {
+    Alert,
+    Button,
+    H5,
+    Popover,
+    ProgressBar,
+    ButtonGroup
+} from "@blueprintjs/core";
 import moment from "moment";
 
 class Dates extends Component {
@@ -23,7 +30,7 @@ class Dates extends Component {
         window.location.reload();
     }
 
-    handleOpen(i) {
+    handleOpen() {
         this.setState({ isOpen: true });
     }
 
@@ -76,7 +83,7 @@ class Dates extends Component {
                         className="reserve-button"
                         disabled={
                             this.state.loading && this.state.index !== i
-                                ? this.state.index
+                                ? this.state.loading
                                 : null
                         } // disable button when loading
                     />
@@ -87,18 +94,20 @@ class Dates extends Component {
                             {moment(wholeDate).format("LLLL")}
                         </p>
                         <div>
-                            <Button
-                                intent="danger"
-                                text="Cancel"
-                                className="bp3-popover-dismiss"
-                                disabled={this.state.loading} // disable button when loading
-                            />
-                            <Button
-                                intent="success"
-                                text="Reserve"
-                                onClick={() => this.selectDate(time, i)}
-                                disabled={this.state.loading} // disable button when loading
-                            />
+                            <ButtonGroup>
+                                <Button
+                                    intent="danger"
+                                    text="Cancel"
+                                    className="bp3-popover-dismiss"
+                                    disabled={this.state.loading} // disable button when loading
+                                />
+                                <Button
+                                    intent="success"
+                                    text="Reserve"
+                                    onClick={() => this.selectDate(time, i)}
+                                    disabled={this.state.loading} // disable button when loading
+                                />
+                            </ButtonGroup>
                             {this.state.loading ? (
                                 <ProgressBar
                                     className="margin-top-10"
@@ -112,7 +121,7 @@ class Dates extends Component {
                                 onClose={this.handleClose}
                                 icon={
                                     this.state.error.length === 0
-                                        ? "endorsed"
+                                        ? "tick-circle"
                                         : "error"
                                 }
                                 intent={
