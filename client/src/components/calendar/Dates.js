@@ -61,9 +61,8 @@ class Dates extends Component {
         return this.props.availableDates.map((time, i) => {
             var wholeDate = moment(
                 moment(this.props.selectedDate, "YYYYMMDD").format("YYYYMMDD") +
-                    "T" +
                     time.split("-", 1),
-                "YYYYMMDDTHH:mma"
+                "YYYYMMDDHH:mma"
             );
             return (
                 <Popover
