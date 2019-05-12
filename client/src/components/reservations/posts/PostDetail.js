@@ -68,7 +68,15 @@ class PostDetail extends Component {
         return (
             <Callout className="margin-bottom-20">
                 <H3>
-                    {moment(post.date, "YYYY-MM-DD").format("dddd, MMMM D, Y")}
+                    {moment(post.date, "YYYY-MM-DD").format("dddd, MMMM D, Y")}{" "}
+                    (
+                    {moment().to(
+                        moment(
+                            post.date + post.time.substr(0, 7),
+                            "YYYY-MM-DDHH:mma"
+                        )
+                    )}
+                    )
                 </H3>
                 <p>{post.time}</p>
                 <ButtonGroup>
