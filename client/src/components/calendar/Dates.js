@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Alert, Button, H5, Popover, ProgressBar } from "@blueprintjs/core";
+import {
+    Alert,
+    Button,
+    H5,
+    Popover,
+    ProgressBar,
+    ButtonGroup
+} from "@blueprintjs/core";
 import moment from "moment";
 
 class Dates extends Component {
@@ -8,8 +15,9 @@ class Dates extends Component {
 
         this.state = {
             error: "",
-            isOpen: false,
-            loading: false
+            isOpen: null,
+            loading: false,
+            index: -1
         };
 
         this.selectDate = this.selectDate.bind(this);
@@ -18,7 +26,7 @@ class Dates extends Component {
     }
 
     handleClose() {
-        this.setState({ isOpen: false });
+        this.setState({ isOpen: null, index: -1 });
         window.location.reload();
     }
 
@@ -26,9 +34,9 @@ class Dates extends Component {
         this.setState({ isOpen: true });
     }
 
-    selectDate(time) {
+    selectDate(time, i) {
         if (time) {
-            this.setState({ loading: true, error: "" }, () => {
+            this.setState({ index: i, loading: true, error: "" }, () => {
                 var url =
                     "/azure/post_reservation?date=" +
                     this.props.selectedDate +
@@ -37,15 +45,11 @@ class Dates extends Component {
                 fetch(url, { method: "POST" })
                     .then(res => res.json())
                     .then(results => {
-                        console.log("succcc");
-                        console.log(results);
                         this.setState({ loading: false });
                         this.handleOpen(); // nice, on click ok refresh page
                     })
                     .catch(error => {
                         // need to send error to backend and save...
-                        console.log("booooo");
-                        console.log(error);
                         this.setState({ loading: false, error: error });
                         this.handleOpen(); // error
                     });
@@ -54,22 +58,31 @@ class Dates extends Component {
     }
 
     render() {
-        var i = 0;
-        return this.props.availableDates.map(time => {
-            var wholeDate = time;
-            wholeDate = moment(
-                moment(this.props.selectedDate).format("YYYY-MM-DD") +
-                    "T" +
-                    wholeDate.split("-", 1),
-                "YYYY-MM-DDTHH:mma"
+        return this.props.availableDates.map((time, i) => {
+            var wholeDate = moment(
+                moment(this.props.selectedDate, "YYYYMMDD").format("YYYYMMDD") +
+                    time.split("-", 1),
+                "YYYYMMDDHH:mma"
             );
-            i++;
             return (
-                <Popover key={i} popoverClassName="bp3-popover-content-sizing">
+                <Popover
+                    key={i}
+                    popoverClassName="bp3-popover-content-sizing"
+                    isOpen={
+                        this.state.loading && this.state.index === i
+                            ? this.state.loading
+                            : null
+                    }
+                >
                     <Button
                         icon="calendar"
                         text={"Reserve " + time}
                         className="reserve-button"
+                        disabled={
+                            this.state.loading && this.state.index !== i
+                                ? this.state.loading
+                                : null
+                        } // disable button when loading
                     />
                     <div>
                         <H5>Confirm reservation?</H5>
@@ -78,16 +91,20 @@ class Dates extends Component {
                             {moment(wholeDate).format("LLLL")}
                         </p>
                         <div>
-                            <Button
-                                intent="danger"
-                                text="Cancel"
-                                className="bp3-popover-dismiss"
-                            />
-                            <Button
-                                intent="success"
-                                text="Reserve"
-                                onClick={() => this.selectDate(time)}
-                            />
+                            <ButtonGroup>
+                                <Button
+                                    intent="danger"
+                                    text="Cancel"
+                                    className="bp3-popover-dismiss"
+                                    disabled={this.state.loading} // disable button when loading
+                                />
+                                <Button
+                                    intent="success"
+                                    text="Reserve"
+                                    onClick={() => this.selectDate(time, i)}
+                                    disabled={this.state.loading} // disable button when loading
+                                />
+                            </ButtonGroup>
                             {this.state.loading ? (
                                 <ProgressBar
                                     className="margin-top-10"
@@ -101,7 +118,7 @@ class Dates extends Component {
                                 onClose={this.handleClose}
                                 icon={
                                     this.state.error.length === 0
-                                        ? "endorsed"
+                                        ? "tick-circle"
                                         : "error"
                                 }
                                 intent={
@@ -109,6 +126,9 @@ class Dates extends Component {
                                         ? "success"
                                         : "danger"
                                 }
+                                canOutsideClickCancel={true}
+                                canEscapeKeyCancel={true}
+                                onCancel={() => this.handleClose}
                             >
                                 <p>
                                     {this.state.error.length === 0

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, H5, Button } from "@blueprintjs/core";
+import { Card, H2, Button } from "@blueprintjs/core";
 import { withRouter } from "react-router-dom";
 
 class Home extends Component {
@@ -29,7 +29,7 @@ class Home extends Component {
         return (
             <div className="Home">
                 <Card>
-                    <H5>Welcome to spu2you, {this.state.email}</H5>
+                    <H2>Welcome to spu2you, {this.state.email}</H2>
                     <p>
                         You can start reserving telecommuting robots by clicking
                         reserve.

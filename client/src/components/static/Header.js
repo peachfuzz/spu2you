@@ -47,14 +47,8 @@ class Header extends Component {
                             minimal
                             icon="timeline-events"
                             onClick={() =>
-                                this.props.history.push("/reservation")
+                                this.props.history.push("/reservations")
                             }
-                        />
-                        <AnchorButton
-                            text="Robot"
-                            minimal
-                            icon="rig"
-                            onClick={() => this.props.history.push("/robot")}
                         />
                     </NavbarGroup>
                     <NavbarGroup align={Alignment.RIGHT}>
@@ -63,8 +57,7 @@ class Header extends Component {
                             minimal
                             rightIcon="log-out"
                             onClick={() => {
-                                window.location =
-                                    "http://localhost:3000/logout";
+                                window.location = "/logout";
                             }}
                         />
                     </NavbarGroup>

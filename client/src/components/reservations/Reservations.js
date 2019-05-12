@@ -1,33 +1,56 @@
 import React, { Component } from "react";
-//import { Code, getKeyComboString, KeyCombo, Card } from "@blueprintjs/core";
-import { Tag, Card, H5, Button } from "@blueprintjs/core";
-import Moment from "react-moment";
-import "moment-timezone";
+import { Card, Spinner, Button, NonIdealState } from "@blueprintjs/core";
+import PostList from "./posts/PostList";
 
 export default class Reservation extends Component {
     constructor() {
         super();
-        this.state = { selectedDate: new Date() };
+        this.state = { availableDates: [], loading: false };
     }
+
+    getDates() {
+        var url = "/azure/get_my_reservations";
+        this.setState({ loading: true });
+        fetch(url)
+            .then(res => res.json())
+            .then(results => {
+                console.log(results);
+                this.setState({ availableDates: results.dates });
+                this.setState({ loading: false });
+            })
+            .catch(error => {
+                this.setState({ loading: false });
+            });
+    }
+
+    componentDidMount() {
+        this.setState({ loading: true });
+        this.getDates();
+    }
+
     render() {
         return (
             <Card>
-                <H5>This is the date you chose:</H5>
-                <Tag key={this.state.selectedDate} icon="calendar">
-                    <Moment date={this.state.selectedDate} format="LLLL" />
-                </Tag>
-                <p>To checkin to your reservation, click check-in</p>
-                <Button
-                    rightIcon="arrow-right"
-                    intent="success"
-                    text="Check-in"
-                    onClick={() => {
-                        this.props.history.push({
-                            pathname: "/robot",
-                            state: { selectedDate: this.state.selectedDate }
-                        });
-                    }}
-                />
+                {this.state.loading ? (
+                    <Spinner />
+                ) : this.state.availableDates.length > 0 ? (
+                    <PostList PostData={this.state.availableDates} />
+                ) : (
+                    <NonIdealState
+                        icon="clean"
+                        title="No reservations"
+                        description="You do not have any reservations."
+                        action={
+                            <Button
+                                onClick={() =>
+                                    this.props.history.push("/calendar")
+                                }
+                                text="Make new reservations"
+                                icon="calendar"
+                            />
+                        }
+                    />
+                )}
             </Card>
         );
     }

@@ -156,3 +156,16 @@ p {
 .margin-top-10 {
     margin-top: 10px;
 }
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+.bp3-align-right {
+    margin-left: auto;
+}
+
+.bp3-portal button:focus {
+    outline: -webkit-focus-ring-color auto 5px;
+    outline-offset: 0;
+}

@@ -114,6 +114,8 @@ switch (env) {
         break;
 }
 
+var access_token = "";
+
 passport.use(
     new OIDCStrategy(
         {
@@ -148,12 +150,14 @@ passport.use(
                     }
                     if (!user) {
                         // "Auto-registration"
+                        console.log("auto registration???");
                         users.push(profile);
                         return done(null, profile);
                     }
                     return done(null, user);
                 });
             });
+            access_token = accessToken; // is this good?
         }
     )
 );
@@ -227,6 +231,16 @@ app.get("/", ensureAuthenticated, function(req, res) {
     res.render("index", { user: req.user });
     user_info = req.user._json;
     user_email = req.user._json.email;
+
+    // adds users when they are sent home
+
+    // request.post(
+    //     "http://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+    //         config.azureFunctionCode +
+    //         "==&func=addUser&uEmail=" +
+    //         user_email
+    // );
+
     // var prot = req.protocol;
     // var host = req.get("host");
     // console.log(prot + "://" + host);
@@ -234,6 +248,11 @@ app.get("/", ensureAuthenticated, function(req, res) {
 
 app.get("/api/user", ensureAuthenticated, function(req, res) {
     res.json(user_email);
+});
+
+// one way we can "authenticate" azure functions: af gets "/api/access_token"
+app.get("/api/access_token", function(req, res) {
+    res.json(access_token);
 });
 
 app.get("/calendar", ensureAuthenticated, function(req, res) {
@@ -308,24 +327,6 @@ app.get("/logout", function(req, res) {
     });
 });
 
-app.get("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
-    // /azure/delete_reservations?date=12-12-19
-
-    var options = {
-        url:
-            "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
-            config.azureFunctionCode +
-            "==&func=deleteReservation&date=" +
-            req.query.date +
-            "&user=" +
-            user_email
-    };
-
-    request.get(options, (error, response, body) => {
-        res.json(body);
-    });
-});
-
 const times_in_day = {
     dates: [
         "7:30am-10:30am",
@@ -380,40 +381,36 @@ var date = moment().format("YYYYMMDD");
 
 app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
     // /azure/get_reservations?date=12-12-19
+    // Reminder: if link found, someone can get reservations for any user
+
     var options = {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
             config.azureFunctionCode +
-            "==&func=getAllTimeSlots&date=" +
-            req.query.date +
-            "&user=" +
+            "==&func=getActiveUserReservations&uEmail=" +
             user_email
     };
+
     date = moment(req.query.date); // might use this variable bc it might be faster
 
     request.get(options, (error, response, body) => {
-        var my_times = { dates: [] };
-        var j = 0;
-        if (body.length !== 0) {
-            // need find out response types for all items reserved, no items reserved, n items reserved
-            // currently returns empty string if no items reserved AND if date invalid
-            for (var i = 0; i < times_in_day.length; i++) {
-                if (body[j] === i + 1) {
-                    j++;
-                } else {
-                    my_times.dates.push(times_in_day);
-                }
-            }
-            res.json(my_times);
-        } else {
-            res.json(times_in_day);
+        var ret = [];
+        var timeID = "";
+        for (var key in JSON.parse(body)) {
+            timeID = times_in_day.dates[JSON.parse(body)[key].TimeID.value - 1]; // time_in_day.dates is an array
+
+            ret.push({
+                date: JSON.parse(body)[key].ResDate.value.substr(0, 10),
+                time: timeID,
+                reservationID: JSON.parse(body)[key].ResID.value
+            });
         }
+        res.json({ dates: ret });
     });
 });
 
 app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
     // /azure/get_reservations?date=12-12-19
-
     var options = {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
@@ -479,9 +476,9 @@ app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
             user_email
     };
 
-    console.log(options.url);
     // add reservation format: spu2you-af...orchestrator...func=addReservation&date=20190507&timeID=2&uEmail=hector@spu.edu
     // request res's for specific user ...&func=getReservations&uEmail=hector@spu.edu
+    // reminder: if unreservable conflict appointments are reserved by user x, they will show in user x's appointments === bad
     request.post(options, (error, response, body) => {
         // res.json(body);
         if (error) {
@@ -489,6 +486,66 @@ app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
         } else {
             res.json({ res: response, bod: body });
         }
+    });
+});
+
+app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
+    // allow them to checkin 30 min before start time?
+    var reservation_start_time = moment(
+        req.query.date + res.query.time,
+        "YYYYMMDDHH:mma"
+    );
+    // allow them to checkin 30 min before end time?
+    var reservation_end_time = moment(
+        req.query.date + res.query.time,
+        "YYYYMMDDHH:mma"
+    );
+    // isSameOrBefore()/isSameOrAfter() defaults to now
+    // https://momentjs.com/docs/#/query/is-same-or-before/
+    if (
+        moment(reservation_start_time).isSameOrAfter() &&
+        moment(reservation_end_time).isSameOrBefore()
+    ) {
+        var succ = document.createElement("h1");
+        response.textContent = "you succcc";
+
+        // end goal response: <embed src="https://app.ohmnilabs.com" className="fullscreen (?)" />;
+        var OhmniLabsEmbed = document.createElement("EMBED");
+        OhmniLabsEmbed.src = "https://app.ohmnilabs.com";
+
+        // stretch goals:
+        // only display certain items
+        // OR
+        // get them to the point where they can control the robot and add event listener for src link change / when they hang up
+        // maybe window.hashchange ??
+        // window.addEventListener('hashchange', function(e){console.log('hash changed')});
+
+        res.json({
+            success: "Checking you in!",
+            response: succ,
+            OhmniLabs: OhmniLabsEmbed
+        });
+    } else {
+        res.json({
+            error: "It's not time yet to checkin for this appointment!"
+        });
+    }
+});
+
+app.post("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
+    // /azure/delete_reservations?date=12-12-19
+    var options = {
+        url:
+            "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+            config.azureFunctionCode +
+            "==&func=deleteReservation&ResID=" +
+            req.query.ResID +
+            "&user=" +
+            user_email
+    };
+
+    request.post(options, (error, response, body) => {
+        res.json(body);
     });
 });
 
