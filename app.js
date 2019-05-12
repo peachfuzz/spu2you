@@ -231,6 +231,16 @@ app.get("/", ensureAuthenticated, function(req, res) {
     res.render("index", { user: req.user });
     user_info = req.user._json;
     user_email = req.user._json.email;
+
+    // adds users when they are sent home
+
+    // request.post(
+    //     "http://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+    //         config.azureFunctionCode +
+    //         "==&func=addUser&uEmail=" +
+    //         user_email
+    // );
+
     // var prot = req.protocol;
     // var host = req.get("host");
     // console.log(prot + "://" + host);
@@ -482,13 +492,13 @@ app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
 app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
     // allow them to checkin 30 min before start time?
     var reservation_start_time = moment(
-        req.query.date + "T" + res.query.time,
-        "YYYYMMDDTHH:mma"
+        req.query.date + res.query.time,
+        "YYYYMMDDHH:mma"
     );
     // allow them to checkin 30 min before end time?
     var reservation_end_time = moment(
-        req.query.date + "T" + res.query.time,
-        "YYYYMMDDTHH:mma"
+        req.query.date + res.query.time,
+        "YYYYMMDDHH:mma"
     );
     // isSameOrBefore()/isSameOrAfter() defaults to now
     // https://momentjs.com/docs/#/query/is-same-or-before/
