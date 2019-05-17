@@ -440,9 +440,22 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
             });
 
             for (var i = 0; i < times_in_day.dates.length; i++) {
+                console.log("````````````````````````````````````")
+                console.log(i);
+                console.log("````````````````````````````````````")
                 if (body_to_json.length > j && body_to_json[j] - 1 === i) {
                     j++;
+                    // continue iterating i to 'ignore' 6 time slots after a reserved slot
+                    for (var k = 0; k < 6; k++) {
+                        i++;
+                    } 
+                    console.log("~~~~~~~~~~~~~~~~~~~~~")
+                    console.log(j);
+                    console.log("~~~~~~~~~~~~~~~~~~~~~")
                 } else {
+                    console.log("/////////////////////")
+                    console.log("PUSHING ", times_in_day.dates[i]);
+                    console.log("/////////////////////")
                     dates.push(times_in_day.dates[i]);
                 }
             }
