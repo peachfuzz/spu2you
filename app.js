@@ -439,23 +439,21 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
                 return a - b;
             });
 
-            for (var i = 0; i < times_in_day.dates.length; i++) {
+            // getting the first item from the get request
+            var first = body_to_json.length > 0 ? body_to_json[0] : 0;
+            var last = body_to_json.length > 0 ? body_to_json[body_to_json.length - 1] : 0;
+
+            for (var i = first < 5 ? first : 0; i < times_in_day.dates.length; i++) {
                 if (body_to_json.length > j && body_to_json[j] - 1 === i) {
                     // found a reserved time slot
                     j++;
                     // continue iterating i to 'ignore' 5 time slots after a reserved slot
-                    for (var k = 0; k < 5; k++) {
-                        i++;
-                    } 
-                } else if (body_to_json.length > j && body_to_json[j] - 1 === (i+5)) { 
-                    // found a reserved time slot 5 spots ahead
+                    i += 5;
+                } else if (body_to_json.length > j && body_to_json[j] - 1 === (i + 5)) { 
                     j++;
-                    // continue iterating i to 'ignore' 5 time slots *up until* the reserved slot
-                    for (var k = 0; k < 5; k++) {
-                        i++;
-                    }
+                    i+= 5
                 } else {
-                    // time slot is not reserved, ok to push date 
+                    // time slot is not reserved, ok to push date
                     dates.push(times_in_day.dates[i]);
                 }
             }
