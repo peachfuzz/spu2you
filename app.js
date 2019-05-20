@@ -226,20 +226,22 @@ function ensureAuthenticated(req, res, next) {
     }
     res.redirect("/login");
 }
-
+var once = 0;
 app.get("/", ensureAuthenticated, function(req, res) {
     res.render("index", { user: req.user });
     user_info = req.user._json;
     user_email = req.user._json.email;
 
     // adds users when they are sent home
-
-    // request.post(
-    //     "http://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
-    //         config.azureFunctionCode +
-    //         "==&func=addUser&uEmail=" +
-    //         user_email
-    // );
+    if (once === 0) {
+        request.post(
+            "http://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+                config.azureFunctionCode +
+                "==&func=addUser&uEmail=" +
+                user_email
+        );
+        once = 1;
+    }
 
     // var prot = req.protocol;
     // var host = req.get("host");
@@ -424,38 +426,51 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
             var current_hour = moment().format("h"); // trying to figure out how to ignore
             var dates = [];
             var j = 0;
-            var body_to_json = [];
+            var taken_time_slots = [];
 
             for (var key in JSON.parse(body)) {
                 if (JSON.parse(body).hasOwnProperty(key)) {
-                    body_to_json.push(
+                    taken_time_slots.push(
                         JSON.parse(body)[key.toString()].TimeID.value
                     );
                 }
             }
 
             // sorts numbers - otherwise will sort as strings ie: 1 10 12 13 2 3
-            body_to_json.sort(function(a, b) {
+            taken_time_slots.sort(function(a, b) {
                 return a - b;
             });
 
             for (var i = 0; i < times_in_day.dates.length; i++) {
-                if (body_to_json.length > j && body_to_json[j] - 1 === i) {
+                if (
+                    i < 5 &&
+                    taken_time_slots[j] < 5 &&
+                    i < taken_time_slots[j]
+                ) {
+                    // for the first
+                    i = taken_time_slots[j] + 4;
+                    j++;
+                } else if (
+                    taken_time_slots.length > j &&
+                    taken_time_slots[j] - 6 === i
+                ) {
                     // found a reserved time slot
                     j++;
-                    // continue iterating i to 'ignore' 5 time slots after a reserved slot
-                    for (var k = 0; k < 5; k++) {
-                        i++;
-                    } 
-                } else if (body_to_json.length > j && body_to_json[j] - 1 === (i+5)) { 
-                    // found a reserved time slot 5 spots ahead
-                    j++;
-                    // continue iterating i to 'ignore' 5 time slots *up until* the reserved slot
-                    for (var k = 0; k < 5; k++) {
-                        i++;
-                    }
-                } else {
-                    // time slot is not reserved, ok to push date 
+                    // ignoring next 5
+                    i += 10; //5;
+                }
+                // else if (
+                //     taken_time_slots.length > j &&
+                //     taken_time_slots[j] - 1 === i + 5
+                // ) {
+                //     // found a reserved time slot 5 spots ahead
+                //     j++;
+                //     // continue iterating i to 'ignore' 5 time slots *up until* the reserved slot
+                //     // this loops needs to be updated and will remain a loop, ask Alex
+                //     i += 5;
+                // }
+                else {
+                    // time slot is not reserved, ok to push date
                     dates.push(times_in_day.dates[i]);
                 }
             }
