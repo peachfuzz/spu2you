@@ -442,12 +442,7 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
             });
 
             // getting the first item from the get request
-            var first = body_to_json.length > 0 ? body_to_json[0] : 0;
-            console.log("~~~~~~~~~~~~~~~~");
-            console.log(first);
-            console.log("~~~~~~~~~~~~~~~~");
-            // time slots that do not belong to the user :thinking:
-            // ~~~~~~~~~~
+            // var first = body_to_json.length > 0 ? body_to_json[0] : 0;
 
             // for (var i = first < 5 ? first : 0; i < times_in_day.dates.length; i++) {
             for (var i = 0; i < times_in_day.dates.length; i++) {
@@ -465,8 +460,8 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
                 ) {
                     // found a reserved time slot
                     j++;
-                    // ignoring next 5
-                    i += 10; //5;
+                    // ignoring next 10
+                    i += 10; 
                 }
                 // else if (
                 //     taken_time_slots.length > j &&
