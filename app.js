@@ -568,4 +568,4 @@ app.post("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
 //   res.render("index", { user: req.user });
 // });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
