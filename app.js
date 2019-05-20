@@ -441,11 +441,27 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
 
             // getting the first item from the get request
             var first = body_to_json.length > 0 ? body_to_json[0] : 0;
+            console.log("~~~~~~~~~~~~~~~~");
+            console.log(first);
+            console.log("~~~~~~~~~~~~~~~~");
             var last = body_to_json.length > 0 ? body_to_json[body_to_json.length - 1] : 0;
 
-            for (var i = first < 5 ? first : 0; i < times_in_day.dates.length; i++) {
+            // ~~~~~~~~~~
+            // the following loop using the conditional operator causes issues when displaying 
+            // time slots that do not belong to the user :thinking:
+            // ~~~~~~~~~~
+
+            // for (var i = first < 5 ? first : 0; i < times_in_day.dates.length; i++) {
+            for (var i = 0; i < times_in_day.dates.length; i++) {
+                console.log("////////////////////");
+                console.log(i);
+                console.log("////////////////////");
                 if (body_to_json.length > j && body_to_json[j] - 1 === i) {
                     // found a reserved time slot
+                    console.log("////////////////////");
+                    console.log(i);
+                    console.log("////////////////////");
+
                     j++;
                     // continue iterating i to 'ignore' 5 time slots after a reserved slot
                     i += 5;
