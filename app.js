@@ -441,6 +441,22 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
                 return a - b;
             });
 
+            // getting the first item from the get request
+            var first = body_to_json.length > 0 ? body_to_json[0] : 0;
+            console.log("~~~~~~~~~~~~~~~~");
+            console.log(first);
+            console.log("~~~~~~~~~~~~~~~~");
+            var last =
+                body_to_json.length > 0
+                    ? body_to_json[body_to_json.length - 1]
+                    : 0;
+
+            // ~~~~~~~~~~
+            // the following loop using the conditional operator causes issues when displaying
+            // time slots that do not belong to the user :thinking:
+            // ~~~~~~~~~~
+
+            // for (var i = first < 5 ? first : 0; i < times_in_day.dates.length; i++) {
             for (var i = 0; i < times_in_day.dates.length; i++) {
                 if (
                     i < 5 &&
@@ -583,4 +599,4 @@ app.post("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
 //   res.render("index", { user: req.user });
 // });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
