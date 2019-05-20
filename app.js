@@ -446,13 +446,6 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
             console.log("~~~~~~~~~~~~~~~~");
             console.log(first);
             console.log("~~~~~~~~~~~~~~~~");
-            var last =
-                body_to_json.length > 0
-                    ? body_to_json[body_to_json.length - 1]
-                    : 0;
-
-            // ~~~~~~~~~~
-            // the following loop using the conditional operator causes issues when displaying
             // time slots that do not belong to the user :thinking:
             // ~~~~~~~~~~
 
