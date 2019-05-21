@@ -424,9 +424,7 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
     request.get(options, (error, response, body) => {
         if (Object.keys(body).length !== 0) {
             // supposed to get number of keys but just returns character count 🤷‍
-            var current_hour = moment().format("h"); // trying to figure out how to ignore
             var dates = [];
-            var takenIndex = 0;
             var taken_time_slots = [];
 
             for (var key in JSON.parse(body)) {
