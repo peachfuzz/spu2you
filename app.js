@@ -441,17 +441,11 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
                 return a - b;
             });
 
-            // getting the first item from the get request
-            // var first = body_to_json.length > 0 ? body_to_json[0] : 0;
-
             for (var timeIDIndex = 0; timeIDIndex < times_in_day.dates.length; timeIDIndex++) {
                 // calculate offset for ignoring for first 5 slots 
-                var offset = 5;
-                if (taken_time_slots[takenIndex] < 5) {
-                    // offset = timeIDIndex;
+                if (taken_time_slots.length > takenIndex && taken_time_slots[takenIndex] < 5) {
                     timeIDIndex = taken_time_slots[takenIndex] - 1;
                 }
-
 
                 // found taken slot at current spot, ignore next 5 so long as we do not get another 'hit'
                 if (taken_time_slots.length > takenIndex && taken_time_slots[takenIndex] - 1 === timeIDIndex) {
@@ -460,20 +454,18 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
                     for (var i = 0; i < 5; i++) {
                         dates.pop(times_in_day[timeIDIndex-i]);
                     }
+                    // set limit to how many forward indexes we want to check 
                     var limit = timeIDIndex + 5;
                     for (var i = timeIDIndex; i < limit; i++) {
                         if (taken_time_slots[takenIndex] - 1 === timeIDIndex) {
                             takenIndex++;
-                            // refresh the limit 
+                            // new hit -- refresh the limit 
                             limit += 5;
                         }
                         else {
                             timeIDIndex++;
                         }
                     }
-                    // instead of below, need to check along the way and 'refresh' the += 5 if 
-                    // we get a hit along the way 
-                    // timeIDIndex += 5;
                 }
                 else {
                     // no conflict, push time slot 
