@@ -413,11 +413,12 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
 
 app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
     // /azure/get_reservations?date=12-12-19
+    console.log()
     var options = {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
             config.azureFunctionCode +
-            "==&func=getUsedTimeSlots&date=" +
+            "==&func=getAvailableTimeSlots&date=" +
             req.query.date
     };
     request.get(options, (error, response, body) => {
@@ -430,94 +431,13 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
 
             for (var key in JSON.parse(body)) {
                 if (JSON.parse(body).hasOwnProperty(key)) {
-                    taken_time_slots.push(
-                        JSON.parse(body)[key.toString()].TimeID.value
-                    );
+                    dates.push(times_in_day.dates[ JSON.parse(body)[key.toString()].TimeID.value -1 ]);
                 }
             }
 
-            // sorts numbers - otherwise will sort as strings ie: 1 10 12 13 2 3
             taken_time_slots.sort(function(a, b) {
                 return a - b;
             });
-
-            // starting index is the first taken slot if less than 5 
-            /*
-            if (taken_time_slots.length > takenIndex && taken_time_slots[takenIndex] < 5) {
-                timeIDIndex = taken_time_slots[takenIndex] - 1;
-            }
-            */
-            
-            for (var timeIDIndex = 0; timeIDIndex < times_in_day.dates.length; timeIDIndex++) {
-                
-                /*
-                // set limit to how many forward indexes we want to check 
-                var limit = timeIDIndex + 5;
-                for (var i = timeIDIndex; i < limit; i++) {
-                    if (taken_time_slots[i] === timeIDIndex) {
-                        takenIndex++;
-                        // new hit -- refresh the limit 
-                        limit += 5;
-                    }
-                    else {
-                        timeIDIndex++;
-                    }
-                }
-                */
-                
-                    
-                // if landed on a used timeslot 
-                if (taken_time_slots.length > takenIndex && taken_time_slots[takenIndex] - 1 === timeIDIndex) {
-                    takenIndex++;
-
-                    // remove previously pushed & conflicting timeIDs
-                    var removeIndex = dates.length;
-                    for (var i = 0; i < 6; i++) {
-                        // splice removes and reorganizes the dates array
-                        if (removeIndex - i < 0) {
-                            break;
-                        }  
-                        else {
-                            dates.splice(removeIndex-i, 1);
-                        }
-                        console.log(dates)
-                    }
-
-                    timeIDIndex += 5;
-                }
-
-                else {
-                    // no conflict, push time slot 
-                    console.log("PUSHING",times_in_day.dates[timeIDIndex] );
-                    dates.push(times_in_day.dates[timeIDIndex]);
-                    console.log("TO INDEX", dates.indexOf(times_in_day.dates[timeIDIndex]));
-                        
-
-                }
-
-                /* HECTOR'S:
-                if ( 
-                    timeIDIndex < 5 &&
-                    taken_time_slots[takenIndex] < 5 &&
-                    timeIDIndex < taken_time_slots[takenIndex]
-                ) {
-                    // for the first
-                    timeIDIndex = taken_time_slots[takenIndex] + 4;
-                    takenIndex++;
-                } else if ( // case for finding a time slot 5 spots ahead
-                    taken_time_slots.length > takenIndex &&
-                    taken_time_slots[takenIndex] - 6 === timeIDIndex
-                ) {
-                    takenIndex++;
-                    // ignoring next 10
-                    timeIDIndex += 10; 
-                }
-                else {
-                    // time slot is not reserved, ok to push date
-                    dates.push(times_in_day.dates[timeIDIndex]);
-                }
-                */
-            }
 
             var r = {};
 
