@@ -425,7 +425,7 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
             // supposed to get number of keys but just returns character count 🤷‍
             var current_hour = moment().format("h"); // trying to figure out how to ignore
             var dates = [];
-            var j = 0;
+            var takenIndex = 0;
             var taken_time_slots = [];
 
             for (var key in JSON.parse(body)) {
@@ -444,39 +444,64 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
             // getting the first item from the get request
             // var first = body_to_json.length > 0 ? body_to_json[0] : 0;
 
-            // for (var i = first < 5 ? first : 0; i < times_in_day.dates.length; i++) {
-            for (var i = 0; i < times_in_day.dates.length; i++) {
-                if (
-                    i < 5 &&
-                    taken_time_slots[j] < 5 &&
-                    i < taken_time_slots[j]
+            for (var timeIDIndex = 0; timeIDIndex < times_in_day.dates.length; timeIDIndex++) {
+                // calculate offset for ignoring for first 5 slots 
+                var offset = 5;
+                if (taken_time_slots[takenIndex] < 5) {
+                    // offset = timeIDIndex;
+                    timeIDIndex = taken_time_slots[takenIndex] - 1;
+                }
+
+
+                // found taken slot at current spot, ignore next 5 so long as we do not get another 'hit'
+                if (taken_time_slots.length > takenIndex && taken_time_slots[takenIndex] - 1 === timeIDIndex) {
+                    takenIndex++;
+                    // pop previous 5 from dates
+                    for (var i = 0; i < 5; i++) {
+                        dates.pop(times_in_day[timeIDIndex-i]);
+                    }
+                    var limit = timeIDIndex + 5;
+                    for (var i = timeIDIndex; i < limit; i++) {
+                        if (taken_time_slots[takenIndex] - 1 === timeIDIndex) {
+                            takenIndex++;
+                            // refresh the limit 
+                            limit += 5;
+                        }
+                        else {
+                            timeIDIndex++;
+                        }
+                    }
+                    // instead of below, need to check along the way and 'refresh' the += 5 if 
+                    // we get a hit along the way 
+                    // timeIDIndex += 5;
+                }
+                else {
+                    // no conflict, push time slot 
+                    dates.push(times_in_day.dates[timeIDIndex]);
+                }
+
+                /* HECTOR'S:
+                if ( 
+                    timeIDIndex < 5 &&
+                    taken_time_slots[takenIndex] < 5 &&
+                    timeIDIndex < taken_time_slots[takenIndex]
                 ) {
                     // for the first
-                    i = taken_time_slots[j] + 4;
-                    j++;
-                } else if (
-                    taken_time_slots.length > j &&
-                    taken_time_slots[j] - 6 === i
+                    timeIDIndex = taken_time_slots[takenIndex] + 4;
+                    takenIndex++;
+                } else if ( // case for finding a time slot 5 spots ahead
+                    taken_time_slots.length > takenIndex &&
+                    taken_time_slots[takenIndex] - 6 === timeIDIndex
                 ) {
-                    // found a reserved time slot
-                    j++;
+                    takenIndex++;
                     // ignoring next 10
-                    i += 10; 
+                    timeIDIndex += 10; 
                 }
-                // else if (
-                //     taken_time_slots.length > j &&
-                //     taken_time_slots[j] - 1 === i + 5
-                // ) {
-                //     // found a reserved time slot 5 spots ahead
-                //     j++;
-                //     // continue iterating i to 'ignore' 5 time slots *up until* the reserved slot
-                //     // this loops needs to be updated and will remain a loop, ask Alex
-                //     i += 5;
-                // }
                 else {
                     // time slot is not reserved, ok to push date
-                    dates.push(times_in_day.dates[i]);
+                    dates.push(times_in_day.dates[timeIDIndex]);
                 }
+                */
             }
 
             var r = {};
