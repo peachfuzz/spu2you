@@ -441,35 +441,58 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
                 return a - b;
             });
 
+            // starting index is the first taken slot if less than 5 
+            /*
+            if (taken_time_slots.length > takenIndex && taken_time_slots[takenIndex] < 5) {
+                timeIDIndex = taken_time_slots[takenIndex] - 1;
+            }
+            */
+            
             for (var timeIDIndex = 0; timeIDIndex < times_in_day.dates.length; timeIDIndex++) {
-                // calculate offset for ignoring for first 5 slots 
-                if (taken_time_slots.length > takenIndex && taken_time_slots[takenIndex] < 5) {
-                    timeIDIndex = taken_time_slots[takenIndex] - 1;
+                
+                /*
+                // set limit to how many forward indexes we want to check 
+                var limit = timeIDIndex + 5;
+                for (var i = timeIDIndex; i < limit; i++) {
+                    if (taken_time_slots[i] === timeIDIndex) {
+                        takenIndex++;
+                        // new hit -- refresh the limit 
+                        limit += 5;
+                    }
+                    else {
+                        timeIDIndex++;
+                    }
                 }
-
-                // found taken slot at current spot, ignore next 5 so long as we do not get another 'hit'
+                */
+                
+                    
+                // if landed on a used timeslot 
                 if (taken_time_slots.length > takenIndex && taken_time_slots[takenIndex] - 1 === timeIDIndex) {
                     takenIndex++;
-                    // pop previous 5 from dates
-                    for (var i = 0; i < 5; i++) {
-                        dates.pop(times_in_day[timeIDIndex-i]);
-                    }
-                    // set limit to how many forward indexes we want to check 
-                    var limit = timeIDIndex + 5;
-                    for (var i = timeIDIndex; i < limit; i++) {
-                        if (taken_time_slots[takenIndex] - 1 === timeIDIndex) {
-                            takenIndex++;
-                            // new hit -- refresh the limit 
-                            limit += 5;
-                        }
+
+                    // remove previously pushed & conflicting timeIDs
+                    var removeIndex = dates.length;
+                    for (var i = 0; i < 6; i++) {
+                        // splice removes and reorganizes the dates array
+                        if (removeIndex - i < 0) {
+                            break;
+                        }  
                         else {
-                            timeIDIndex++;
+                            dates.splice(removeIndex-i, 1);
                         }
+                        console.log(dates)
                     }
+
+                    timeIDIndex += 5;
                 }
+
                 else {
                     // no conflict, push time slot 
+                    console.log("PUSHING",times_in_day.dates[timeIDIndex] );
                     dates.push(times_in_day.dates[timeIDIndex]);
+                    console.log("TO INDEX", dates.indexOf(times_in_day.dates[timeIDIndex]));
+                        
+
                 }
 
                 /* HECTOR'S:
