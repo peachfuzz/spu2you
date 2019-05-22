@@ -425,17 +425,38 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
         if (Object.keys(body).length !== 0) {
             // supposed to get number of keys but just returns character count 🤷‍
             var dates = [];
-            var taken_time_slots = [];
+            var last5 = [];
+            var indexCount = 1;
 
-            for (var key in JSON.parse(body)) {
-                if (JSON.parse(body).hasOwnProperty(key)) {
-                    dates.push(times_in_day.dates[ JSON.parse(body)[key.toString()].TimeID.value -1 ]);
+            if (body == '{}') { // no used time slots, push all
+                dates = times_in_day.dates;
+            }
+            else {
+                for (var key in JSON.parse(body)) {
+                    if (JSON.parse(body).hasOwnProperty(key)) {
+                        if (indexCount > JSON.parse(body)[key.toString()].TimeID.value) {
+                            continue;
+                        }
+                        if (last5.length > 5) {
+                            // ok to push first index and remove from last5                            
+                            dates.push(last5[0]);
+                            last5.splice(0, 1);
+                        }
+                        if (JSON.parse(body)[key.toString()].TimeID.value == indexCount) {
+                            last5.push(times_in_day.dates[JSON.parse(body)[key.toString()].TimeID.value - 1]);
+                            if (indexCount == 21) {
+                                dates.push.apply(dates, last5);
+                            }
+                            indexCount++;
+                        }
+                        else {
+                            // count is off -- indicates a missing timeID from list (reserved)
+                            last5.splice(0, 5);
+                            indexCount += 6;
+                        }
+                    }
                 }
             }
-
-            taken_time_slots.sort(function(a, b) {
-                return a - b;
-            });
 
             var r = {};
 
