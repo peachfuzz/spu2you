@@ -31,5 +31,8 @@
         "start": "nodemon app.js",
         "build": "npm run build --prefix ./client",
         "c-install": "npm install --prefix ./client"
+    },
+    "devDependencies": {
+        "zombie": "^6.1.4"
     }
 }

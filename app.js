@@ -34,8 +34,11 @@ var bodyParser = require("body-parser"); // causes infinite redirect if removed
 var methodOverride = require("method-override");
 var passport = require("passport");
 var moment = require("moment");
+var Spooky = require("spooky");
 
 const request = require("request");
+const Browser = require("zombie");
+// Browser.localhost("https://app.ohmnilabs.com", 3000);
 
 var config = require("./config");
 // var util = require("util"); // idk...
@@ -413,7 +416,6 @@ app.get("/azure/get_my_reservations", ensureAuthenticated, function(req, res) {
 
 app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
     // /azure/get_reservations?date=12-12-19
-    console.log()
     var options = {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
@@ -429,7 +431,11 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
 
             for (var key in JSON.parse(body)) {
                 if (JSON.parse(body).hasOwnProperty(key)) {
-                    dates.push(times_in_day.dates[ JSON.parse(body)[key.toString()].TimeID.value -1 ]);
+                    dates.push(
+                        times_in_day.dates[
+                            JSON.parse(body)[key.toString()].TimeID.value - 1
+                        ]
+                    );
                 }
             }
 
@@ -481,43 +487,89 @@ app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
 
 app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
     // allow them to checkin 30 min before start time?
-    var reservation_start_time = moment(
-        req.query.date + res.query.time,
-        "YYYYMMDDHH:mma"
-    );
+    var reservation_start_time = moment().format();
     // allow them to checkin 30 min before end time?
-    var reservation_end_time = moment(
-        req.query.date + res.query.time,
-        "YYYYMMDDHH:mma"
-    );
+    var reservation_end_time = moment()
+        .add(1, "d") // change to subtract after not dev
+        .format();
+
+    if (req.query.date && res.query.time) {
+        reservation_start_time = moment(
+            req.query.date + res.query.time,
+            "YYYYMMDDHH:mma"
+        );
+        reservation_end_time = moment(
+            req.query.date + res.query.time,
+            "YYYYMMDDHH:mma"
+        );
+    }
+
     // isSameOrBefore()/isSameOrAfter() defaults to now
     // https://momentjs.com/docs/#/query/is-same-or-before/
     if (
-        moment(reservation_start_time).isSameOrAfter() &&
-        moment(reservation_end_time).isSameOrBefore()
+        moment(reservation_start_time).isSameOrBefore() &&
+        moment(reservation_end_time).isSameOrAfter()
     ) {
-        var succ = document.createElement("h1");
-        response.textContent = "you succcc";
+        console.log("POOPY 💩");
+        const browser = new Browser();
+        browser.visit("https://app.ohmnilabs.com", function() {
+            console.log("starting form");
 
-        // end goal response: <embed src="https://app.ohmnilabs.com" className="fullscreen (?)" />;
-        var OhmniLabsEmbed = document.createElement("EMBED");
-        OhmniLabsEmbed.src = "https://app.ohmnilabs.com";
+            // creds
+            browser.fill("input[name=username]", "hector@spu.edu");
+            browser.fill("input[name=password]", "thisIsbad123");
+            // creds
 
-        // stretch goals:
-        // only display certain items
-        // OR
-        // get them to the point where they can control the robot and add event listener for src link change / when they hang up
-        // maybe window.hashchange ??
-        // window.addEventListener('hashchange', function(e){console.log('hash changed')});
+            console.log("filled out form");
+            console.log(browser.html("input[name=username]"));
+            console.log(browser.html("input[name=password]"));
+            console.log(browser.location.href);
 
-        res.json({
-            success: "Checking you in!",
-            response: succ,
-            OhmniLabs: OhmniLabsEmbed
+            // browser.document.forms[0].submit();
+            browser.click(".button--primary", function() {
+                // current issue: stays on the same page even after button click
+                console.log("Form submitted ok!");
+                console.log(browser.html("input[name=username]"));
+                console.log(browser.html("input[name=password]"));
+                console.log(browser.html(".button--primary"));
+                console.log(browser.location.href);
+                console.log("header: ", browser.text(".box__header h2"));
+            });
+
+            // browser.pressButton(".button--primary"); // maybe working??
+            // console.log("😛", browser.text(".button--primary")); // this returned button text
+
+            // browser.wait().then(function() {
+            //     console.log("Form submitted ok!");
+            //     console.log(browser.html("input[name=username]"));
+            //     console.log(browser.html("input[name=password]"));
+            //     console.log(browser.location.href);
+            //     console.log(browser.text(".box__header h2"));
+
+            //     // browser.wait().then(function() {
+            //     //     console.log(browser.location.href);
+            //     //     console.log("Going to settings");
+            //     //     browser.click(".action.action--setting");
+            //     //     browser.wait().then(function() {
+            //     //         console.log("Adding user");
+            //     //         browser.fill(
+            //     //             "form.invite-user input",
+            //     //             "dominguezmah@spu.edu"
+            //     //         );
+            //     //         browser.click("form.invite-user input");
+            //     //     });
+            //     // });
+            // });
+            // respond once everything worked..?
+            res.json({
+                success: "Checking you in!"
+            });
         });
+
+        // }
     } else {
         res.json({
-            error: "It's not time yet to checkin for this appointment!"
+            error: "It's not time yet to check-in for this appointment!"
         });
     }
 });
