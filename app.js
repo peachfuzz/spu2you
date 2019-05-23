@@ -485,6 +485,16 @@ app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
     });
 });
 
+/*
+    Unusable technologies and reasons why:
+        Cheerio - only parses data, doesn't run javascript and ohmnilabs is in React (JavaScript)
+    
+    Potential technologies w/ issues:
+        JSDOM
+        ZombieJS
+        CasperJS - .start is not a function ??
+        PhantomJS/SlimerJS
+*/
 app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
     // allow them to checkin 30 min before start time?
     var reservation_start_time = moment().format();
@@ -523,19 +533,21 @@ app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
             console.log("filled out form");
             console.log(browser.html("input[name=username]"));
             console.log(browser.html("input[name=password]"));
+            console.log("😛", browser.text(".button--primary")); // this returned button text
             console.log(browser.location.href);
 
             // browser.document.forms[0].submit();
             browser.click(".button--primary", function() {
-                // current issue: stays on the same page even after button click
-                console.log("Form submitted ok!");
-                console.log(browser.html("input[name=username]"));
-                console.log(browser.html("input[name=password]"));
-                console.log(browser.html(".button--primary"));
+                //     //     // current issue: stays on the same page even after button click
+                console.log("Clicked button!");
+                //     //     console.log(browser.html("input[name=username]"));
+                //     //     console.log(browser.html("input[name=password]"));
+                //     //     console.log(browser.html(".button--primary"));
                 console.log(browser.location.href);
-                console.log("header: ", browser.text(".box__header h2"));
+                //     //     console.log("header: ", browser.text(".box__header h2"));
+                //     //     console.log("😛", browser.text(".button--primary")); // this returned button text
             });
-
+            console.log(browser.location.href);
             // browser.pressButton(".button--primary"); // maybe working??
             // console.log("😛", browser.text(".button--primary")); // this returned button text
 
@@ -546,19 +558,20 @@ app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
             //     console.log(browser.location.href);
             //     console.log(browser.text(".box__header h2"));
 
-            //     // browser.wait().then(function() {
-            //     //     console.log(browser.location.href);
-            //     //     console.log("Going to settings");
-            //     //     browser.click(".action.action--setting");
-            //     //     browser.wait().then(function() {
-            //     //         console.log("Adding user");
-            //     //         browser.fill(
-            //     //             "form.invite-user input",
-            //     //             "dominguezmah@spu.edu"
-            //     //         );
-            //     //         browser.click("form.invite-user input");
-            //     //     });
-            //     // });
+            // browser.wait().then(function() {
+            //     console.log(browser.location.href);
+            //     console.log("Going to settings");
+            //     browser.click(".action.action--setting");
+            //     browser.wait().then(function() {
+            //         console.log("Adding user");
+            //         browser.fill(
+            //             "form.invite-user input",
+            //             "dominguezmah@spu.edu"
+            //         );
+            //         browser.click("form.invite-user input");
+            //     });
+            // });
+
             // });
             // respond once everything worked..?
             res.json({
