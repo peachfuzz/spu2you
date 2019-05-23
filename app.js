@@ -553,8 +553,8 @@ app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
             console.log("starting form");
 
             // creds
-            browser.fill("input[name=username]", "hector@spu.edu");
-            browser.fill("input[name=password]", "thisIsbad123");
+            browser.fill("input[name=username]", config.hectorUN);
+            browser.fill("input[name=password]", config.hectorPW);
             // creds
 
             console.log("filled out form");
