@@ -523,22 +523,23 @@ app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
         PhantomJS/SlimerJS
 */
 app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
-    // allow them to checkin 30 min before start time?
+    // sets start and end time to arbitrarily be now and yesterday
+    // if no date/time passed in, these will be the default
     var reservation_start_time = moment().format();
-    // allow them to checkin 30 min before end time?
     var reservation_end_time = moment()
-        .add(1, "d") // change to subtract after not dev
+        .subtract(1, "d") // change to subtract after not dev
         .format();
 
-    if (req.query.date && res.query.time) {
+    // sets the time
+    if (req.query.date && req.query.time) {
         reservation_start_time = moment(
-            req.query.date + res.query.time,
+            req.query.date + req.query.time,
             "YYYYMMDDHH:mma"
         );
         reservation_end_time = moment(
-            req.query.date + res.query.time,
+            req.query.date + req.query.time,
             "YYYYMMDDHH:mma"
-        );
+        ).add(3, "h");
     }
 
     // isSameOrBefore()/isSameOrAfter() defaults to now
@@ -547,8 +548,7 @@ app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
         moment(reservation_start_time).isSameOrBefore() &&
         moment(reservation_end_time).isSameOrAfter()
     ) {
-        console.log("POOPY 💩");
-        const browser = new Browser();
+        // const browser = new Browser();
 
         // browser.on("authenticate", function(authentication) {
         //     authentication.username = config.hectorUN;
@@ -557,72 +557,74 @@ app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
 
         // browser.visit("https://app.ohmnilabs.com/my-bots", function() {
         // going to spu.edu and clicking a link works...
-        browser.visit("https://canvas.spu.edu", function() {
-            console.log("contents of page");
-            console.log(browser.source);
-            console.log(browser.location.href);
-            // browser.clickLink(".full-hero__link");
+        // browser.visit("https://canvas.spu.edu", function() {
+        //     console.log("contents of page");
+        //     console.log(browser.source);
+        //     console.log(browser.location.href);
+        // browser.clickLink(".full-hero__link");
 
-            // console.log(browser.html(".box__header h2"));
-            // // console.log("starting form");
-            browser.click("input[value=Continue]");
-            // // creds
-            browser.fill("input[name=j_username]", config.hectorUN);
-            browser.fill("input[name=j_password]", config.hectorPW);
-            // // creds
+        // console.log(browser.html(".box__header h2"));
+        // console.log("starting form");
+        // browser.click("input[value=Continue]");
+        // creds
+        // browser.fill("input[name=j_username]", config.hectorUN);
+        // browser.fill("input[name=j_password]", config.hectorPW);
+        // creds
 
-            // console.log("filled out form");
-            // console.log(browser.html("input[name=username]"));
-            // console.log(browser.html("input[name=password]"));
-            // console.log("😛", browser.text(".button--primary")); // this returned button text
-            // console.log(browser.location.href);
+        // console.log("filled out form");
+        // console.log(browser.html("input[name=username]"));
+        // console.log(browser.html("input[name=password]"));
+        // console.log("😛", browser.text(".button--primary")); // this returned button text
+        // console.log(browser.location.href);
 
-            // browser.document.forms[0].submit();
-            // browser.click(".button--primary", function() {
-            // current issue: stays on the same page even after button click
-            //     console.log("Clicked button!");
-            //     console.log(browser.html("input[name=username]"));
-            //     console.log(browser.html("input[name=password]"));
-            //     console.log(browser.html(".button--primary"));
-            //     console.log(browser.location.href);
-            //     console.log("header: ", browser.text(".box__header h2"));
-            //     console.log("😛", browser.text(".button--primary")); // this returned button text
-            // });
-            // console.log(browser.location.href);
-            // browser.pressButton(".button--primary"); // maybe working??
-            // console.log("😛", browser.text(".button--primary")); // this returned button text
+        // browser.document.forms[0].submit();
+        // browser.click(".button--primary", function() {
+        // current issue: stays on the same page even after button click
+        //     console.log("Clicked button!");
+        //     console.log(browser.html("input[name=username]"));
+        //     console.log(browser.html("input[name=password]"));
+        //     console.log(browser.html(".button--primary"));
+        //     console.log(browser.location.href);
+        //     console.log("header: ", browser.text(".box__header h2"));
+        //     console.log("😛", browser.text(".button--primary")); // this returned button text
+        // });
+        // console.log(browser.location.href);
+        // browser.pressButton(".button--primary"); // maybe working??
+        // console.log("😛", browser.text(".button--primary")); // this returned button text
 
-            // browser.wait().then(function() {
-            //     console.log("Form submitted ok!");
-            //     console.log(browser.html("input[name=username]"));
-            //     console.log(browser.html("input[name=password]"));
-            //     console.log(browser.location.href);
-            //     console.log(browser.text(".box__header h2"));
+        // browser.wait().then(function() {
+        //     console.log("Form submitted ok!");
+        //     console.log(browser.html("input[name=username]"));
+        //     console.log(browser.html("input[name=password]"));
+        //     console.log(browser.location.href);
+        //     console.log(browser.text(".box__header h2"));
 
-            // browser.wait().then(function() {
-            //     console.log(browser.location.href);
-            //     console.log("Going to settings");
-            //     browser.click(".action.action--setting");
-            //     browser.wait().then(function() {
-            //         console.log("Adding user");
-            //         browser.fill(
-            //             "form.invite-user input",
-            //             "dominguezmah@spu.edu"
-            //         );
-            //         browser.click("form.invite-user input");
-            //     });
-            // });
+        // browser.wait().then(function() {
+        //     console.log(browser.location.href);
+        //     console.log("Going to settings");
+        //     browser.click(".action.action--setting");
+        //     browser.wait().then(function() {
+        //         console.log("Adding user");
+        //         browser.fill(
+        //             "form.invite-user input",
+        //             "dominguezmah@spu.edu"
+        //         );
+        //         browser.click("form.invite-user input");
+        //     });
+        // });
 
-            // });
-            res.json({
-                success: "Checking you in!"
-            });
+        // });
+
+        // frontend will check if res.body === y or n and will send to /robot if y
+        res.json({
+            body: "y"
         });
+        // });
 
         // }
     } else {
         res.json({
-            error: "It's not time yet to check-in for this appointment!"
+            body: "n"
         });
     }
 });
