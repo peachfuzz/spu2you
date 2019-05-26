@@ -549,32 +549,46 @@ app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
     ) {
         console.log("POOPY 💩");
         const browser = new Browser();
-        browser.visit("https://app.ohmnilabs.com", function() {
-            console.log("starting form");
 
-            // creds
-            browser.fill("input[name=username]", config.hectorUN);
-            browser.fill("input[name=password]", config.hectorPW);
-            // creds
+        // browser.on("authenticate", function(authentication) {
+        //     authentication.username = config.hectorUN;
+        //     authentication.password = config.hectorPW;
+        // });
 
-            console.log("filled out form");
-            console.log(browser.html("input[name=username]"));
-            console.log(browser.html("input[name=password]"));
-            console.log("😛", browser.text(".button--primary")); // this returned button text
+        // browser.visit("https://app.ohmnilabs.com/my-bots", function() {
+        // going to spu.edu and clicking a link works...
+        browser.visit("https://canvas.spu.edu", function() {
+            console.log("contents of page");
+            console.log(browser.source);
             console.log(browser.location.href);
+            // browser.clickLink(".full-hero__link");
+
+            // console.log(browser.html(".box__header h2"));
+            // // console.log("starting form");
+            browser.click("input[value=Continue]");
+            // // creds
+            browser.fill("input[name=j_username]", config.hectorUN);
+            browser.fill("input[name=j_password]", config.hectorPW);
+            // // creds
+
+            // console.log("filled out form");
+            // console.log(browser.html("input[name=username]"));
+            // console.log(browser.html("input[name=password]"));
+            // console.log("😛", browser.text(".button--primary")); // this returned button text
+            // console.log(browser.location.href);
 
             // browser.document.forms[0].submit();
-            browser.click(".button--primary", function() {
-                //     //     // current issue: stays on the same page even after button click
-                console.log("Clicked button!");
-                //     //     console.log(browser.html("input[name=username]"));
-                //     //     console.log(browser.html("input[name=password]"));
-                //     //     console.log(browser.html(".button--primary"));
-                console.log(browser.location.href);
-                //     //     console.log("header: ", browser.text(".box__header h2"));
-                //     //     console.log("😛", browser.text(".button--primary")); // this returned button text
-            });
-            console.log(browser.location.href);
+            // browser.click(".button--primary", function() {
+            // current issue: stays on the same page even after button click
+            //     console.log("Clicked button!");
+            //     console.log(browser.html("input[name=username]"));
+            //     console.log(browser.html("input[name=password]"));
+            //     console.log(browser.html(".button--primary"));
+            //     console.log(browser.location.href);
+            //     console.log("header: ", browser.text(".box__header h2"));
+            //     console.log("😛", browser.text(".button--primary")); // this returned button text
+            // });
+            // console.log(browser.location.href);
             // browser.pressButton(".button--primary"); // maybe working??
             // console.log("😛", browser.text(".button--primary")); // this returned button text
 
@@ -600,7 +614,6 @@ app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
             // });
 
             // });
-            // respond once everything worked..?
             res.json({
                 success: "Checking you in!"
             });
