@@ -17,7 +17,8 @@ class PostDetail extends Component {
         this.state = {
             error: "",
             isOpen: null,
-            loading: false
+            delete_loading: null, // must set to either true or null, otherwise causes UI bugs
+            check_in_loading: null
         };
 
         this.checkInWasClicked = this.checkInWasClicked.bind(this);
@@ -35,28 +36,49 @@ class PostDetail extends Component {
         this.setState({ isOpen: true });
     }
 
-    checkInWasClicked() {
-        const { dateCallback } = this.props;
+    checkInWasClicked(date, time) {
+        // const { dateCallback } = this.props; // not entirely sure what this is doing
+        // if (dateCallback !== undefined) {
+        //     dateCallback(
+        //         "Are you sure you want to check into your reservation"
+        //     );
+        // }
+        console.log("date:", date, "time:", time);
+        this.setState({ check_in_loading: true, error: "" }, () => {
+            var url =
+                "check_into_reservation?date=" +
+                date +
+                "&time=" +
+                time.split("-", 1);
 
-        if (dateCallback !== undefined) {
-            dateCallback(
-                "Are you sure you want to check into your reservation"
-            );
-        }
+            fetch(url)
+                .then(res => res.json())
+                .then(results => {
+                    this.setState({ check_in_loading: null });
+                    if (results.body === "y") {
+                        window.location = "/robot";
+                    } else {
+                        // show error, "not your time yet"
+                    }
+                })
+                .catch(error => {
+                    this.setState({ check_in_loading: null, error: error });
+                });
+        });
     }
 
     deleteWasClicked(reservationID) {
-        this.setState({ loading: true, error: "" }, () => {
+        this.setState({ delete_loading: true, error: "" }, () => {
             var url = "/azure/delete_reservations?ResID=" + reservationID;
             fetch(url, { method: "POST" })
                 .then(res => res.json())
                 .then(results => {
-                    this.setState({ loading: false });
+                    this.setState({ delete_loading: null });
                     this.handleOpen(); // nice, on click ok refresh page
                 })
                 .catch(error => {
                     // need to send error to backend and save...
-                    this.setState({ loading: false, error: "error" });
+                    this.setState({ delete_loading: null, error: "error" });
                     this.handleOpen(); // error
                 });
         });
@@ -82,15 +104,13 @@ class PostDetail extends Component {
                 <ButtonGroup>
                     <Popover
                         popoverClassName="bp3-popover-content-sizing"
-                        isOpen={this.state.loading ? this.state.loading : null}
+                        isOpen={this.state.delete_loading}
                     >
                         <Button
                             rightIcon="trash"
                             intent="danger"
                             text="Delete"
-                            disabled={
-                                this.state.loading ? this.state.loading : null
-                            }
+                            disabled={this.state.delete_loading}
                         />
                         <div>
                             <H5>
@@ -107,7 +127,7 @@ class PostDetail extends Component {
                                         intent="warning"
                                         text="Cancel"
                                         className="bp3-popover-dismiss"
-                                        disabled={this.state.loading} // disable button when loading
+                                        disabled={this.state.delete_loading} // disable button when delete_loading
                                     />
                                     <Button
                                         intent="danger"
@@ -117,10 +137,10 @@ class PostDetail extends Component {
                                                 post.reservationID
                                             )
                                         }
-                                        disabled={this.state.loading} // disable button when loading
+                                        disabled={this.state.delete_loading} // disable button when delete_loading
                                     />
                                 </ButtonGroup>
-                                {this.state.loading ? (
+                                {this.state.delete_loading ? (
                                     <ProgressBar
                                         className="margin-top-10"
                                         size="50"
@@ -158,7 +178,9 @@ class PostDetail extends Component {
                         rightIcon="log-in"
                         intent="primary"
                         text="Check-in"
-                        disabled="true"
+                        onClick={() =>
+                            this.checkInWasClicked(post.date, post.time)
+                        }
                     />
                 </ButtonGroup>
             </Callout>

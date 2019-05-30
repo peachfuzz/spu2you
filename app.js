@@ -34,8 +34,11 @@ var bodyParser = require("body-parser"); // causes infinite redirect if removed
 var methodOverride = require("method-override");
 var passport = require("passport");
 var moment = require("moment");
+var Spooky = require("spooky");
 
 const request = require("request");
+const Browser = require("zombie");
+// Browser.localhost("https://app.ohmnilabs.com", 3000);
 
 var config = require("./config");
 // var util = require("util"); // idk...
@@ -226,20 +229,22 @@ function ensureAuthenticated(req, res, next) {
     }
     res.redirect("/login");
 }
-
+var once = 0;
 app.get("/", ensureAuthenticated, function(req, res) {
     res.render("index", { user: req.user });
     user_info = req.user._json;
     user_email = req.user._json.email;
 
     // adds users when they are sent home
-
-    // request.post(
-    //     "http://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
-    //         config.azureFunctionCode +
-    //         "==&func=addUser&uEmail=" +
-    //         user_email
-    // );
+    if (once === 0) {
+        request.post(
+            "http://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
+                config.azureFunctionCode +
+                "==&func=addUser&uEmail=" +
+                user_email
+        );
+        once = 1;
+    }
 
     // var prot = req.protocol;
     // var host = req.get("host");
@@ -415,35 +420,53 @@ app.get("/azure/get_reservations", ensureAuthenticated, function(req, res) {
         url:
             "https://spu2you-af.azurewebsites.net/api/Orchestrator?code=" +
             config.azureFunctionCode +
-            "==&func=getUsedTimeSlots&date=" +
+            "==&func=getAvailableTimeSlots&date=" +
             req.query.date
     };
     request.get(options, (error, response, body) => {
         if (Object.keys(body).length !== 0) {
             // supposed to get number of keys but just returns character count 🤷‍
-            var current_hour = moment().format("h"); // trying to figure out how to ignore
             var dates = [];
-            var j = 0;
-            var body_to_json = [];
+            var last5 = [];
+            var indexCount = 1;
 
-            for (var key in JSON.parse(body)) {
-                if (JSON.parse(body).hasOwnProperty(key)) {
-                    body_to_json.push(
-                        JSON.parse(body)[key.toString()].TimeID.value
-                    );
-                }
-            }
-
-            // sorts numbers - otherwise will sort as strings ie: 1 10 12 13 2 3
-            body_to_json.sort(function(a, b) {
-                return a - b;
-            });
-
-            for (var i = 0; i < times_in_day.dates.length; i++) {
-                if (body_to_json.length > j && body_to_json[j] - 1 === i) {
-                    j++;
-                } else {
-                    dates.push(times_in_day.dates[i]);
+            if (body == "{}") {
+                // no used time slots, push all
+                dates = times_in_day.dates;
+            } else {
+                for (var key in JSON.parse(body)) {
+                    if (JSON.parse(body).hasOwnProperty(key)) {
+                        if (
+                            indexCount >
+                            JSON.parse(body)[key.toString()].TimeID.value
+                        ) {
+                            continue;
+                        }
+                        if (last5.length > 5) {
+                            // ok to push first index and remove from last5
+                            dates.push(last5[0]);
+                            last5.splice(0, 1);
+                        }
+                        if (
+                            JSON.parse(body)[key.toString()].TimeID.value ==
+                            indexCount
+                        ) {
+                            last5.push(
+                                times_in_day.dates[
+                                    JSON.parse(body)[key.toString()].TimeID
+                                        .value - 1
+                                ]
+                            );
+                            if (indexCount == 21) {
+                                dates.push.apply(dates, last5);
+                            }
+                            indexCount++;
+                        } else {
+                            // count is off -- indicates a missing timeID from list (reserved)
+                            last5.splice(0, 5);
+                            indexCount += 6;
+                        }
+                    }
                 }
             }
 
@@ -489,45 +512,119 @@ app.post("/azure/post_reservation", ensureAuthenticated, function(req, res) {
     });
 });
 
+/*
+    Unusable technologies and reasons why:
+        Cheerio - only parses data, doesn't run javascript and ohmnilabs is in React (JavaScript)
+    
+    Potential technologies w/ issues:
+        JSDOM
+        ZombieJS
+        CasperJS - .start is not a function ??
+        PhantomJS/SlimerJS
+*/
 app.get("/check_into_reservation", ensureAuthenticated, (req, res) => {
-    // allow them to checkin 30 min before start time?
-    var reservation_start_time = moment(
-        req.query.date + res.query.time,
-        "YYYYMMDDHH:mma"
-    );
-    // allow them to checkin 30 min before end time?
-    var reservation_end_time = moment(
-        req.query.date + res.query.time,
-        "YYYYMMDDHH:mma"
-    );
+    // sets start and end time to arbitrarily be now and yesterday
+    // if no date/time passed in, these will be the default
+    var reservation_start_time = moment().format();
+    var reservation_end_time = moment()
+        .subtract(1, "d") // change to subtract after not dev
+        .format();
+
+    // sets the time
+    if (req.query.date && req.query.time) {
+        reservation_start_time = moment(
+            req.query.date + req.query.time,
+            "YYYYMMDDHH:mma"
+        );
+        reservation_end_time = moment(
+            req.query.date + req.query.time,
+            "YYYYMMDDHH:mma"
+        ).add(3, "h");
+    }
+
     // isSameOrBefore()/isSameOrAfter() defaults to now
     // https://momentjs.com/docs/#/query/is-same-or-before/
     if (
-        moment(reservation_start_time).isSameOrAfter() &&
-        moment(reservation_end_time).isSameOrBefore()
+        moment(reservation_start_time).isSameOrBefore() &&
+        moment(reservation_end_time).isSameOrAfter()
     ) {
-        var succ = document.createElement("h1");
-        response.textContent = "you succcc";
+        // const browser = new Browser();
 
-        // end goal response: <embed src="https://app.ohmnilabs.com" className="fullscreen (?)" />;
-        var OhmniLabsEmbed = document.createElement("EMBED");
-        OhmniLabsEmbed.src = "https://app.ohmnilabs.com";
+        // browser.on("authenticate", function(authentication) {
+        //     authentication.username = config.hectorUN;
+        //     authentication.password = config.hectorPW;
+        // });
 
-        // stretch goals:
-        // only display certain items
-        // OR
-        // get them to the point where they can control the robot and add event listener for src link change / when they hang up
-        // maybe window.hashchange ??
-        // window.addEventListener('hashchange', function(e){console.log('hash changed')});
+        // browser.visit("https://app.ohmnilabs.com/my-bots", function() {
+        // going to spu.edu and clicking a link works...
+        // browser.visit("https://canvas.spu.edu", function() {
+        //     console.log("contents of page");
+        //     console.log(browser.source);
+        //     console.log(browser.location.href);
+        // browser.clickLink(".full-hero__link");
 
+        // console.log(browser.html(".box__header h2"));
+        // console.log("starting form");
+        // browser.click("input[value=Continue]");
+        // creds
+        // browser.fill("input[name=j_username]", config.hectorUN);
+        // browser.fill("input[name=j_password]", config.hectorPW);
+        // creds
+
+        // console.log("filled out form");
+        // console.log(browser.html("input[name=username]"));
+        // console.log(browser.html("input[name=password]"));
+        // console.log("😛", browser.text(".button--primary")); // this returned button text
+        // console.log(browser.location.href);
+
+        // browser.document.forms[0].submit();
+        // browser.click(".button--primary", function() {
+        // current issue: stays on the same page even after button click
+        //     console.log("Clicked button!");
+        //     console.log(browser.html("input[name=username]"));
+        //     console.log(browser.html("input[name=password]"));
+        //     console.log(browser.html(".button--primary"));
+        //     console.log(browser.location.href);
+        //     console.log("header: ", browser.text(".box__header h2"));
+        //     console.log("😛", browser.text(".button--primary")); // this returned button text
+        // });
+        // console.log(browser.location.href);
+        // browser.pressButton(".button--primary"); // maybe working??
+        // console.log("😛", browser.text(".button--primary")); // this returned button text
+
+        // browser.wait().then(function() {
+        //     console.log("Form submitted ok!");
+        //     console.log(browser.html("input[name=username]"));
+        //     console.log(browser.html("input[name=password]"));
+        //     console.log(browser.location.href);
+        //     console.log(browser.text(".box__header h2"));
+
+        // browser.wait().then(function() {
+        //     console.log(browser.location.href);
+        //     console.log("Going to settings");
+        //     browser.click(".action.action--setting");
+        //     browser.wait().then(function() {
+        //         console.log("Adding user");
+        //         browser.fill(
+        //             "form.invite-user input",
+        //             "dominguezmah@spu.edu"
+        //         );
+        //         browser.click("form.invite-user input");
+        //     });
+        // });
+
+        // });
+
+        // frontend will check if res.body === y or n and will send to /robot if y
         res.json({
-            success: "Checking you in!",
-            response: succ,
-            OhmniLabs: OhmniLabsEmbed
+            body: "y"
         });
+        // });
+
+        // }
     } else {
         res.json({
-            error: "It's not time yet to checkin for this appointment!"
+            body: "n"
         });
     }
 });
@@ -555,4 +652,4 @@ app.post("/azure/delete_reservations", ensureAuthenticated, function(req, res) {
 //   res.render("index", { user: req.user });
 // });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
