@@ -30,7 +30,8 @@
     "scripts": {
         "start": "nodemon app.js",
         "build": "npm run build --prefix ./client",
-        "c-install": "npm install --prefix ./client"
+        "c-install": "npm install --prefix ./client",
+        "dingler": "npm install && npm install --prefix ./client && npm run build && npm start"
     },
     "devDependencies": {
         "zombie": "^6.1.4"
