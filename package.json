@@ -31,6 +31,7 @@
         "start": "nodemon app.js",
         "build": "npm run build --prefix ./client",
         "c-install": "npm install --prefix ./client",
+        "heroku-postbuild": "cd client && npm install && npm run build",
         "dingler": "npm install && npm install --prefix ./client && npm run build && npm start"
     },
     "devDependencies": {
